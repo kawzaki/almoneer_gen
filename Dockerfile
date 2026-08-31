@@ -31,8 +31,14 @@ COPY . .
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# 7. Create SQLite Database file if it doesn't exist
-RUN mkdir -p database && touch database/database.sqlite
+# 7. Ensure all storage and framework directories exist
+RUN mkdir -p storage/framework/views \
+             storage/framework/cache/data \
+             storage/framework/sessions \
+             storage/logs \
+             bootstrap/cache \
+             database \
+    && touch database/database.sqlite
 
 # 8. Set File Permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
@@ -41,5 +47,5 @@ RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/ht
 # 9. Expose Port 80
 EXPOSE 80
 
-# 10. Startup Command: Migrate & Seed DB, then Start Apache
-CMD sh -c "php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force && php artisan db:seed --force && apache2-foreground"
+# 10. Startup Command: Create directories, Run Migrations & Seeders, then Start Apache
+CMD sh -c "mkdir -p storage/framework/views storage/framework/cache/data storage/framework/sessions && chown -R www-data:www-data storage bootstrap/cache database && php artisan migrate --force && php artisan db:seed --force && apache2-foreground"
