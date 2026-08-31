@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" viewBox="0 0 70 70">
+  <defs>
+    <linearGradient id="zelligeGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff8db" stop-opacity="0.18"/>
+      <stop offset="50%" stop-color="#e5b84c" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#b07d1c" stop-opacity="0.12"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#zelligeGold)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.1">
+    <!-- 8-Point Rosette with Interlaced Strapwork -->
+    <path d="M35 5 L43 20 L58 20 L46 30 L50 45 L35 37 L20 45 L24 30 L12 20 L27 20 Z" stroke-width="1.2" fill="rgba(229,184,76,0.02)"/>
+    <circle cx="35" cy="35" r="8" stroke-width="1"/>
+    <circle cx="35" cy="35" r="3" fill="#fde68a" fill-opacity="0.2" stroke="none"/>
+    
+    <!-- Seamless Border Intersections -->
+    <path d="M35 0 L35 70 M0 35 L70 35"/>
+    <path d="M0 0 L70 70 M70 0 L0 70" stroke-width="0.8"/>
+    
+    <!-- Outer Octagon Links -->
+    <polygon points="35,0 70,35 35,70 0,35" stroke-width="0.9"/>
+  </g>
+</svg>

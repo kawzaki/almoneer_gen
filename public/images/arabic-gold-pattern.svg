@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff4c2" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#e6b94d" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#b38020" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#goldGrad)" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Main 8-Point Intersecting Star -->
+    <rect x="15" y="15" width="30" height="30" stroke-width="1.8" />
+    <rect x="15" y="15" width="30" height="30" transform="rotate(45 30 30)" stroke-width="1.8" />
+    
+    <!-- Central Rosette and Core Accent -->
+    <circle cx="30" cy="30" r="7.5" stroke-width="1.5" />
+    <circle cx="30" cy="30" r="3.5" fill="#fde68a" fill-opacity="0.9" stroke="none" />
+    
+    <!-- Interlacing Star Bands -->
+    <path d="M30 0 L45 15 M30 0 L15 15 M60 30 L45 15 M60 30 L45 45 M30 60 L45 45 M30 60 L15 45 M0 30 L15 45 M0 30 L15 15" stroke-width="1.6" />
+    
+    <!-- Corner Secondary Stars -->
+    <rect x="-10" y="-10" width="20" height="20" transform="rotate(45 0 0)" stroke-width="1.5" />
+    <rect x="50" y="-10" width="20" height="20" transform="rotate(45 60 0)" stroke-width="1.5" />
+    <rect x="-10" y="50" width="20" height="20" transform="rotate(45 0 60)" stroke-width="1.5" />
+    <rect x="50" y="50" width="20" height="20" transform="rotate(45 60 60)" stroke-width="1.5" />
+    
+    <circle cx="0" cy="0" r="4" stroke-width="1.2" />
+    <circle cx="60" cy="0" r="4" stroke-width="1.2" />
+    <circle cx="0" cy="60" r="4" stroke-width="1.2" />
+    <circle cx="60" cy="60" r="4" stroke-width="1.2" />
+  </g>
+</svg>

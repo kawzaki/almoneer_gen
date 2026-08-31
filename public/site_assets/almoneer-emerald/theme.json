@@ -1,0 +1,14 @@
+{
+    "name": "almoneer-emerald",
+    "title": "الثيم الزمردي الملكي",
+    "author": "شبكة المنير",
+    "version": "2.0.0",
+    "description": "الثيم العصري المتوافق مع الهواتف الذكية مع الهوية الحوزوية العريقة للمنير",
+    "colors": {
+        "primary": "#0a3d47",
+        "secondary": "#0f4c5c",
+        "accent": "#c5942d",
+        "surface": "#faf9f5",
+        "text": "#1e293b"
+    }
+}

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="luxuryGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff8db" stop-opacity="0.18"/>
+      <stop offset="50%" stop-color="#e5b84c" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#b07d1c" stop-opacity="0.12"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#luxuryGold)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.1">
+    <!-- Andalusian Damascus Ogee Arabesque Arch Lattice -->
+    <!-- Interlocking Organic Arches forming Sanctuary Windows -->
+    <path d="M32 0 C22 14 0 20 0 32 C0 44 22 50 32 64 C42 50 64 44 64 32 C64 20 42 14 32 0 Z" fill="rgba(229,184,76,0.015)" />
+    
+    <!-- Secondary Intersecting Arches -->
+    <path d="M0 0 C14 10 20 22 32 32 C44 22 50 10 64 0" />
+    <path d="M0 64 C14 54 20 42 32 32 C44 42 50 54 64 64" />
+    <path d="M0 32 C10 20 22 14 32 0 C42 14 54 20 64 32" />
+    <path d="M0 32 C10 44 22 50 32 64 C42 50 54 44 64 32" />
+
+    <!-- Central Floral Rosette (8-petal Palmette) -->
+    <circle cx="32" cy="32" r="6" stroke-width="1" />
+    <circle cx="32" cy="32" r="2" fill="#fff8db" fill-opacity="0.25" stroke="none" />
+    
+    <!-- Petal accents at 45 degrees -->
+    <path d="M32 24 C34 27 36 29 39 29 C36 31 34 33 32 36 C30 33 28 31 25 29 C28 29 30 27 32 24 Z" fill="rgba(255,248,219,0.03)" stroke-width="0.8" />
+    
+    <!-- Corner Nodes & Rosettes (Seamless Tile) -->
+    <circle cx="0" cy="0" r="4" stroke-width="0.9" />
+    <circle cx="64" cy="0" r="4" stroke-width="0.9" />
+    <circle cx="0" cy="64" r="4" stroke-width="0.9" />
+    <circle cx="64" cy="64" r="4" stroke-width="0.9" />
+    
+    <circle cx="32" cy="0" r="2.5" stroke-width="0.8" />
+    <circle cx="32" cy="64" r="2.5" stroke-width="0.8" />
+    <circle cx="0" cy="32" r="2.5" stroke-width="0.8" />
+    <circle cx="64" cy="32" r="2.5" stroke-width="0.8" />
+  </g>
+</svg>
