@@ -50,7 +50,7 @@ class AppServiceProvider extends ServiceProvider
                 return $siteSettings['site.theme'] ?? 'almoneer-emerald';
             });
 
-            $hawzaPortalUrl = env('HAWZA_PORTAL_URL', 'http://localhost:8000');
+            $hawzaPortalUrl = env('HAWZA_PORTAL_URL', 'https://almoneer-droos.onrender.com');
 
             $view->with([
                 'globalHorizontalMenu' => $horizontalMenu,

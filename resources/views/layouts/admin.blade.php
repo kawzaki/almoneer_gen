@@ -154,7 +154,7 @@
                     <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                 </a>
 
-                <a href="{{ $hawzaPortalUrl ?? 'http://localhost:8000' }}" target="_blank" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1.5 transition">
+                <a href="{{ $hawzaPortalUrl ?? 'https://almoneer-droos.onrender.com' }}" target="_blank" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1.5 transition">
                     <i class="fa-solid fa-graduation-cap text-gold-600"></i>
                     <span>بوابة الدروس الحوزوية</span>
                 </a>
