@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', $siteSettings['site.title'] ?? 'شبكة سماحة العلامة السيد منير الخباز | الموقع العام')</title>
+    <title>@yield('title', ($siteSettings['site.title'] ?? 'سماحة السيد منير الخباز') . ' | الموقع الرسمي')</title>
     <meta name="description" content="@yield('description', 'الموقع العام والفكري لسماحة العلامة السيد منير الخباز - المحاضرات العامة، ديوان الشعر، الكتب والمؤلفات، الاستفسارات الفكرية والفقهية.')">
 
     <!-- Open Graph / Meta -->
@@ -13,58 +13,132 @@
     <meta property="og:image" content="@yield('og_image', asset('assets/images/logo.png'))">
     <meta property="og:url" content="{{ url()->current() }}">
 
-    <!-- Google Fonts: IBM Plex Sans Arabic (UI) + Amiri (Scholarly & Poetry) -->
+    <!-- Google Fonts: IBM Plex Sans Arabic (UI) + Amiri (Scholarly & Poetry) + Amiri Quran (Uthmanic Quran) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- FontAwesome 6 Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- Tailwind CSS (CDN with Custom Color Palette) -->
+    @php
+        $isTurquoise = ($activeTheme === 'almoneer-turquoise');
+        $emeraldColors = $isTurquoise ? [
+            '700' => '#14b8a6',
+            '800' => '#0d8a9e',
+            '850' => '#0a7284',
+            '900' => '#075866',
+            '950' => '#043640',
+        ] : [
+            '700' => '#0f766e',
+            '800' => '#0f4c5c',
+            '850' => '#0c404f',
+            '900' => '#0a3d47',
+            '950' => '#06262d',
+        ];
+        $sandColors = $isTurquoise ? [
+            '50' => '#f2fafb',
+            '100' => '#e5f6f8',
+            '200' => '#cceef2',
+        ] : [
+            '50' => '#faf9f5',
+            '100' => '#f5f3ec',
+            '200' => '#e8e4d8',
+        ];
+        $emeraldJson = json_encode($emeraldColors);
+        $sandJson = json_encode($sandColors);
+    @endphp
+
+    <!-- Tailwind CSS (CDN with Custom Dynamic Color Palette) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        emerald: {
-                            800: '#0f4c5c',
-                            850: '#0c404f',
-                            900: '#0a3d47',
-                            950: '#06262d',
-                        },
+                        emerald: {!! $emeraldJson !!},
                         gold: {
-                            300: '#e5ca85',
-                            400: '#d4aa48',
-                            500: '#c5942d',
-                            600: '#a87920',
+                            300: '#f6d87e',
+                            400: '#e5bc52',
+                            500: '#cfa234',
+                            600: '#b28622',
                         },
-                        sand: {
-                            50: '#faf9f5',
-                            100: '#f5f3ec',
-                            200: '#e8e4d8',
-                        }
+                        sand: {!! $sandJson !!}
                     },
                     fontFamily: {
                         sans: ['"IBM Plex Sans Arabic"', 'sans-serif'],
                         scholarly: ['"Amiri"', 'serif'],
+                        quran: ['"Amiri Quran"', '"KFGQPC Uthman Taha Naskh"', '"KFGQPC Uthmanic Script HAFS"', '"Amiri"', 'serif'],
                     }
                 }
             }
         }
     </script>
 
+    @if(file_exists(public_path("site_assets/{$activeTheme}/theme.css")))
+        <link rel="stylesheet" href="{{ asset("site_assets/{$activeTheme}/theme.css") }}">
+    @endif
+
     <style>
         body {
             font-family: 'IBM Plex Sans Arabic', sans-serif;
-            background-color: #faf9f5;
+            background-color: {{ $isTurquoise ? '#f2fafb' : '#faf9f5' }};
             color: #1e293b;
+        }
+
+        /* Uthmanic Quranic Font Styles */
+        @font-face {
+            font-family: 'KFGQPC Uthman Taha Naskh';
+            src: local('KFGQPC Uthman Taha Naskh'), local('KFGQPC Uthmanic Script HAFS');
+        }
+        .font-quran, .quran-verse {
+            font-family: 'Amiri Quran', 'KFGQPC Uthman Taha Naskh', 'KFGQPC Uthmanic Script HAFS', 'Amiri', serif !important;
+            font-feature-settings: "cv01", "ss01";
+            line-height: 2.2 !important;
+        }
+        .quran-verse {
+            color: #04242a;
+            font-size: 1.25em;
+            font-weight: 400;
+            display: inline;
+            padding: 0 3px;
+        }
+        .quran-ref {
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            font-size: 0.75rem;
+            color: #a87920;
+            font-weight: 600;
+            margin-right: 0.35rem;
         }
         .font-scholarly {
             font-family: 'Amiri', serif;
         }
-        /* Authentic Islamic Geometric Pattern (Enhanced & Zoomed) */
+
+        /* Authentic Islamic Geometric Pattern (Dynamic based on theme) */
+        @if($isTurquoise)
+        .islamic-pattern {
+            background-color: #074b57 !important;
+            background-image: 
+                url("{{ asset('images/user-pattern-transparent.png') }}"),
+                radial-gradient(circle at 85% 15%, rgba(246, 216, 126, 0.35) 0%, transparent 50%),
+                radial-gradient(circle at 15% 85%, rgba(34, 211, 238, 0.45) 0%, transparent 60%),
+                radial-gradient(circle at 50% 50%, rgba(13, 138, 158, 0.42) 0%, transparent 70%),
+                linear-gradient(135deg, #0e8b9f 0%, #074b57 45%, #032b33 100%) !important;
+            background-size: 580px auto, 100% 100%, 100% 100%, 100% 100%, 100% 100% !important;
+            background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat !important;
+        }
+
+        .header-islamic-pattern {
+            background-color: #085360 !important;
+            background-image: 
+                url("{{ asset('images/user-pattern-transparent.png') }}"),
+                radial-gradient(ellipse at 50% 0%, rgba(246, 216, 126, 0.28) 0%, rgba(8, 83, 96, 0) 75%),
+                radial-gradient(circle at 85% 85%, rgba(34, 211, 238, 0.3) 0%, transparent 50%),
+                linear-gradient(135deg, #0f879b 0%, #085360 50%, #04353f 100%) !important;
+            background-size: 440px auto, 100% 100%, 100% 100% !important;
+            background-repeat: repeat, no-repeat, no-repeat !important;
+        }
+        @else
         .islamic-pattern {
             background-color: #083c46 !important;
             background-image: 
@@ -86,6 +160,7 @@
             background-size: 440px auto, 100% 100%, 100% 100% !important;
             background-repeat: repeat, no-repeat, no-repeat !important;
         }
+        @endif
         .glass-card {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
@@ -241,7 +316,7 @@
 
     @stack('styles')
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-gold-500 selection:text-white pb-24 md:pb-12">
+<body class="theme-{{ $activeTheme }} min-h-screen flex flex-col antialiased selection:bg-gold-500 selection:text-white pb-24 md:pb-12">
 
     <!-- 1. Top Cross-Portal Switcher Bar (Connecting with Hawza Portal on Port 8000) -->
     <div class="bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-950 text-gold-300 text-xs border-b border-gold-500/30 py-1.5 px-4 shadow-sm">
@@ -249,20 +324,34 @@
             <div class="flex items-center gap-3">
                 <span class="inline-flex items-center gap-1.5 font-medium">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span>الموقع العام والفكري الرسمي</span>
+                    <span>الموقع الرسمي</span>
                 </span>
                 <span class="text-gold-500/50">|</span>
                 <span class="hidden sm:inline text-slate-300">{{ $siteSettings['site.hadith'] ?? 'لا يزال المرء عالماً ما طلب العلم' }}</span>
             </div>
             <div class="flex items-center gap-3">
+                <!-- Theme Switcher Pill -->
+                <div class="inline-flex items-center rounded-full bg-black/30 p-0.5 border border-gold-500/30 text-[11px] shadow-inner">
+                    <a href="{{ route('theme.switch', 'almoneer-emerald') }}" 
+                       class="px-2.5 py-0.5 rounded-full transition flex items-center gap-1.5 {{ $activeTheme === 'almoneer-emerald' ? 'bg-emerald-800 text-gold-300 font-bold shadow-sm' : 'text-slate-300 hover:text-white' }}"
+                       title="الثيم الزمردي الكحلي">
+                        <span class="w-2 h-2 rounded-full bg-[#0a3d47] border border-gold-400/50"></span>
+                        <span>الزمردي</span>
+                    </a>
+                    <a href="{{ route('theme.switch', 'almoneer-turquoise') }}" 
+                       class="px-2.5 py-0.5 rounded-full transition flex items-center gap-1.5 {{ $activeTheme === 'almoneer-turquoise' ? 'bg-[#0d8a9e] text-white font-bold shadow-sm' : 'text-slate-300 hover:text-white' }}"
+                       title="الثيم الفيروزي المشرق">
+                        <span class="w-2 h-2 rounded-full bg-[#22d3ee] border border-white/60"></span>
+                        <span>الفيروزي المشرق</span>
+                    </a>
+                </div>
+
+                <span class="text-gold-500/30">|</span>
+
                 <a href="{{ $hawzaPortalUrl }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-gold-500/20 hover:bg-gold-500 hover:text-emerald-950 text-gold-300 border border-gold-500/40 transition-all font-semibold text-[11px] shadow-sm">
                     <i class="fa-solid fa-graduation-cap"></i>
-                    <span>بوابة الدروس الحوزوية والبحث الخارج</span>
+                    <span>بوابة الدروس الحوزوية</span>
                     <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
-                </a>
-                <a href="{{ route('login') }}" class="text-slate-400 hover:text-gold-300 text-[11px] flex items-center gap-1">
-                    <i class="fa-solid fa-lock text-[10px]"></i>
-                    <span>لوحة الإدارة</span>
                 </a>
             </div>
         </div>
@@ -270,60 +359,72 @@
 
     <!-- 2. Main Scholarly Header -->
     <header class="header-islamic-pattern text-white relative border-b border-gold-500/30 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-            <div class="flex items-center justify-between gap-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-7">
+            <div class="flex items-center justify-between gap-3 sm:gap-4">
                 
-                <!-- Brand Title & Calligraphy -->
-                <div class="flex items-center gap-4">
-                    <a href="{{ route('home') }}" class="group flex items-center gap-3.5">
-                        <div class="h-12 sm:h-14 w-auto flex-shrink-0 flex items-center justify-center">
-                            <img src="{{ asset('images/almoneer-logo-official.png') }}" alt="شعار شبكة المنير" class="h-12 sm:h-14 w-auto object-contain drop-shadow-[0_2px_12px_rgba(212,170,72,0.5)] group-hover:scale-105 transition-transform">
+                <!-- Right Side (RTL): Mobile Hamburger + Brand Title & Calligraphy -->
+                <div class="flex items-center gap-2.5 sm:gap-4">
+                    <!-- Mobile Menu Button (Placed on the Right in Arabic RTL) -->
+                    <button onclick="toggleMobileMenu()" class="lg:hidden p-2.5 rounded-xl bg-emerald-800/90 text-gold-300 hover:bg-emerald-700 hover:text-white border border-gold-500/30 focus:outline-none flex-shrink-0 transition shadow-sm active:scale-95" aria-label="قائمة الموقع">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+
+                    <!-- Brand Link & Calligraphy -->
+                    <a href="{{ route('home') }}" class="group flex items-center gap-2.5 sm:gap-4">
+                        <div class="h-12 sm:h-16 md:h-20 w-auto flex-shrink-0 flex items-center justify-center">
+                            <img src="{{ asset('images/almoneer-logo-official.png') }}" alt="شعار شبكة المنير" class="h-12 sm:h-16 md:h-20 w-auto object-contain drop-shadow-[0_4px_16px_rgba(212,170,72,0.6)] group-hover:scale-105 transition-transform">
                         </div>
-                        <div>
-                            <h1 class="text-lg sm:text-xl md:text-2xl font-bold font-scholarly text-gold-300 group-hover:text-gold-200 transition leading-tight">
-                                {{ $siteSettings['site.title'] ?? 'شبكة سماحة العلامة السيد منير الخباز' }}
-                            </h1>
-                            <p class="text-xs sm:text-sm text-slate-300 font-light mt-0.5">
-                                {{ $siteSettings['site.subtitle'] ?? 'الموقع العام والفكري الرسمي' }}
-                            </p>
+                        <div class="flex flex-col justify-center">
+                            <!-- Handwritten Arabic Calligraphy (Official Artwork from almoneer_calligoraphy.pdf) -->
+                            <div class="flex flex-col items-start gap-1 sm:gap-1.5">
+                                <img src="{{ asset('images/calligraphy-sayyid-muneer-gold.png') }}" 
+                                     alt="{{ $siteSettings['site.title'] ?? 'سماحة السيد منير الخباز' }}" 
+                                     class="h-8 sm:h-11 md:h-15 lg:h-18 w-auto object-contain drop-shadow-[0_3px_12px_rgba(0,0,0,0.65)] group-hover:brightness-110 transition">
+                                <img src="{{ asset('images/calligraphy-markaz-light.png') }}" 
+                                     alt="{{ $siteSettings['site.subtitle'] ?? 'مركز النتاج الفقهي والفكري والنشاط التبليغي' }}" 
+                                     class="h-2.5 sm:h-3.5 md:h-5 lg:h-6.5 w-auto object-contain opacity-95 group-hover:opacity-100 transition drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">
+                            </div>
+                            <h1 class="sr-only">{{ $siteSettings['site.title'] ?? 'سماحة السيد منير الخباز' }} - {{ $siteSettings['site.subtitle'] ?? 'مركز النتاج الفقهي والفكري والنشاط التبليغي' }}</h1>
                         </div>
                     </a>
                 </div>
 
-                <!-- Live Ticker / Quick Actions -->
-                <div class="hidden lg:flex items-center gap-4">
-                    <!-- Social Bar -->
-                    <div class="flex items-center gap-2 text-gold-300 text-sm">
-                        @if(!empty($siteSettings['social.youtube']))
-                        <a href="{{ $siteSettings['social.youtube'] }}" target="_blank" class="w-8 h-8 rounded-full bg-emerald-800/80 hover:bg-red-600 hover:text-white flex items-center justify-center transition" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
-                        @endif
-                        @if(!empty($siteSettings['social.instagram']))
-                        <a href="{{ $siteSettings['social.instagram'] }}" target="_blank" class="w-8 h-8 rounded-full bg-emerald-800/80 hover:bg-pink-600 hover:text-white flex items-center justify-center transition" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                        @endif
-                        @if(!empty($siteSettings['social.tiktok']))
-                        <a href="{{ $siteSettings['social.tiktok'] }}" target="_blank" class="w-8 h-8 rounded-full bg-emerald-800/80 hover:bg-black hover:text-white flex items-center justify-center transition" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-                        @endif
-                        @if(!empty($siteSettings['social.twitter']))
-                        <a href="{{ $siteSettings['social.twitter'] }}" target="_blank" class="w-8 h-8 rounded-full bg-emerald-800/80 hover:bg-sky-500 hover:text-white flex items-center justify-center transition" title="X"><i class="fa-brands fa-x-twitter"></i></a>
-                        @endif
+                <!-- Left Side (RTL): Desktop Search & Inquiries + Mobile Quick Actions -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <!-- Desktop Search & Inquiries -->
+                    <div class="hidden lg:flex items-center gap-3 xl:gap-4">
+                        <!-- Search Form -->
+                        <form action="{{ route('search') }}" method="GET" class="relative">
+                            <input type="text" 
+                                   name="q" 
+                                   value="{{ request('q') }}" 
+                                   placeholder="ابحث في الموقع (محاضرات، كتب...)" 
+                                   class="w-56 xl:w-72 pl-9 pr-4 py-2.5 text-xs rounded-xl bg-emerald-950/70 border border-gold-500/40 text-white placeholder-slate-400 focus:outline-none focus:border-gold-400 focus:ring-1 focus:ring-gold-400/50 shadow-inner transition backdrop-blur-sm">
+                            <button type="submit" class="absolute left-3 top-1/2 -translate-y-1/2 text-gold-400 hover:text-gold-200 transition" aria-label="بحث">
+                                <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                            </button>
+                        </form>
+
+                        <!-- Inquiries Button -->
+                        <a href="{{ route('inquiries.index') }}" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-emerald-950 font-bold text-xs shadow-md transition flex items-center gap-2 flex-shrink-0">
+                            <i class="fa-solid fa-circle-question"></i>
+                            <span>إرسال استفسار</span>
+                        </a>
                     </div>
 
-                    <!-- Inquiries Button -->
-                    <a href="{{ route('inquiries.index') }}" class="px-4 py-2 rounded-xl bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-emerald-950 font-bold text-xs shadow-md transition flex items-center gap-2">
-                        <i class="fa-solid fa-circle-question"></i>
-                        <span>إرسال استفسار</span>
-                    </a>
+                    <!-- Mobile Quick Inquiry Button (Left side of mobile header) -->
+                    <div class="flex lg:hidden items-center gap-1.5">
+                        <a href="{{ route('inquiries.index') }}" class="px-3 py-2 rounded-xl bg-gradient-to-r from-gold-500 to-gold-600 text-emerald-950 font-bold text-xs shadow-sm flex items-center gap-1.5" title="إرسال استفسار">
+                            <i class="fa-solid fa-circle-question"></i>
+                            <span class="hidden sm:inline">استفسار</span>
+                        </a>
+                    </div>
                 </div>
-
-                <!-- Mobile Menu Button -->
-                <button onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-lg bg-emerald-800 text-gold-300 hover:bg-emerald-700 focus:outline-none" aria-label="Toggle Menu">
-                    <i class="fa-solid fa-bars text-xl"></i>
-                </button>
             </div>
         </div>
 
         <!-- 3. Desktop Horizontal Navigation (Loaded from cached menu.htm) -->
-        <nav class="hidden lg:block bg-[#052c33] border-t border-b border-gold-500/25 shadow-inner">
+        <nav class="hidden lg:block bg-[#052c33] border-t border-b border-gold-500/25 shadow-inner w-full">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="horizontal-menu-wrapper py-1">
                     {!! $globalHorizontalMenu !!}
@@ -341,7 +442,39 @@
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
-            <div class="mt-4 space-y-2 mobile-menu-links">
+            <!-- Mobile Search Form -->
+            <div class="mt-4 mb-2">
+                <form action="{{ route('search') }}" method="GET" class="relative">
+                    <input type="text" 
+                           name="q" 
+                           value="{{ request('q') }}" 
+                           placeholder="بحث في الموقع..." 
+                           class="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-emerald-900/90 border border-gold-500/30 text-white placeholder-slate-400 focus:outline-none focus:border-gold-400">
+                    <button type="submit" class="absolute left-3 top-1/2 -translate-y-1/2 text-gold-400" aria-label="بحث">
+                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Mobile Theme Switcher -->
+            <div class="mt-3 p-2 rounded-xl bg-emerald-900/60 border border-gold-500/20 flex items-center justify-between text-xs">
+                <span class="text-gold-300 font-semibold text-[11px] flex items-center gap-1.5">
+                    <i class="fa-solid fa-palette text-xs"></i>
+                    <span>مظهر الموقع:</span>
+                </span>
+                <div class="inline-flex items-center rounded-lg bg-black/40 p-0.5 border border-gold-500/20 text-[11px]">
+                    <a href="{{ route('theme.switch', 'almoneer-emerald') }}" 
+                       class="px-2 py-0.5 rounded-md transition flex items-center gap-1 {{ $activeTheme === 'almoneer-emerald' ? 'bg-emerald-800 text-gold-300 font-bold' : 'text-slate-400 hover:text-white' }}">
+                        <span>الزمردي</span>
+                    </a>
+                    <a href="{{ route('theme.switch', 'almoneer-turquoise') }}" 
+                       class="px-2 py-0.5 rounded-md transition flex items-center gap-1 {{ $activeTheme === 'almoneer-turquoise' ? 'bg-[#0d8a9e] text-white font-bold' : 'text-slate-400 hover:text-white' }}">
+                        <span>الفيروزي</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-3 space-y-2 mobile-menu-links">
                 {!! $globalVerticalMenu !!}
             </div>
         </div>
@@ -400,7 +533,8 @@
                 
                 <!-- Col 1: About & Scholarly Note -->
                 <div class="space-y-4">
-                    <h4 class="font-scholarly text-xl text-gold-300 font-bold">{{ $siteSettings['site.title'] ?? 'شبكة سماحة العلامة السيد منير الخباز' }}</h4>
+                    <h4 class="font-scholarly text-xl text-gold-300 font-bold">{{ $siteSettings['site.title'] ?? 'سماحة السيد منير الخباز' }}</h4>
+                    <p class="text-xs text-gold-400/90 font-medium">{{ $siteSettings['site.subtitle'] ?? 'مركز النتاج الفقهي والفكري والنشاط التبليغي' }}</p>
                     <p class="text-sm leading-relaxed text-slate-300 font-light">
                         البوابة العامة لنشر المحاضرات الفكرية، ديوان الشعر، المؤلفات، والندوات، مع الربط المباشر ببوابة الدروس الحوزوية والبحث الخارج.
                     </p>
@@ -416,8 +550,7 @@
                     <ul class="space-y-2 text-xs text-slate-300">
                         <li><a href="{{ route('home') }}" class="hover:text-gold-300 transition">الصفحة الرئيسية</a></li>
                         <li><a href="{{ route('bio') }}" class="hover:text-gold-300 transition">نبذة عن حياته الشريفة</a></li>
-                        <li><a href="{{ route('audios.index') }}" class="hover:text-gold-300 transition">المكتبة الصوتية ومحاضرات عاشوراء</a></li>
-                        <li><a href="{{ route('videos.index') }}" class="hover:text-gold-300 transition">المكتبة المرئية والمقاطع القصيرة</a></li>
+                        <li><a href="{{ route('lectures.index') }}" class="text-gold-400 font-bold hover:underline transition">أرشيف المحاضرات والمواسم (مرئية • صوتية • مكتوبة)</a></li>
                         <li><a href="{{ route('poems.index') }}" class="hover:text-gold-300 transition">ديوان الشعر والقصائد</a></li>
                         <li><a href="{{ route('books.index') }}" class="hover:text-gold-300 transition">المؤلفات والكتب الإلكترونية</a></li>
                     </ul>
@@ -439,19 +572,28 @@
                 <!-- Col 4: Official Accounts -->
                 <div class="space-y-4">
                     <h4 class="text-white font-bold text-sm border-r-2 border-gold-400 pr-2">الحسابات الرسمية المعتمدة</h4>
-                    <p class="text-xs text-slate-400">تابعوا جديد المحاضرات والمقاطع اليومية عبر الحسابات الرسمية الموثقة:</p>
-                    <div class="flex items-center gap-2">
+                    <p class="text-xs text-slate-400 leading-relaxed">تابعوا جديد المحاضرات والمقاطع اليومية عبر الحسابات الرسمية الموثقة:</p>
+                    <div class="flex flex-wrap items-center gap-2 pt-1">
                         @if(!empty($siteSettings['social.youtube']))
-                        <a href="{{ $siteSettings['social.youtube'] }}" target="_blank" class="w-9 h-9 rounded-xl bg-emerald-900 hover:bg-red-600 text-white flex items-center justify-center transition shadow-md"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="{{ $siteSettings['social.youtube'] }}" target="_blank" class="w-9 h-9 rounded-xl bg-emerald-900 hover:bg-red-600 text-white flex items-center justify-center transition shadow-md hover:scale-105" title="قناة اليوتيوب الرسمية"><i class="fa-brands fa-youtube"></i></a>
                         @endif
                         @if(!empty($siteSettings['social.instagram']))
-                        <a href="{{ $siteSettings['social.instagram'] }}" target="_blank" class="w-9 h-9 rounded-xl bg-emerald-900 hover:bg-pink-600 text-white flex items-center justify-center transition shadow-md"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="{{ $siteSettings['social.instagram'] }}" target="_blank" class="w-9 h-9 rounded-xl bg-emerald-900 hover:bg-gradient-to-tr hover:from-amber-600 hover:via-pink-600 hover:to-purple-600 text-white flex items-center justify-center transition shadow-md hover:scale-105" title="انستغرام"><i class="fa-brands fa-instagram"></i></a>
                         @endif
-                        @if(!empty($siteSettings['social.tiktok']))
-                        <a href="{{ $siteSettings['social.tiktok'] }}" target="_blank" class="w-9 h-9 rounded-xl bg-emerald-900 hover:bg-black text-white flex items-center justify-center transition shadow-md"><i class="fa-brands fa-tiktok"></i></a>
+                        @if(!empty($siteSettings['social.facebook']))
+                        <a href="{{ $siteSettings['social.facebook'] }}" target="_blank" class="w-9 h-9 rounded-xl bg-emerald-900 hover:bg-blue-600 text-white flex items-center justify-center transition shadow-md hover:scale-105" title="فيسبوك"><i class="fa-brands fa-facebook-f"></i></a>
                         @endif
                         @if(!empty($siteSettings['social.twitter']))
-                        <a href="{{ $siteSettings['social.twitter'] }}" target="_blank" class="w-9 h-9 rounded-xl bg-emerald-900 hover:bg-sky-500 text-white flex items-center justify-center transition shadow-md"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="{{ $siteSettings['social.twitter'] }}" target="_blank" class="w-9 h-9 rounded-xl bg-emerald-900 hover:bg-sky-500 text-white flex items-center justify-center transition shadow-md hover:scale-105" title="منصة إكس (تويتر)"><i class="fa-brands fa-x-twitter"></i></a>
+                        @endif
+                        @if(!empty($siteSettings['social.tiktok']))
+                        <a href="{{ $siteSettings['social.tiktok'] }}" target="_blank" class="w-9 h-9 rounded-xl bg-emerald-900 hover:bg-black text-white flex items-center justify-center transition shadow-md hover:scale-105" title="تيك توك"><i class="fa-brands fa-tiktok"></i></a>
+                        @endif
+                        @if(!empty($siteSettings['social.snapchat']))
+                        <a href="{{ $siteSettings['social.snapchat'] }}" target="_blank" class="w-9 h-9 rounded-xl bg-emerald-900 hover:bg-[#FFFC00] hover:text-black text-white flex items-center justify-center transition shadow-md hover:scale-105" title="سناب شات"><i class="fa-brands fa-snapchat text-base"></i></a>
+                        @endif
+                        @if(!empty($siteSettings['social.telegram']))
+                        <a href="{{ $siteSettings['social.telegram'] }}" target="_blank" class="w-9 h-9 rounded-xl bg-emerald-900 hover:bg-sky-600 text-white flex items-center justify-center transition shadow-md hover:scale-105" title="قناة تيليجرام"><i class="fa-brands fa-telegram"></i></a>
                         @endif
                     </div>
                 </div>
@@ -459,7 +601,7 @@
 
             <!-- Bottom Copyright -->
             <div class="pt-8 border-t border-emerald-900/80 flex flex-wrap justify-between items-center gap-4 text-xs text-slate-400">
-                <p>© {{ date('Y') }} شبكة سماحة العلامة السيد منير الخباز - جميع الحقوق محفوظة.</p>
+                <p>© {{ date('Y') }} {{ $siteSettings['site.title'] ?? 'سماحة السيد منير الخباز' }} - جميع الحقوق محفوظة.</p>
                 <div class="flex items-center gap-4">
                     <a href="{{ route('home') }}" class="hover:text-gold-300">الرئيسية</a>
                     <span>•</span>
@@ -506,13 +648,13 @@
             <i class="fa-solid fa-house text-base"></i>
             <span class="text-[10px] mt-1">الرئيسية</span>
         </a>
-        <a href="{{ route('audios.index') }}" class="flex flex-col items-center text-xs {{ request()->routeIs('audios.*') ? 'text-gold-400 font-bold' : 'text-slate-400 hover:text-slate-200' }}">
-            <i class="fa-solid fa-headphones text-base"></i>
-            <span class="text-[10px] mt-1">الصوتيات</span>
+        <a href="{{ route('lectures.index') }}" class="flex flex-col items-center text-xs {{ request()->routeIs('lectures.*') ? 'text-gold-400 font-bold' : 'text-slate-400 hover:text-slate-200' }}">
+            <i class="fa-solid fa-layer-group text-base"></i>
+            <span class="text-[10px] mt-1">المحاضرات</span>
         </a>
-        <a href="{{ route('videos.index') }}" class="flex flex-col items-center text-xs {{ request()->routeIs('videos.*') ? 'text-gold-400 font-bold' : 'text-slate-400 hover:text-slate-200' }}">
-            <i class="fa-solid fa-video text-base"></i>
-            <span class="text-[10px] mt-1">المرئيات</span>
+        <a href="{{ route('news.index') }}" class="flex flex-col items-center text-xs {{ request()->routeIs('news.*') ? 'text-gold-400 font-bold' : 'text-slate-400 hover:text-slate-200' }}">
+            <i class="fa-solid fa-newspaper text-base"></i>
+            <span class="text-[10px] mt-1">الأخبار</span>
         </a>
         <a href="{{ route('books.index') }}" class="flex flex-col items-center text-xs {{ request()->routeIs('books.*') ? 'text-gold-400 font-bold' : 'text-slate-400 hover:text-slate-200' }}">
             <i class="fa-solid fa-book-bookmark text-base"></i>

@@ -1,0 +1,16 @@
+{
+    "name": "almoneer-turquoise",
+    "title": "الثيم الفيروزي المشرق",
+    "author": "شبكة المنير",
+    "version": "2.0.0",
+    "description": "ثيم مشرق وعصري يرتكز على زرقة الفيروز النضرة (Turquoise) مع تدرجات لونية زاهية وزخارف إسلامية ولمسات ذهبية فاخرة",
+    "colors": {
+        "primary": "#0d8a9e",
+        "secondary": "#075866",
+        "dark": "#043640",
+        "accent": "#d4aa48",
+        "accent_bright": "#22d3ee",
+        "surface": "#f0f9fa",
+        "text": "#0f172a"
+    }
+}

@@ -50,6 +50,11 @@ class AppServiceProvider extends ServiceProvider
                 return $siteSettings['site.theme'] ?? 'almoneer-emerald';
             });
 
+            // Allow session-based live preview override
+            if (session()->has('site_theme_preview')) {
+                $activeTheme = session('site_theme_preview');
+            }
+
             $hawzaPortalUrl = env('HAWZA_PORTAL_URL', 'https://almoneer-droos.onrender.com');
 
             $view->with([

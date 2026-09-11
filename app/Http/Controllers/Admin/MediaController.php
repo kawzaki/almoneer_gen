@@ -27,7 +27,8 @@ class MediaController extends Controller
         $request->validate([
             'title'     => 'required|string|max:255',
             'type'      => 'required|in:audio,video,short',
-            'media_url' => 'required|string',
+            'media_url' => 'nullable|string',
+            'tags'      => 'nullable|string',
         ]);
 
         $slug = Str::slug($request->title, '-', null) ?: 'media-' . time();
@@ -35,19 +36,53 @@ class MediaController extends Controller
             $slug .= '-' . time();
         }
 
+        // Infer Hijri year & season if not explicitly set
+        $sy = $request->season_year ?? '';
+        $title = $request->title ?? '';
+        $year = '1448';
+        if (preg_match('/(14\d\d)/', $sy, $m) || preg_match('/(14\d\d)/', $title, $m)) {
+            $year = $m[1];
+        }
+
+        $season = 'محاضرات عامة';
+        $seasonSlug = 'general';
+        if (mb_strpos($sy, 'محرم') !== false || mb_strpos($sy, 'عاشوراء') !== false || mb_strpos($title, 'عاشوراء') !== false) {
+            $season = 'محرم الحرام';
+            $seasonSlug = 'muharram';
+        } elseif (mb_strpos($sy, 'صفر') !== false || mb_strpos($title, 'الأربعين') !== false) {
+            $season = 'صفر الخير';
+            $seasonSlug = 'safar';
+        } elseif (mb_strpos($sy, 'رمضان') !== false) {
+            $season = 'شهر رمضان';
+            $seasonSlug = 'ramadan';
+        } elseif (mb_strpos($sy, 'فاطم') !== false) {
+            $season = 'الأيام الفاطمية';
+            $seasonSlug = 'fatimiya';
+        }
+
+        $num = null;
+        if (preg_match('/14\d\d-\d\d-(\d+)/', $title, $m)) {
+            $num = (int)$m[1];
+        }
+
         MediaItem::create([
-            'title'       => $request->title,
-            'slug'        => $slug,
-            'category_id' => $request->category_id,
-            'type'        => $request->type,
-            'media_url'   => $request->media_url,
-            'thumbnail'   => $request->thumbnail,
-            'duration'    => $request->duration,
-            'season_year' => $request->season_year,
-            'description' => $request->description,
-            'transcript'  => $request->transcript,
-            'is_featured' => $request->boolean('is_featured'),
-            'is_active'   => $request->boolean('is_active', true),
+            'title'          => $request->title,
+            'slug'           => $slug,
+            'category_id'    => $request->category_id,
+            'type'           => $request->type,
+            'media_url'      => $request->media_url,
+            'thumbnail'      => $request->thumbnail,
+            'duration'       => $request->duration,
+            'season_year'    => $request->season_year,
+            'hijri_year'     => $year,
+            'season'         => $season,
+            'season_slug'    => $seasonSlug,
+            'lecture_number' => $num,
+            'description'    => $request->description,
+            'tags'           => $request->tags,
+            'transcript'     => $request->transcript,
+            'is_featured'    => $request->boolean('is_featured'),
+            'is_active'      => $request->boolean('is_active', true),
         ]);
 
         return redirect()->route('admin.media.index')->with('success', 'تم حفظ المادة الإعلامية بنجاح!');
@@ -64,10 +99,11 @@ class MediaController extends Controller
         $request->validate([
             'title'     => 'required|string|max:255',
             'type'      => 'required|in:audio,video,short',
-            'media_url' => 'required|string',
+            'media_url' => 'nullable|string',
+            'tags'      => 'nullable|string',
         ]);
 
-        $medium->update([
+        $updateData = [
             'title'       => $request->title,
             'category_id' => $request->category_id,
             'type'        => $request->type,
@@ -76,10 +112,26 @@ class MediaController extends Controller
             'duration'    => $request->duration,
             'season_year' => $request->season_year,
             'description' => $request->description,
+            'tags'        => $request->tags,
             'transcript'  => $request->transcript,
             'is_featured' => $request->boolean('is_featured'),
             'is_active'   => $request->boolean('is_active', true),
-        ]);
+        ];
+
+        // Update season metadata if year or season not set yet
+        if (empty($medium->hijri_year) || empty($medium->season_slug)) {
+            $sy = $request->season_year ?? '';
+            $title = $request->title ?? '';
+            if (preg_match('/(14\d\d)/', $sy, $m) || preg_match('/(14\d\d)/', $title, $m)) {
+                $updateData['hijri_year'] = $m[1];
+            }
+            if (mb_strpos($sy, 'محرم') !== false || mb_strpos($title, 'عاشوراء') !== false) {
+                $updateData['season'] = 'محرم الحرام';
+                $updateData['season_slug'] = 'muharram';
+            }
+        }
+
+        $medium->update($updateData);
 
         return redirect()->route('admin.media.index')->with('success', 'تم تحديث المادة الإعلامية بنجاح!');
     }

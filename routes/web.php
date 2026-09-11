@@ -12,6 +12,8 @@ use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\InquiryController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SocialHubController;
+use App\Http\Controllers\LectureController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Auth\LoginController;
 
 // =========================================================================
@@ -19,14 +21,20 @@ use App\Http\Controllers\Auth\LoginController;
 // =========================================================================
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/bio', [BioController::class, 'index'])->name('bio');
+Route::get('/search', [SearchController::class, 'index'])->name('search');
 
-// الصوتيات (Audios)
-Route::get('/audios', [AudioController::class, 'index'])->name('audios.index');
-Route::get('/audios/{slug}', [AudioController::class, 'show'])->name('audios.show');
+// المحاضرات والمواسم السنوية (Lectures & Seasonal Archives)
+Route::get('/lectures', [LectureController::class, 'index'])->name('lectures.index');
+Route::get('/lectures/{year}', [LectureController::class, 'year'])->where('year', '[0-9]{4}')->name('lectures.year');
+Route::get('/lectures/{year}/{season}', [LectureController::class, 'season'])->where('year', '[0-9]{4}')->name('lectures.season');
+Route::get('/lectures/{year}/{season}/{slug}', [LectureController::class, 'show'])->where('year', '[0-9]{4}')->name('lectures.show');
+Route::get('/lectures/{slug}', [LectureController::class, 'showBySlug'])->name('lectures.single');
 
-// المرئيات (Videos & Shorts)
-Route::get('/videos', [VideoController::class, 'index'])->name('videos.index');
-Route::get('/videos/{slug}', [VideoController::class, 'show'])->name('videos.show');
+// توافق المسارات القديمة وتوجيهها تلقائياً للمحاضرات (Backwards Compatibility)
+Route::get('/videos', fn() => redirect()->route('lectures.index'))->name('videos.index');
+Route::get('/videos/{slug}', fn($slug) => redirect()->route('lectures.single', ['slug' => $slug]))->name('videos.show');
+Route::get('/audios', fn() => redirect()->route('lectures.index', ['format' => 'audio']))->name('audios.index');
+Route::get('/audios/{slug}', fn($slug) => redirect()->route('lectures.single', ['slug' => $slug]))->name('audios.show');
 
 // الشعر والقصائد (Poetry)
 Route::get('/poems', [PoemController::class, 'index'])->name('poems.index');
@@ -54,6 +62,16 @@ Route::get('/inquiries/track', [InquiryController::class, 'track'])->name('inqui
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 Route::get('/social-hub', [SocialHubController::class, 'index'])->name('social.index');
+
+// التبديل الفوري للثيم وتجربة القوالب (Theme Quick Switcher)
+Route::get('/theme/switch/{name}', function ($name) {
+    if (in_array($name, ['almoneer-emerald', 'almoneer-turquoise'])) {
+        session(['site_theme_preview' => $name]);
+    } elseif ($name === 'reset') {
+        session()->forget('site_theme_preview');
+    }
+    return redirect()->back();
+})->name('theme.switch');
 
 // =========================================================================
 // 2. تسجيل الدخول ولوحة التحكم (Auth & Admin Routes)
@@ -88,7 +106,8 @@ Route::prefix('admin')->middleware(['admin'])->name('admin.')->group(function ()
     Route::resource('inquiries', \App\Http\Controllers\Admin\InquiryController::class);
     Route::resource('wisdom', \App\Http\Controllers\Admin\WeeklyWisdomController::class);
     
-    // 5. الإعدادات والرقابة
+    // 5. أدوات التحرير والإعدادات والرقابة
+    Route::get('/vacum', function() { return view('admin.tools.vacum'); })->name('tools.vacum');
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
     Route::get('/audit-logs', [\App\Http\Controllers\Admin\AuditLogController::class, 'index'])->name('audit.index');

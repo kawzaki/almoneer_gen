@@ -33,8 +33,8 @@ class DatabaseSeeder extends Seeder
 
         // 2. Site Settings
         $settings = [
-            'site.title'           => 'شبكة سماحة العلامة السيد منير الخباز',
-            'site.subtitle'        => 'الموقع العام والفكري الرسمي',
+            'site.title'           => 'سماحة السيد منير الخباز',
+            'site.subtitle'        => 'مركز النتاج الفقهي والفكري والنشاط التبليغي',
             'site.hadith'          => 'لا يزال المرء عالماً ما طلب العلم، فإذا ظن أنه قد علم فقد جهل',
             'site.theme'           => 'almoneer-emerald',
             'site.email'           => 'info@almoneer.org',

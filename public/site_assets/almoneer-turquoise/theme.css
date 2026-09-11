@@ -1,0 +1,54 @@
+/**
+ * Almoneer Bright Turquoise Theme (الثيم الفيروزي المشرق)
+ * Network of His Eminence Sayyid Muneer Al-Khabbaz
+ */
+
+:root {
+    --theme-primary: #0d8a9e;
+    --theme-primary-hover: #0b7687;
+    --theme-secondary: #075866;
+    --theme-dark: #043640;
+    --theme-darker: #02242b;
+    --theme-turquoise-glow: rgba(34, 211, 238, 0.4);
+    --theme-gold-accent: #d4aa48;
+    --theme-surface: #f0f9fa;
+}
+
+/* Turquoise Theme Islamic Patterns */
+body.theme-almoneer-turquoise .islamic-pattern,
+.theme-almoneer-turquoise .islamic-pattern {
+    background-color: #074b57 !important;
+    background-image: 
+        url('/images/user-pattern-transparent.png'),
+        radial-gradient(circle at 85% 15%, rgba(246, 216, 126, 0.35) 0%, transparent 50%),
+        radial-gradient(circle at 15% 85%, rgba(34, 211, 238, 0.45) 0%, transparent 60%),
+        radial-gradient(circle at 50% 50%, rgba(13, 138, 158, 0.4) 0%, transparent 70%),
+        linear-gradient(135deg, #0e8b9f 0%, #074b57 45%, #032b33 100%) !important;
+    background-size: 580px auto, 100% 100%, 100% 100%, 100% 100%, 100% 100% !important;
+    background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat !important;
+}
+
+body.theme-almoneer-turquoise .header-islamic-pattern,
+.theme-almoneer-turquoise .header-islamic-pattern {
+    background-color: #085360 !important;
+    background-image: 
+        url('/images/user-pattern-transparent.png'),
+        radial-gradient(ellipse at 50% 0%, rgba(246, 216, 126, 0.3) 0%, rgba(8, 83, 96, 0) 75%),
+        radial-gradient(circle at 85% 85%, rgba(34, 211, 238, 0.3) 0%, transparent 50%),
+        linear-gradient(135deg, #0f879b 0%, #085360 50%, #04353f 100%) !important;
+    background-size: 440px auto, 100% 100%, 100% 100%, 100% 100% !important;
+    background-repeat: repeat, no-repeat, no-repeat !important;
+}
+
+/* Refined Turquoise Glass Card */
+body.theme-almoneer-turquoise .glass-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(13, 138, 158, 0.25);
+    box-shadow: 0 4px 20px -2px rgba(7, 88, 102, 0.08);
+}
+
+/* Turquoise glow accents for highlights */
+body.theme-almoneer-turquoise .turquoise-glow {
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.35);
+}

@@ -117,26 +117,54 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-2">
-                <a href="{{ asset($video->pdf_file ?? 'transcripts/1448-01-01-human-nature.pdf') }}" target="_blank" download class="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-gold-300 text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+            <div class="flex flex-wrap items-center gap-2">
+                <!-- Reading Controls -->
+                <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs text-slate-700">
+                    <button onclick="changeFontSize(1)" class="px-2 py-1 hover:bg-white rounded-lg transition font-bold" title="تكبير الخط">A+</button>
+                    <button onclick="changeFontSize(-1)" class="px-2 py-1 hover:bg-white rounded-lg transition font-bold" title="تصغير الخط">A-</button>
+                    <button onclick="copyTranscript()" id="copy-btn" class="px-2.5 py-1 hover:bg-white rounded-lg transition flex items-center gap-1 text-[11px]" title="نسخ النص بالكامل">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>نسخ</span>
+                    </button>
+                </div>
+
+                @if($video->pdf_file || true)
+                <a href="{{ asset($video->pdf_file ?? 'transcripts/1448-01-01-human-nature.pdf') }}" target="_blank" download class="px-3.5 py-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-gold-300 text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
                     <i class="fa-solid fa-file-pdf"></i>
                     <span>تحميل الملف النصي 📥</span>
                 </a>
+                @endif
             </div>
         </div>
 
-        <!-- Transcript Content Area -->
-        <div class="prose prose-slate max-w-none text-slate-800 text-sm sm:text-base leading-loose font-scholarly bg-amber-50/30 p-6 sm:p-8 rounded-2xl border border-amber-100/60 space-y-4">
-            @if($video->transcript)
-                {!! nl2br(e($video->transcript)) !!}
-            @else
-                <p>
-                    بسم الله الرحمن الرحيم<br>
-                    الحمد لله رب العالمين والصلاة والسلام على أشرف الأنبياء والمرسلين سيدنا محمد وآله الطاهرين.
-                </p>
-            @endif
+        <!-- Transcript Content Area (with Uthmanic Quranic Font) -->
+        <div id="transcript-body" class="prose prose-slate max-w-none text-slate-800 text-base sm:text-lg leading-loose font-scholarly bg-amber-50/20 p-6 sm:p-10 rounded-2xl border border-amber-100/60 transition-all">
+            {!! \App\Services\TranscriptFormatter::format($video->transcript) !!}
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        let currentFontSize = 18;
+        function changeFontSize(delta) {
+            const body = document.getElementById('transcript-body');
+            currentFontSize = Math.min(26, Math.max(14, currentFontSize + delta * 2));
+            body.style.fontSize = currentFontSize + 'px';
+        }
+
+        function copyTranscript() {
+            const text = document.getElementById('transcript-body').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById('copy-btn');
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check text-emerald-600"></i> تم النسخ!';
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                }, 2000);
+            });
+        }
+    </script>
+    @endpush
 
     <!-- Related Lectures -->
     @if($relatedVideos->count() > 0)

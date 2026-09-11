@@ -40,16 +40,22 @@
         <div class="bg-white rounded-2xl border {{ $theme->active ? 'border-2 border-gold-500 shadow-md' : 'border-slate-200' }} overflow-hidden flex flex-col justify-between">
             <div>
                 <!-- Mockup Preview Banner -->
-                <div class="h-36 bg-gradient-to-br from-emerald-950 to-emerald-900 p-4 flex flex-col justify-between text-white relative">
-                    <div class="flex justify-between items-start">
+                @php
+                    $isTurqTheme = ($theme->name === 'almoneer-turquoise');
+                @endphp
+                <div class="h-36 {{ $isTurqTheme ? 'bg-gradient-to-br from-[#043640] via-[#075866] to-[#0d8a9e]' : 'bg-gradient-to-br from-emerald-950 to-emerald-900' }} p-4 flex flex-col justify-between text-white relative overflow-hidden">
+                    <!-- Subtle decorative pattern circle -->
+                    <div class="absolute -left-6 -bottom-6 w-24 h-24 rounded-full {{ $isTurqTheme ? 'bg-[#22d3ee]/20' : 'bg-gold-500/20' }} blur-xl"></div>
+
+                    <div class="flex justify-between items-start relative z-10">
                         <span class="text-xs px-2.5 py-0.5 rounded-full bg-black/40 text-gold-300 font-mono">v{{ $theme->version }}</span>
                         @if($theme->active)
                         <span class="text-xs px-3 py-0.5 rounded-full bg-gold-500 text-emerald-950 font-bold shadow">نشط الآن</span>
                         @endif
                     </div>
-                    <div>
-                        <h4 class="font-bold text-lg text-gold-300">{{ $theme->title ?? $theme->name }}</h4>
-                        <p class="text-xs text-slate-300">{{ $theme->author ?? 'شبكة المنير' }}</p>
+                    <div class="relative z-10">
+                        <h4 class="font-bold text-lg {{ $isTurqTheme ? 'text-white' : 'text-gold-300' }}">{{ $theme->title ?? $theme->name }}</h4>
+                        <p class="text-xs text-slate-200">{{ $theme->author ?? 'شبكة المنير' }}</p>
                     </div>
                 </div>
 
@@ -58,12 +64,30 @@
                     <p class="text-xs text-slate-600 leading-relaxed min-h-[40px]">
                         {{ $theme->description ?? 'قالب مخصص مصمم لشبكة سماحة السيد منير الخباز.' }}
                     </p>
+
+                    @if(isset($theme->colors) && is_array($theme->colors))
+                    <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-[11px] font-semibold text-slate-400">لوحة الألوان:</span>
+                        <div class="flex items-center gap-1.5">
+                            @foreach($theme->colors as $cKey => $cVal)
+                                @if(is_string($cVal) && str_starts_with($cVal, '#'))
+                                <span class="w-4 h-4 rounded-full border border-slate-300 shadow-xs inline-block" style="background-color: {{ $cVal }}" title="{{ $cKey }}: {{ $cVal }}"></span>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
 
             <!-- Footer Actions -->
             <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-2">
                 @if(!$theme->active)
+                <a href="{{ route('theme.switch', $theme->name) }}" target="_blank" class="px-3 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-xl transition flex items-center gap-1" title="معاينة الثيم في نافذة جديدة">
+                    <i class="fa-solid fa-eye text-slate-500"></i>
+                    <span>معاينة</span>
+                </a>
+
                 <form action="{{ route('admin.themes.activate', $theme->name) }}" method="POST" class="flex-grow">
                     @csrf
                     <button type="submit" class="w-full py-2 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5">
@@ -80,10 +104,16 @@
                     </button>
                 </form>
                 @else
-                <span class="w-full text-center py-2 text-xs font-bold text-emerald-800 flex items-center justify-center gap-1.5">
-                    <i class="fa-solid fa-circle-check text-emerald-600"></i>
-                    <span>هذا هو الثيم المفعل للموقع</span>
-                </span>
+                <div class="w-full flex items-center justify-between">
+                    <a href="{{ url('/') }}" target="_blank" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-semibold rounded-xl transition flex items-center gap-1">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        <span>زيارة الموقع</span>
+                    </a>
+                    <span class="text-xs font-bold text-emerald-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                        <span>هذا هو الثيم المفعل حالياً</span>
+                    </span>
+                </div>
                 @endif
             </div>
         </div>

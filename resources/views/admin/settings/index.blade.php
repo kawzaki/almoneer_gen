@@ -22,11 +22,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">عنوان الموقع الرئيسي:</label>
-                    <input type="text" name="site.title" value="{{ $settings['site.title'] ?? 'شبكة سماحة العلامة السيد منير الخباز' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+                    <input type="text" name="site.title" value="{{ $settings['site.title'] ?? 'سماحة السيد منير الخباز' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">الوصف المختصر (Subtitle):</label>
-                    <input type="text" name="site.subtitle" value="{{ $settings['site.subtitle'] ?? 'الموقع العام والفكري الرسمي' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+                    <input type="text" name="site.subtitle" value="{{ $settings['site.subtitle'] ?? 'مركز النتاج الفقهي والفكري والنشاط التبليغي' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
                 </div>
             </div>
 
@@ -95,12 +95,24 @@
                     <input type="text" name="social.instagram" value="{{ $settings['social.instagram'] ?? '' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50" dir="ltr">
                 </div>
                 <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1"><i class="fa-brands fa-facebook text-blue-600"></i> فيسبوك (Facebook):</label>
+                    <input type="text" name="social.facebook" value="{{ $settings['social.facebook'] ?? '' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50" dir="ltr">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1"><i class="fa-brands fa-snapchat text-amber-500"></i> سناب شات (Snapchat):</label>
+                    <input type="text" name="social.snapchat" value="{{ $settings['social.snapchat'] ?? '' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50" dir="ltr">
+                </div>
+                <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1"><i class="fa-brands fa-tiktok text-black"></i> تيك توك (TikTok):</label>
                     <input type="text" name="social.tiktok" value="{{ $settings['social.tiktok'] ?? '' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50" dir="ltr">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1"><i class="fa-brands fa-x-twitter text-slate-800"></i> منصة إكس (Twitter):</label>
                     <input type="text" name="social.twitter" value="{{ $settings['social.twitter'] ?? '' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50" dir="ltr">
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1"><i class="fa-brands fa-telegram text-sky-500"></i> تيليجرام (Telegram):</label>
+                    <input type="text" name="social.telegram" value="{{ $settings['social.telegram'] ?? '' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50" dir="ltr">
                 </div>
             </div>
         </div>

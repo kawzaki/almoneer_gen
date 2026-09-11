@@ -20,18 +20,24 @@ class MediaItem extends Model
         'thumbnail',
         'duration',
         'description',
+        'tags',
         'transcript',
         'pdf_file',
         'season_year',
+        'hijri_year',
+        'season',
+        'season_slug',
+        'lecture_number',
         'is_featured',
         'is_active',
         'views_count',
     ];
 
     protected $casts = [
-        'is_featured' => 'boolean',
-        'is_active'   => 'boolean',
-        'views_count' => 'integer',
+        'is_featured'     => 'boolean',
+        'is_active'       => 'boolean',
+        'views_count'     => 'integer',
+        'lecture_number'  => 'integer',
     ];
 
     public function category()
@@ -59,11 +65,71 @@ class MediaItem extends Model
         return $query->where('is_featured', true);
     }
 
+    public function scopeYear($query, $year)
+    {
+        return $query->where('hijri_year', $year);
+    }
+
+    public function scopeSeason($query, $seasonSlug)
+    {
+        return $query->where(function ($q) use ($seasonSlug) {
+            $q->where('season_slug', $seasonSlug)
+              ->orWhere('season', $seasonSlug);
+        });
+    }
+
+    public function scopeWithTag($query, $tag)
+    {
+        return $query->where('tags', 'like', "%{$tag}%");
+    }
+
+    public function getTagsListAttribute(): array
+    {
+        if (empty($this->tags)) {
+            return [];
+        }
+        $tags = preg_split('/[,،|]+/u', $this->tags);
+        return array_values(array_filter(array_map('trim', $tags)));
+    }
+
+    public function hasVideo(): bool
+    {
+        if (empty($this->media_url)) {
+            return false;
+        }
+        $url = trim($this->media_url);
+        return !in_array($url, ['#', 'pending', '', 'none']);
+    }
+
+    public function hasAudio(): bool
+    {
+        return !empty($this->soundcloud_url) || $this->type === 'audio';
+    }
+
+    public function hasTranscript(): bool
+    {
+        return !empty($this->transcript) || !empty($this->pdf_file);
+    }
+
     public function getYoutubeIdAttribute(): ?string
     {
+        if (empty($this->media_url)) {
+            return null;
+        }
         if (preg_match('/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/', $this->media_url, $matches)) {
             return $matches[1];
         }
         return null;
+    }
+
+    public function getDisplayThumbnailAttribute(): string
+    {
+        if (!empty($this->thumbnail)) {
+            return asset($this->thumbnail);
+        }
+        if ($this->youtube_id) {
+            return 'https://img.youtube.com/vi/' . $this->youtube_id . '/hqdefault.jpg';
+        }
+        return asset('images/video-pending-placeholder.svg');
     }
 }

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'شبكة سماحة العلامة السيد منير الخباز | الموقع العام والفكري')
+@section('title', 'سماحة السيد منير الخباز | الموقع الرسمي')
 
 @section('content')
 
@@ -17,11 +17,11 @@
                     <span>الموسم العاشورائي ١٤٤٧هـ - المنظومة الأخلاقية</span>
                 </div>
 
-                <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-scholarly leading-tight tracking-wide text-white">
+                <h1 class="text-xl sm:text-2xl md:text-3xl font-bold font-scholarly leading-snug tracking-wide text-white">
                     @if($featuredArticle)
                         {{ $featuredArticle->title }}
                     @else
-                        شبكة سماحة العلامة السيد منير الخباز
+                        سماحة السيد منير الخباز
                     @endif
                 </h1>
 
@@ -41,14 +41,6 @@
                             <span>قراءة تفاصيل الخبر</span>
                         </a>
                     @endif
-
-                    @if($featuredAudios->count() > 0)
-                        <button onclick="playGlobalAudio('{{ $featuredAudios->first()->media_url }}', '{{ addslashes($featuredAudios->first()->title) }}')" class="px-5 py-3 rounded-xl bg-emerald-800/90 hover:bg-emerald-700 text-gold-200 border border-gold-400/40 text-sm font-semibold shadow-lg transition-all flex items-center gap-2">
-                            <i class="fa-solid fa-circle-play text-gold-400 text-base"></i>
-                            <span>استماع صوتي ({{ $featuredAudios->first()->duration ?? '40:00' }})</span>
-                        </button>
-                    @endif
-
                 </div>
 
             </div>
@@ -148,13 +140,9 @@
                 <i class="fa-brands fa-youtube"></i>
                 <span>قناة يوتيوب ↗</span>
             </a>
-            <a href="{{ route('videos.index') }}" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition flex items-center gap-1.5">
-                <i class="fa-solid fa-video"></i>
-                <span>أرشيف المرئيات</span>
-            </a>
-            <a href="{{ route('audios.index') }}" class="px-4 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 text-xs font-bold transition flex items-center gap-1.5">
-                <i class="fa-solid fa-microphone"></i>
-                <span>المكتبة الصوتية</span>
+            <a href="{{ route('lectures.index') }}" class="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+                <i class="fa-solid fa-layer-group text-gold-400"></i>
+                <span>أرشيف المحاضرات والمواسم</span>
             </a>
         </div>
     </div>
