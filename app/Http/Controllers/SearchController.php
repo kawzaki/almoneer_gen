@@ -57,7 +57,8 @@ class SearchController extends Controller
                 ->where(function ($query) use ($term) {
                     $query->where('title', 'like', "%{$term}%")
                           ->orWhere('summary', 'like', "%{$term}%")
-                          ->orWhere('content', 'like', "%{$term}%");
+                          ->orWhere('content', 'like', "%{$term}%")
+                          ->orWhere('tags', 'like', "%{$term}%");
                 })
                 ->latest()
                 ->take(12)

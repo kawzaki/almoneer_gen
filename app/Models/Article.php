@@ -18,6 +18,7 @@ class Article extends Model
         'content',
         'image',
         'type',
+        'tags',
         'is_featured',
         'is_active',
         'views_count',
@@ -44,5 +45,18 @@ class Article extends Model
     public function scopeFeatured($query)
     {
         return $query->where('is_featured', true);
+    }
+
+    public function getTagsListAttribute(): array
+    {
+        if (empty($this->tags)) {
+            return [];
+        }
+        return array_values(array_filter(array_map('trim', preg_split('/[,،|]+/u', $this->tags))));
+    }
+
+    public function scopeWithTag($query, $tag)
+    {
+        return $query->where('tags', 'like', '%' . $tag . '%');
     }
 }

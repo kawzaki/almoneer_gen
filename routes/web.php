@@ -97,7 +97,8 @@ Route::prefix('admin')->middleware(['admin'])->name('admin.')->group(function ()
     Route::post('/themes/upload', [\App\Http\Controllers\Admin\ThemeController::class, 'store'])->name('themes.store');
     Route::delete('/themes/{name}', [\App\Http\Controllers\Admin\ThemeController::class, 'destroy'])->name('themes.destroy');
 
-    // 4. إدارة المحتوى (Content Management)
+    // 4. إدارة المحتوى والتصنيفات (Content & Category Management)
+    Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
     Route::resource('articles', \App\Http\Controllers\Admin\ArticleController::class);
     Route::resource('media', \App\Http\Controllers\Admin\MediaController::class);
     Route::resource('poems', \App\Http\Controllers\Admin\PoemController::class);

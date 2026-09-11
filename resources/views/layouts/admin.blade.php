@@ -84,6 +84,11 @@
                 <span>الأخبار والنشاطات</span>
             </a>
 
+            <a href="{{ route('admin.categories.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.categories.*') ? 'bg-gold-500 text-emerald-950 font-bold shadow-sm' : 'text-slate-300 hover:bg-emerald-900' }}">
+                <i class="fa-solid fa-folder-tree w-5 text-center"></i>
+                <span>إدارة التصنيفات</span>
+            </a>
+
             <a href="{{ route('admin.media.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.media.*') ? 'bg-gold-500 text-emerald-950 font-bold shadow-sm' : 'text-slate-300 hover:bg-emerald-900' }}">
                 <i class="fa-solid fa-photo-film w-5 text-center"></i>
                 <span>الصوتيات والمرئيات</span>

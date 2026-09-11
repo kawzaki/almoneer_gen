@@ -9,10 +9,16 @@
             <h2 class="text-xl font-bold text-slate-800">إدارة الأخبار والنشاطات والبيانات</h2>
             <p class="text-xs text-slate-500 mt-1">إضافة وتحرير الأخبار وتغطيات المؤتمرات والجولات التبليغية.</p>
         </div>
-        <a href="{{ route('admin.articles.create') }}" class="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-2">
-            <i class="fa-solid fa-plus"></i>
-            <span>إضافة خبر جديد</span>
-        </a>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('admin.categories.index', ['module' => 'article']) }}" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition flex items-center gap-2 border border-slate-200">
+                <i class="fa-solid fa-folder-tree text-gold-600"></i>
+                <span>إدارة التصنيفات</span>
+            </a>
+            <a href="{{ route('admin.articles.create') }}" class="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-2">
+                <i class="fa-solid fa-plus"></i>
+                <span>إضافة خبر جديد</span>
+            </a>
+        </div>
     </div>
 
     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
