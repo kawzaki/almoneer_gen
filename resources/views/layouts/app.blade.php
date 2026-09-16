@@ -613,32 +613,63 @@
         </div>
     </footer>
 
-    <!-- Persistent Floating Audio Player -->
-    <div id="global-audio-player" class="fixed bottom-0 left-0 right-0 z-40 bg-emerald-950/95 text-white border-t border-gold-500/40 backdrop-blur-md shadow-2xl p-3 transform translate-y-full transition-transform">
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
-            <div class="flex items-center gap-3 min-w-0">
-                <button id="player-play-btn" onclick="togglePlay()" class="w-10 h-10 rounded-full bg-gradient-to-r from-gold-400 to-gold-600 text-emerald-950 flex items-center justify-center text-lg font-bold shadow-md hover:scale-105 transition flex-shrink-0">
-                    <i id="player-icon" class="fa-solid fa-play"></i>
-                </button>
-                <div class="min-w-0">
-                    <p id="player-title" class="text-xs sm:text-sm font-bold text-gold-200 truncate">عنوان المادة الصوتية</p>
-                    <p id="player-time" class="text-[11px] text-slate-400">00:00 / 00:00</p>
+    <!-- Persistent Detachable Floating Audio Player -->
+    <div id="global-audio-player" class="fixed bottom-14 lg:bottom-0 left-0 right-0 z-50 bg-emerald-950/95 text-white border-t border-gold-500/40 backdrop-blur-md shadow-2xl p-3 transform translate-y-[150%] transition-transform duration-300">
+        <div class="max-w-7xl mx-auto flex flex-col gap-2">
+            <!-- Main Control Bar -->
+            <div class="flex items-center justify-between gap-3">
+                
+                <!-- Left: Play/Pause/Icon & Track Info -->
+                <div class="flex items-center gap-3 min-w-0 flex-1">
+                    <button id="player-play-btn" onclick="togglePlay()" class="w-10 h-10 rounded-full bg-gradient-to-r from-gold-400 to-gold-600 text-emerald-950 flex items-center justify-center text-lg font-bold shadow-md hover:scale-105 transition flex-shrink-0">
+                        <i id="player-icon" class="fa-solid fa-play"></i>
+                    </button>
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2">
+                            <p id="player-title" class="text-xs sm:text-sm font-bold text-gold-200 truncate">عنوان المادة الصوتية</p>
+                            <span id="player-type-badge" class="hidden px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-300 border border-orange-500/30 text-[10px] font-bold">SoundCloud</span>
+                        </div>
+                        <p id="player-time" class="text-[11px] text-slate-400">00:00 / 00:00</p>
+                    </div>
+                </div>
+
+                <!-- Middle: Progress bar (Audio) or Notice (SoundCloud) -->
+                <div id="player-direct-progress" class="hidden md:flex flex-grow items-center gap-3 px-4 max-w-md">
+                    <input id="player-seek" type="range" min="0" max="100" value="0" oninput="seekAudio(this.value)" class="w-full h-1.5 bg-emerald-800 rounded-lg appearance-none cursor-pointer accent-gold-400">
+                </div>
+                <div id="player-sc-notice" class="hidden md:flex items-center gap-2 text-xs text-amber-300/80 px-2">
+                    <i class="fa-solid fa-headphones-simple text-amber-400"></i>
+                    <span>المشغل العائم مستمر أثناء تصفح الموقع</span>
+                </div>
+
+                <!-- Right Controls: Speed, Pop-out, Toggle Drawer, Close -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <button onclick="changeSpeed()" id="speed-btn" class="px-2 py-1 bg-emerald-800 text-[11px] font-bold rounded text-gold-300 hover:bg-emerald-700">1.0x</button>
+                    
+                    <!-- Popout Mini Window Button -->
+                    <button type="button" onclick="openGlobalPopout()" class="px-2.5 py-1 bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 text-xs font-semibold rounded-lg border border-gold-500/40 flex items-center gap-1.5 transition" title="فتح نافذة مشغل مستقلة تستمر أثناء تصفحك لكافة الصفحات">
+                        <i class="fa-solid fa-up-right-from-square text-[10px]"></i>
+                        <span class="hidden sm:inline">نافذة مصغرة</span>
+                    </button>
+
+                    <!-- Toggle SoundCloud Frame Drawer Button -->
+                    <button id="toggle-sc-drawer-btn" type="button" onclick="toggleSoundcloudDrawer()" class="hidden px-2 py-1 bg-emerald-800 text-xs text-slate-300 hover:text-white rounded-lg transition" title="إظهار / إخفاء واجهة المشغل">
+                        <i id="sc-drawer-icon" class="fa-solid fa-chevron-up"></i>
+                    </button>
+
+                    <!-- Close Player -->
+                    <button onclick="closeAudioPlayer()" class="text-slate-400 hover:text-white p-1 text-base transition" title="إغلاق المشغل">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
                 </div>
             </div>
 
-            <!-- Progress bar -->
-            <div class="hidden md:flex flex-grow items-center gap-3 px-6">
-                <input id="player-seek" type="range" min="0" max="100" value="0" oninput="seekAudio(this.value)" class="w-full h-1.5 bg-emerald-800 rounded-lg appearance-none cursor-pointer accent-gold-400">
-            </div>
-
-            <!-- Controls -->
-            <div class="flex items-center gap-3">
-                <button onclick="changeSpeed()" id="speed-btn" class="px-2 py-1 bg-emerald-800 text-[11px] font-bold rounded text-gold-300 hover:bg-emerald-700">1.0x</button>
-                <button onclick="closeAudioPlayer()" class="text-slate-400 hover:text-white p-1" title="إغلاق المشغل">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+            <!-- Expandable SoundCloud Frame Drawer -->
+            <div id="global-sc-drawer" class="hidden w-full rounded-xl overflow-hidden bg-black/60 border border-white/10 mt-1">
+                <div id="global-sc-frame-container" class="w-full h-[120px]"></div>
             </div>
         </div>
+
         <audio id="core-audio-element" ontimeupdate="updateAudioProgress()" onended="onAudioEnded()"></audio>
     </div>
 
@@ -673,35 +704,118 @@
             drawer.classList.toggle('hidden');
         }
 
-        // Global Floating Audio Player Logic
+        // Global Floating & Detachable Audio Player Logic
         const audio = document.getElementById('core-audio-element');
         const playerBar = document.getElementById('global-audio-player');
         const playBtn = document.getElementById('player-icon');
+        const playBtnContainer = document.getElementById('player-play-btn');
         const titleEl = document.getElementById('player-title');
         const timeEl = document.getElementById('player-time');
         const seekEl = document.getElementById('player-seek');
         const speedBtn = document.getElementById('speed-btn');
+        const typeBadge = document.getElementById('player-type-badge');
+        const directProgress = document.getElementById('player-direct-progress');
+        const scNotice = document.getElementById('player-sc-notice');
+        const scDrawer = document.getElementById('global-sc-drawer');
+        const scFrameContainer = document.getElementById('global-sc-frame-container');
+        const toggleScDrawerBtn = document.getElementById('toggle-sc-drawer-btn');
+        const scDrawerIcon = document.getElementById('sc-drawer-icon');
+
+        let currentGlobalTrack = {
+            url: null,
+            title: null,
+            type: 'audio'
+        };
 
         let speeds = [1.0, 1.25, 1.5, 2.0];
         let currentSpeedIndex = 0;
 
-        function playGlobalAudio(url, title) {
+        function playGlobalAudio(url, title, type) {
             if (!url) return;
-            audio.src = url;
-            titleEl.innerText = title || 'محاضرة صوتية';
-            audio.play();
-            playerBar.classList.remove('translate-y-full');
-            playBtn.className = 'fa-solid fa-pause';
+            
+            if (!type) {
+                type = (url.indexOf('soundcloud.com') !== -1) ? 'soundcloud' : 'audio';
+            }
+
+            currentGlobalTrack = {
+                url: url,
+                title: title || 'محاضرة صوتية',
+                type: type
+            };
+
+            // Save to sessionStorage for cross-page persistence
+            try {
+                sessionStorage.setItem('almoneer_audio_player_state', JSON.stringify({
+                    url: currentGlobalTrack.url,
+                    title: currentGlobalTrack.title,
+                    type: currentGlobalTrack.type,
+                    active: true
+                }));
+            } catch (e) {}
+
+            titleEl.innerText = currentGlobalTrack.title;
+            playerBar.classList.remove('translate-y-[150%]');
+
+            if (type === 'soundcloud') {
+                audio.pause();
+                audio.src = '';
+                typeBadge.classList.remove('hidden');
+                directProgress.classList.add('hidden');
+                scNotice.classList.remove('hidden');
+                speedBtn.classList.add('hidden');
+                toggleScDrawerBtn.classList.remove('hidden');
+                playBtnContainer.innerHTML = '<i class="fa-brands fa-soundcloud text-orange-500 text-lg"></i>';
+                playBtnContainer.onclick = toggleSoundcloudDrawer;
+                timeEl.innerText = 'بث صوتي عبر ساوندكلاود';
+
+                const scEmbedUrl = "https://w.soundcloud.com/player/?url=" + encodeURIComponent(url) + "&color=%230f4c5c&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false";
+                scFrameContainer.innerHTML = '<iframe width="100%" height="120" scrolling="no" frameborder="no" allow="autoplay" src="' + scEmbedUrl + '" class="w-full"></iframe>';
+                scDrawer.classList.remove('hidden');
+                scDrawerIcon.className = 'fa-solid fa-chevron-down';
+            } else {
+                typeBadge.classList.add('hidden');
+                directProgress.classList.remove('hidden');
+                scNotice.classList.add('hidden');
+                speedBtn.classList.remove('hidden');
+                toggleScDrawerBtn.classList.add('hidden');
+                scDrawer.classList.add('hidden');
+                scFrameContainer.innerHTML = '';
+                playBtnContainer.innerHTML = '<i id="player-icon" class="fa-solid fa-pause"></i>';
+                playBtnContainer.onclick = togglePlay;
+
+                audio.src = url;
+                audio.play().catch(() => {});
+            }
         }
 
         function togglePlay() {
             if (audio.paused) {
                 audio.play();
-                playBtn.className = 'fa-solid fa-pause';
+                const icon = document.getElementById('player-icon');
+                if (icon) icon.className = 'fa-solid fa-pause';
             } else {
                 audio.pause();
-                playBtn.className = 'fa-solid fa-play';
+                const icon = document.getElementById('player-icon');
+                if (icon) icon.className = 'fa-solid fa-play';
             }
+        }
+
+        function toggleSoundcloudDrawer() {
+            if (scDrawer.classList.contains('hidden')) {
+                scDrawer.classList.remove('hidden');
+                scDrawerIcon.className = 'fa-solid fa-chevron-down';
+            } else {
+                scDrawer.classList.add('hidden');
+                scDrawerIcon.className = 'fa-solid fa-chevron-up';
+            }
+        }
+
+        function openGlobalPopout() {
+            if (!currentGlobalTrack.url) return;
+            const popupUrl = "{{ route('player.popup') }}?url=" + encodeURIComponent(currentGlobalTrack.url) + 
+                             "&title=" + encodeURIComponent(currentGlobalTrack.title) + 
+                             "&type=" + currentGlobalTrack.type;
+            window.open(popupUrl, 'AlmoneerAudioPlayer', 'width=480,height=280,status=no,toolbar=no,menubar=no,location=no,resizable=yes');
         }
 
         function updateAudioProgress() {
@@ -724,12 +838,18 @@
         }
 
         function onAudioEnded() {
-            playBtn.className = 'fa-solid fa-play';
+            const icon = document.getElementById('player-icon');
+            if (icon) icon.className = 'fa-solid fa-play';
         }
 
         function closeAudioPlayer() {
             audio.pause();
-            playerBar.classList.add('translate-y-full');
+            audio.src = '';
+            scFrameContainer.innerHTML = '';
+            playerBar.classList.add('translate-y-[150%]');
+            try {
+                sessionStorage.removeItem('almoneer_audio_player_state');
+            } catch (e) {}
         }
 
         function formatTime(seconds) {
@@ -737,6 +857,19 @@
             const secs = Math.floor(seconds % 60);
             return (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
         }
+
+        // Restore player state if navigated to another page while playing
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                const saved = sessionStorage.getItem('almoneer_audio_player_state');
+                if (saved) {
+                    const state = JSON.parse(saved);
+                    if (state && state.active && state.url) {
+                        playGlobalAudio(state.url, state.title, state.type);
+                    }
+                }
+            } catch (e) {}
+        });
 
         // Active Navigation Highlighting
         document.addEventListener('DOMContentLoaded', function() {

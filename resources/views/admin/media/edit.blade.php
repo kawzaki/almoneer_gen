@@ -4,9 +4,29 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto space-y-6">
-    <div class="flex items-center justify-between">
-        <h2 class="text-xl font-bold text-slate-800">تعديل: {{ $item->title }}</h2>
-        <a href="{{ route('admin.media.index') }}" class="text-xs text-slate-500 hover:text-slate-800">← العودة للقائمة</a>
+    <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+            <h2 class="text-xl font-bold text-slate-800">تعديل: {{ $item->title }}</h2>
+            <div class="flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-slate-500 mt-1.5">
+                <span class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-800 px-2.5 py-1 rounded-lg border border-emerald-200/60">
+                    <i class="fa-regular fa-calendar-plus text-emerald-600"></i>
+                    <span>تاريخ الإضافة:</span>
+                    <strong class="font-mono text-slate-800">{{ $item->created_at ? $item->created_at->format('Y-m-d H:i') : 'غير محدد' }}</strong>
+                    @if($item->created_at)
+                    <span class="text-[10px] text-emerald-700">({{ $item->created_at->diffForHumans() }})</span>
+                    @endif
+                </span>
+                <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-900 px-2.5 py-1 rounded-lg border border-amber-200/60">
+                    <i class="fa-regular fa-clock text-amber-600"></i>
+                    <span>آخر تعديل:</span>
+                    <strong class="font-mono text-slate-800">{{ $item->updated_at ? $item->updated_at->format('Y-m-d H:i') : 'غير محدد' }}</strong>
+                    @if($item->updated_at)
+                    <span class="text-[10px] text-amber-800">({{ $item->updated_at->diffForHumans() }})</span>
+                    @endif
+                </span>
+            </div>
+        </div>
+        <a href="{{ route('admin.media.index') }}" class="text-xs text-slate-600 hover:text-slate-900 bg-white border border-slate-200 px-3.5 py-2 rounded-xl shadow-xs transition">← العودة للقائمة</a>
     </div>
 
     <form action="{{ route('admin.media.update', $item->id) }}" method="POST" class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">

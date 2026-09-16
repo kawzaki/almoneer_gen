@@ -63,6 +63,15 @@ Route::get('/contact', [ContactController::class, 'index'])->name('contact.index
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 Route::get('/social-hub', [SocialHubController::class, 'index'])->name('social.index');
 
+// مشغل الصوت المستقل المنبثق (Pop-out Mini Window Audio Player)
+Route::get('/player/popup', function (\Illuminate\Http\Request $request) {
+    return view('pages.player_popup', [
+        'url'   => $request->query('url'),
+        'title' => $request->query('title', 'التسجيل الصوتي للمحاضرة'),
+        'type'  => $request->query('type', 'soundcloud'),
+    ]);
+})->name('player.popup');
+
 // التبديل الفوري للثيم وتجربة القوالب (Theme Quick Switcher)
 Route::get('/theme/switch/{name}', function ($name) {
     if (in_array($name, ['almoneer-emerald', 'almoneer-turquoise'])) {

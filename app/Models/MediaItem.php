@@ -106,6 +106,32 @@ class MediaItem extends Model
         return !empty($this->soundcloud_url) || $this->type === 'audio';
     }
 
+    public function getEffectiveAudioUrlAttribute(): ?string
+    {
+        if (!empty($this->soundcloud_url)) {
+            return $this->soundcloud_url;
+        }
+        if ($this->type === 'audio' && !empty($this->media_url)) {
+            return $this->media_url;
+        }
+        return null;
+    }
+
+    public function getIsSoundcloudAttribute(): bool
+    {
+        $url = $this->effective_audio_url ?? '';
+        return str_contains($url, 'soundcloud.com');
+    }
+
+    public function getSoundcloudEmbedUrlAttribute(): ?string
+    {
+        if (!$this->is_soundcloud) {
+            return null;
+        }
+        $encoded = urlencode($this->effective_audio_url);
+        return "https://w.soundcloud.com/player/?url={$encoded}&color=%230f4c5c&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false";
+    }
+
     public function hasTranscript(): bool
     {
         return !empty($this->transcript) || !empty($this->pdf_file);

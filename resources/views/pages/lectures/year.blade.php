@@ -48,7 +48,7 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($seasons as $s)
-            <a href="{{ route('lectures.season', ['year' => $year, 'season' => $s->season_slug]) }}" 
+            <a href="{{ route('lectures.season', ['year' => $year, 'season' => $s->season_slug ?? 'general']) }}" 
                class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md hover:border-gold-400 transition flex items-center justify-between group">
                 <div class="space-y-1">
                     <div class="text-xs text-slate-400 font-bold">موسم سنوي</div>

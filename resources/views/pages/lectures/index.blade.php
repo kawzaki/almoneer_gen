@@ -52,7 +52,8 @@
                     <!-- Seasons List in this Year -->
                     <div class="space-y-2">
                         @foreach($seasons as $s)
-                        <a href="{{ route('lectures.season', ['year' => $yearNum, 'season' => $s->season_slug]) }}" 
+                        @if(!empty($s->season_slug))
+                        <a href="{{ route('lectures.season', ['year' => $yearNum, 'season' => $s->season_slug ?? 'general']) }}" 
                            class="flex items-center justify-between p-2.5 rounded-xl bg-emerald-900/60 hover:bg-gold-500 hover:text-emerald-950 transition group/season border border-emerald-800/40 text-xs">
                             <span class="font-bold flex items-center gap-2">
                                 <i class="fa-solid fa-chevron-left text-[10px] text-gold-400 group-hover/season:text-emerald-950 transition"></i>

@@ -41,10 +41,12 @@
             <div class="text-[11px] text-gold-300 font-bold px-1">مواسم أخرى في سنة {{ $year }} هـ:</div>
             <div class="flex flex-wrap gap-1.5">
                 @foreach($siblingSeasons as $sib)
-                <a href="{{ route('lectures.season', ['year' => $year, 'season' => $sib->season_slug]) }}" 
+                @if(!empty($sib->season_slug))
+                <a href="{{ route('lectures.season', ['year' => $year, 'season' => $sib->season_slug ?? 'general']) }}" 
                    class="px-2.5 py-1 rounded-lg text-xs {{ $sib->season_slug == $season ? 'bg-gold-500 text-emerald-950 font-bold' : 'bg-emerald-950/60 text-slate-300 hover:bg-emerald-800' }} transition">
                     {{ $sib->season }}
                 </a>
+                @endif
                 @endforeach
             </div>
         </div>

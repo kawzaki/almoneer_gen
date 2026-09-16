@@ -82,6 +82,8 @@ class LectureController extends Controller
         foreach ($years->take(3) as $yr) {
             $seasonsInYear = MediaItem::active()
                 ->where('hijri_year', $yr)
+                ->whereNotNull('season_slug')
+                ->where('season_slug', '!=', '')
                 ->select('season_slug', 'season')
                 ->selectRaw('count(*) as count')
                 ->groupBy('season_slug', 'season')
@@ -113,6 +115,8 @@ class LectureController extends Controller
 
         $seasons = MediaItem::active()
             ->where('hijri_year', $year)
+            ->whereNotNull('season_slug')
+            ->where('season_slug', '!=', '')
             ->select('season_slug', 'season')
             ->selectRaw('count(*) as lectures_count')
             ->groupBy('season_slug', 'season')
@@ -199,6 +203,8 @@ class LectureController extends Controller
         // Other seasons in same year for sidebar/tab navigation
         $siblingSeasons = MediaItem::active()
             ->where('hijri_year', $year)
+            ->whereNotNull('season_slug')
+            ->where('season_slug', '!=', '')
             ->select('season_slug', 'season')
             ->selectRaw('count(*) as count')
             ->groupBy('season_slug', 'season')

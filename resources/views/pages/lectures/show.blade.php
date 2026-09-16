@@ -26,22 +26,93 @@
             <video src="{{ $video->media_url }}" controls class="w-full h-full"></video>
         @else
             <!-- Placeholder for pending video -->
-            <div class="relative w-full h-full flex items-center justify-center">
+            <div class="relative w-full h-full flex items-center justify-center bg-slate-950">
                 <img src="{{ $video->thumbnail ? asset($video->thumbnail) : asset('images/video-pending-placeholder.svg') }}" 
                      alt="التسجيل المرئي قيد المعالجة" 
-                     class="w-full h-full object-cover">
-                @if($video->thumbnail)
-                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-6 sm:p-10 text-white space-y-2">
+                     class="w-full h-full object-cover opacity-60">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/30 flex flex-col justify-end p-6 sm:p-10 text-white space-y-3">
                     <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gold-500/20 text-gold-300 text-xs font-bold border border-gold-500/40 w-fit backdrop-blur-md">
                         <i class="fa-solid fa-hourglass-half text-gold-400"></i>
                         <span>التسجيل المرئي قيد المونتاج والإدراج قريباً</span>
                     </div>
-                    <p class="text-xs sm:text-sm text-slate-300">يمكنك الاستماع للتسجيل الصوتي أو قراءة التفريغ النصي الموثق أدناه.</p>
+                    <p class="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
+                        التسجيل المرئي قيد المعالجة والمونتاج. يمكنك الاستماع مباشرة للتسجيل الصوتي المدمج أدناه أو فصله لمشغل عائم للتصفح.
+                    </p>
+                    @if($video->hasAudio())
+                    <div class="pt-1 flex flex-wrap items-center gap-2.5">
+                        <button type="button" onclick="playLectureInlineAudio()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-emerald-950 font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg transition transform hover:scale-102 active:scale-98">
+                            <i class="fa-solid fa-circle-play text-base"></i>
+                            <span>استمع للتسجيل الصوتي الآن</span>
+                        </button>
+                        <button type="button" onclick="detachLectureAudio()" class="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-medium flex items-center gap-2 backdrop-blur-md border border-white/20 transition">
+                            <i class="fa-solid fa-clone text-amber-300"></i>
+                            <span>فصل المشغل (مشغل عائم للتصفح)</span>
+                        </button>
+                    </div>
+                    @endif
                 </div>
-                @endif
             </div>
         @endif
     </div>
+
+    <!-- Embedded In-Page Audio Player Card (Inline & Detachable) -->
+    @if($video->hasAudio())
+    <div id="lecture-audio-box" class="bg-gradient-to-r from-[#072b2f] via-slate-900 to-[#072b2f] rounded-3xl p-5 sm:p-6 text-white border border-gold-500/30 shadow-xl space-y-4 transition-all duration-300">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center text-lg shrink-0">
+                    <i class="fa-solid fa-headphones"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-sm sm:text-base text-gold-200">التسجيل الصوتي للمحاضرة</span>
+                        @if($video->is_soundcloud)
+                        <span class="px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-300 border border-orange-500/30 text-[10px] font-bold">SoundCloud</span>
+                        @endif
+                    </div>
+                    <p class="text-xs text-slate-400">استمع مباشرة على الموقع بدون مغادرة الصفحة</p>
+                </div>
+            </div>
+
+            <!-- Player Quick Actions -->
+            <div class="flex items-center gap-2">
+                <!-- Detach to Floating Bottom Bar -->
+                <button type="button" onclick="detachLectureAudio()" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs text-gold-300 border border-white/15 flex items-center gap-1.5 transition" title="فصل المشغل في شريط عائم سفلي أثناء تصفح الموقع">
+                    <i class="fa-solid fa-clone text-[11px]"></i>
+                    <span>فصل المشغل (مشغل عائم)</span>
+                </button>
+
+                <!-- Pop-out Mini Window -->
+                <button type="button" onclick="openLecturePopup()" class="px-3 py-1.5 rounded-xl bg-gold-500/20 hover:bg-gold-500/30 text-xs text-gold-300 border border-gold-500/40 flex items-center gap-1.5 transition" title="فتح نافذة مستقلة مصغرة تستمر أثناء تصفح أي صفحة">
+                    <i class="fa-solid fa-up-right-from-square text-[11px]"></i>
+                    <span class="hidden sm:inline">نافذة مستقلة</span>
+                </button>
+
+                @if($video->soundcloud_url)
+                <a href="{{ $video->soundcloud_url }}" target="_blank" rel="noopener noreferrer" class="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition" title="فتح في ساوندكلاود">
+                    <i class="fa-brands fa-soundcloud"></i>
+                </a>
+                @endif
+            </div>
+        </div>
+
+        <!-- Player Frame / Widget -->
+        <div id="inline-audio-player-frame" class="rounded-2xl overflow-hidden bg-black/40 border border-white/10 p-1">
+            @if($video->is_soundcloud)
+                <iframe id="sc-inline-widget" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" 
+                        src="{{ $video->soundcloud_embed_url }}" 
+                        class="w-full rounded-xl"></iframe>
+            @else
+                <div class="p-4 flex flex-col sm:flex-row items-center gap-4">
+                    <audio id="local-lecture-audio" controls class="w-full">
+                        <source src="{{ $video->effective_audio_url }}">
+                        متصفحك لا يدعم تشغيل الصوت المباشر.
+                    </audio>
+                </div>
+            @endif
+        </div>
+    </div>
+    @endif
 
     <!-- Metadata & Available Formats Hub -->
     <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
@@ -134,16 +205,43 @@
                 </div>
                 @endif
 
-                <!-- 2. Audio Recording -->
-                <a href="{{ $video->soundcloud_url ?? 'https://soundcloud.com/almoneerorg' }}" target="_blank" class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 hover:bg-amber-100/70 transition flex items-center gap-3 group">
-                    <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg shadow-sm shrink-0 group-hover:scale-105 transition">
-                        <i class="fa-solid fa-headphones"></i>
+                <!-- 2. Audio Recording (Inline Embedded & Detachable) -->
+                @if($video->hasAudio())
+                <div class="p-4 rounded-2xl bg-amber-50/80 border border-amber-200/90 flex flex-col justify-between gap-3 group">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg shadow-sm shrink-0 group-hover:scale-105 transition">
+                                <i class="fa-solid fa-headphones"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-xs text-slate-900 group-hover:text-amber-900 transition">التسجيل الصوتي</div>
+                                <div class="text-[11px] text-amber-800">مشغل مدمج بالموقع</div>
+                            </div>
+                        </div>
+                        <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold">متوفر</span>
+                    </div>
+                    <div class="flex items-center gap-2 pt-2 border-t border-amber-200/60 text-xs">
+                        <button type="button" onclick="playLectureInlineAudio()" class="flex-1 py-1.5 px-2.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold transition flex items-center justify-center gap-1.5 shadow-2xs">
+                            <i class="fa-solid fa-play text-[10px]"></i>
+                            <span>تشغيل بالموقع</span>
+                        </button>
+                        <button type="button" onclick="detachLectureAudio()" title="فصل المشغل في شريط عائم للتصفح" class="py-1.5 px-2.5 rounded-lg bg-white hover:bg-amber-100 border border-amber-300 text-amber-900 font-medium transition flex items-center gap-1">
+                            <i class="fa-solid fa-clone text-[10px]"></i>
+                            <span>مشغل عائم</span>
+                        </button>
+                    </div>
+                </div>
+                @else
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center gap-3 opacity-75">
+                    <div class="w-10 h-10 rounded-xl bg-slate-200 text-slate-500 flex items-center justify-center text-lg shadow-sm shrink-0">
+                        <i class="fa-solid fa-headphones-simple"></i>
                     </div>
                     <div>
-                        <div class="font-bold text-xs text-slate-900 group-hover:text-amber-900 transition">التسجيل الصوتي</div>
-                        <div class="text-[11px] text-amber-800">استمع للتسجيل الصوتي ↗</div>
+                        <div class="font-bold text-xs text-slate-700">التسجيل الصوتي (غير متوفر)</div>
+                        <div class="text-[11px] text-slate-500">جاري توفير التسجيل</div>
                     </div>
-                </a>
+                </div>
+                @endif
 
                 <!-- 3. Transcribed Document -->
                 <a href="#transcript-section" class="p-4 rounded-2xl bg-emerald-50/80 border border-emerald-200/80 hover:bg-emerald-100/80 transition flex items-center gap-3 group">
@@ -331,6 +429,46 @@
                 btn.innerHTML = originalHtml;
             }, 2500);
         });
+    }
+
+    // Lecture Audio Controls
+    const lectureAudioData = {
+        url: @json($video->effective_audio_url),
+        embedUrl: @json($video->soundcloud_embed_url),
+        title: @json($video->title),
+        isSoundcloud: @json($video->is_soundcloud ? true : false)
+    };
+
+    function playLectureInlineAudio() {
+        const box = document.getElementById('lecture-audio-box');
+        if (box) {
+            box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            box.classList.add('ring-4', 'ring-gold-400/50');
+            setTimeout(() => box.classList.remove('ring-4', 'ring-gold-400/50'), 1500);
+        }
+        const localAudio = document.getElementById('local-lecture-audio');
+        if (localAudio) {
+            localAudio.play();
+        }
+    }
+
+    function detachLectureAudio() {
+        if (!lectureAudioData.url) return;
+        if (typeof playGlobalAudio === 'function') {
+            playGlobalAudio(
+                lectureAudioData.url, 
+                lectureAudioData.title, 
+                lectureAudioData.isSoundcloud ? 'soundcloud' : 'audio'
+            );
+        }
+    }
+
+    function openLecturePopup() {
+        if (!lectureAudioData.url) return;
+        const popupUrl = "{{ route('player.popup') }}?url=" + encodeURIComponent(lectureAudioData.url) + 
+                         "&title=" + encodeURIComponent(lectureAudioData.title) + 
+                         "&type=" + (lectureAudioData.isSoundcloud ? 'soundcloud' : 'audio');
+        window.open(popupUrl, 'AlmoneerAudioPlayer', 'width=480,height=280,status=no,toolbar=no,menubar=no,location=no,resizable=yes');
     }
 </script>
 @endpush
