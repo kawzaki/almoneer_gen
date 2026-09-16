@@ -63,6 +63,7 @@
                                 {{ $s->count }} مادة
                             </span>
                         </a>
+                        @endif
                         @endforeach
                     </div>
                 </div>
