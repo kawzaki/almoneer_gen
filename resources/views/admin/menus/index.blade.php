@@ -164,28 +164,163 @@
         const vUl = document.querySelector('#vertical-menu-builder ul') || document.querySelector('#vertical-menu-builder');
 
         if (hUl) {
-            new Sortable(hUl, { animation: 150, ghostClass: 'bg-gold-100' });
+            new Sortable(hUl, { animation: 150, ghostClass: 'bg-gold-100', handle: '.drag-handle' });
             enhanceListItems(hUl);
         }
         if (vUl) {
-            new Sortable(vUl, { animation: 150, ghostClass: 'bg-gold-100' });
+            new Sortable(vUl, { animation: 150, ghostClass: 'bg-gold-100', handle: '.drag-handle' });
             enhanceListItems(vUl);
         }
     });
 
     function enhanceListItems(container) {
         container.querySelectorAll('li').forEach(li => {
-            if (!li.querySelector('.delete-btn')) {
-                li.className = 'flex items-center justify-between p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm cursor-move mb-2 text-xs font-semibold text-slate-700';
-                
-                const deleteBtn = document.createElement('button');
-                deleteBtn.type = 'button';
-                deleteBtn.className = 'delete-btn text-red-500 hover:text-red-700 p-1 text-xs';
-                deleteBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
-                deleteBtn.onclick = function() { li.remove(); };
-                li.appendChild(deleteBtn);
+            if (li.dataset.enhanced === 'true') return;
+            li.dataset.enhanced = 'true';
+
+            // Extract initial Title and URL from <a> tag or data attributes
+            const aTag = li.querySelector('a');
+            let title = li.getAttribute('data-title') || (aTag ? aTag.textContent.trim() : li.textContent.trim());
+            let url = li.getAttribute('data-url') || (aTag ? aTag.getAttribute('href') : '#');
+
+            li.setAttribute('data-title', title);
+            li.setAttribute('data-url', url);
+
+            li.className = 'group flex flex-col p-3 bg-white rounded-xl border border-slate-200 shadow-sm mb-2 transition hover:border-emerald-500/50 hover:shadow-md';
+            
+            li.innerHTML = `
+                <div class="flex items-center justify-between gap-3 w-full">
+                    <!-- Right: Drag handle + Title + URL badge -->
+                    <div class="flex items-center gap-3 flex-grow min-w-0 cursor-pointer display-row">
+                        <div class="drag-handle p-1.5 text-slate-400 hover:text-slate-600 cursor-grab active:cursor-grabbing">
+                            <i class="fa-solid fa-grip-vertical text-sm"></i>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2 min-w-0">
+                            <span class="item-title font-bold text-slate-800 text-sm">${escapeHtml(title)}</span>
+                            <span class="item-url text-[11px] text-slate-500 bg-slate-100 border border-slate-200 px-2.5 py-0.5 rounded-lg font-mono dir-ltr max-w-[200px] sm:max-w-xs truncate" title="${escapeHtml(url)}">${escapeHtml(url)}</span>
+                        </div>
+                    </div>
+
+                    <!-- Left: Action buttons (Edit & Delete) -->
+                    <div class="flex items-center gap-1.5 flex-shrink-0">
+                        <button type="button" class="btn-edit px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition flex items-center gap-1 shadow-sm">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <span class="hidden sm:inline">تعديل</span>
+                        </button>
+                        <button type="button" class="btn-delete px-3 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold transition flex items-center gap-1 shadow-sm">
+                            <i class="fa-solid fa-trash-can"></i>
+                            <span class="hidden sm:inline">حذف</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Inline Edit Form Box -->
+                <div class="edit-box hidden pt-3 mt-3 border-t border-slate-100 space-y-2.5 bg-slate-50/80 p-3 rounded-xl">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1">عنوان الرابط (النص المعروض):</label>
+                            <input type="text" class="input-title w-full text-xs rounded-lg border-slate-300 p-2 bg-white focus:ring-emerald-800 focus:border-emerald-800" value="${escapeHtml(title)}">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1">مسار الرابط (URL):</label>
+                            <input type="text" class="input-url w-full text-xs rounded-lg border-slate-300 p-2 bg-white text-left font-mono focus:ring-emerald-800 focus:border-emerald-800" dir="ltr" value="${escapeHtml(url)}">
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-end gap-2 pt-1">
+                        <button type="button" class="btn-cancel px-3 py-1.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold transition flex items-center gap-1">
+                            <i class="fa-solid fa-xmark"></i>
+                            <span>إلغاء</span>
+                        </button>
+                        <button type="button" class="btn-save-edit px-4 py-1.5 rounded-lg bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold transition flex items-center gap-1 shadow-sm">
+                            <i class="fa-solid fa-check"></i>
+                            <span>حفظ التعديل</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Elements
+            const editBox = li.querySelector('.edit-box');
+            const btnEdit = li.querySelector('.btn-edit');
+            const btnDelete = li.querySelector('.btn-delete');
+            const btnSaveEdit = li.querySelector('.btn-save-edit');
+            const btnCancel = li.querySelector('.btn-cancel');
+            const displayRow = li.querySelector('.display-row');
+            const inputTitle = li.querySelector('.input-title');
+            const inputUrl = li.querySelector('.input-url');
+            const itemTitleSpan = li.querySelector('.item-title');
+            const itemUrlSpan = li.querySelector('.item-url');
+
+            function toggleEdit(open) {
+                if (open) {
+                    editBox.classList.remove('hidden');
+                    inputTitle.focus();
+                } else {
+                    editBox.classList.add('hidden');
+                }
             }
+
+            // Edit button click
+            btnEdit.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleEdit(editBox.classList.contains('hidden'));
+            });
+
+            // Display row click also opens editor
+            displayRow.addEventListener('click', (e) => {
+                if (e.target.closest('.drag-handle')) return;
+                toggleEdit(true);
+            });
+
+            // Cancel click
+            btnCancel.addEventListener('click', (e) => {
+                e.stopPropagation();
+                inputTitle.value = li.getAttribute('data-title');
+                inputUrl.value = li.getAttribute('data-url');
+                toggleEdit(false);
+            });
+
+            // Save Edit click
+            btnSaveEdit.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const newTitle = inputTitle.value.trim();
+                const newUrl = inputUrl.value.trim();
+
+                if (!newTitle || !newUrl) {
+                    alert('يرجى كتابة عنوان الرابط ومسار الـ URL.');
+                    return;
+                }
+
+                li.setAttribute('data-title', newTitle);
+                li.setAttribute('data-url', newUrl);
+                itemTitleSpan.textContent = newTitle;
+                itemUrlSpan.textContent = newUrl;
+                itemUrlSpan.title = newUrl;
+
+                toggleEdit(false);
+            });
+
+            // Delete button with confirmation
+            btnDelete.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const currentTitle = li.getAttribute('data-title') || 'هذا العنصر';
+                if (confirm(`هل أنت متأكد من حذف عنصر "${currentTitle}" من القائمة؟`)) {
+                    li.remove();
+                }
+            });
         });
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
     }
 
     function addNewMenuItem() {
@@ -251,15 +386,21 @@
             ? document.getElementById('horizontal-menu-builder')
             : document.getElementById('vertical-menu-builder');
 
-        // Clean out delete buttons before serializing
-        const clone = builder.cloneNode(true);
-        clone.querySelectorAll('.delete-btn').forEach(btn => btn.remove());
-        clone.querySelectorAll('li').forEach(li => {
-            li.removeAttribute('class');
-            li.removeAttribute('style');
-        });
+        const listId = (id === 'horizontal') ? 'ittsc-menu' : 'ittsc-menu2';
 
-        const html = clone.innerHTML.trim();
+        // Collect all active <li> items and serialize cleanly
+        const liElements = builder.querySelectorAll('li');
+        let html = `<ul id="${listId}" class="sortable-list">\n`;
+        
+        liElements.forEach(li => {
+            const title = li.getAttribute('data-title') || '';
+            const url = li.getAttribute('data-url') || '#';
+            if (title && url) {
+                html += `    <li><a href="${url}">${title}</a></li>\n`;
+            }
+        });
+        
+        html += `</ul>`;
 
         fetch(`{{ url('/admin/menus') }}/${id}`, {
             method: 'POST',
@@ -272,7 +413,7 @@
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                alert(data.message);
+                alert(data.message || 'تم حفظ وتحديث القائمة بنجاح!');
             } else {
                 alert('حدث خطأ أثناء الحفظ');
             }
