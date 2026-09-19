@@ -315,8 +315,7 @@
     </style>
 
     @stack('styles')
-</head>
-<body class="theme-{{ $activeTheme }} min-h-screen flex flex-col antialiased selection:bg-gold-500 selection:text-white pb-24 md:pb-12">
+<body class="theme-{{ $activeTheme }} min-h-screen flex flex-col antialiased selection:bg-gold-500 selection:text-white">
 
     <!-- 1. Top Cross-Portal Switcher Bar (Connecting with Hawza Portal on Port 8000) -->
     <div class="bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-950 text-gold-300 text-xs border-b border-gold-500/30 py-1.5 px-4 shadow-sm">
@@ -548,7 +547,7 @@
         }
     </style>
 
-    <footer class="bg-emerald-950 text-slate-300 border-t border-gold-500/30 pt-12 pb-8 mt-16">
+    <footer class="bg-emerald-950 text-slate-300 border-t border-gold-500/30 pt-12 pb-20 lg:pb-8 mt-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                 
