@@ -54,25 +54,20 @@
                     <div class="relative bg-gradient-to-b from-[#083b45] to-[#041f25] rounded-[2rem] p-7 border-2 border-gold-500/50 shadow-2xl text-center space-y-5 backdrop-blur-md">
                         
                         <!-- High-resolution dignified portrait of Sayyid Muneer -->
-                        <div class="relative mx-auto w-40 h-40 sm:w-48 sm:h-48">
+                        <div class="relative mx-auto w-44 h-44 sm:w-52 sm:h-52">
                             <div class="absolute -inset-1.5 bg-gradient-to-tr from-gold-400 via-gold-500 to-emerald-500 rounded-full blur opacity-75 animate-pulse"></div>
                             <div class="relative w-full h-full rounded-full p-1.5 bg-gradient-to-tr from-gold-300 via-gold-500 to-emerald-800 shadow-2xl overflow-hidden border-2 border-gold-400">
-                                <img src="{{ asset('images/sayyid-muneer-portrait.jpg') }}" alt="سماحة العلامة السيد منير الخباز" class="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-500">
+                                <img src="{{ asset('images/sayyid-muneer-portrait.jpg') }}" alt="سماحة العلامة السيد منير الخباز" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
                             </div>
                         </div>
 
-                        <div class="space-y-1">
+                        <div class="space-y-1.5">
                             <h3 class="text-xl sm:text-2xl font-bold font-scholarly text-gold-300 drop-shadow">سماحة العلامة السيد منير الخباز</h3>
                             <p class="text-xs text-slate-200 font-light">أستاذ البحث الخارج في الحوزة العلمية والمفكر الإسلامي</p>
                         </div>
 
-                        <!-- Quote badge -->
-                        <div class="p-3.5 bg-emerald-950/80 rounded-2xl border border-gold-500/30 text-xs text-gold-200 italic font-scholarly shadow-inner leading-relaxed">
-                            "لا يزال المرء عالماً ما طلب العلم، فإذا ظن أنه قد علم فقد جهل"
-                        </div>
-
-                        <div class="pt-1">
-                            <a href="{{ route('bio') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gold-500/15 hover:bg-gold-500/25 border border-gold-500/40 text-gold-300 hover:text-white text-xs font-semibold transition shadow-sm">
+                        <div class="pt-2">
+                            <a href="{{ route('bio') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gold-500/15 hover:bg-gold-500/25 border border-gold-500/40 text-gold-300 hover:text-white text-xs font-semibold transition shadow-sm hover:shadow-gold-500/10">
                                 <span>استعراض السيرة الذاتية المفصلة</span>
                                 <i class="fa-solid fa-arrow-left text-[10px]"></i>
                             </a>
