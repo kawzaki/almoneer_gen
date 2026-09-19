@@ -370,21 +370,21 @@
                     </button>
 
                     <!-- Brand Link & Calligraphy -->
-                    <a href="{{ route('home') }}" class="group flex items-center gap-2.5 sm:gap-4">
-                        <div class="h-12 sm:h-16 md:h-20 w-auto flex-shrink-0 flex items-center justify-center">
-                            <img src="{{ asset('images/almoneer-logo-official.png') }}" alt="شعار شبكة المنير" class="h-12 sm:h-16 md:h-20 w-auto object-contain drop-shadow-[0_4px_16px_rgba(212,170,72,0.6)] group-hover:scale-105 transition-transform">
+                    <a href="{{ route('home') }}" class="group flex items-center gap-3 sm:gap-5">
+                        <div class="h-14 sm:h-20 md:h-24 lg:h-28 w-auto flex-shrink-0 flex items-center justify-center">
+                            <img src="{{ asset('images/almoneer-logo-official.png') }}" alt="شعار شبكة المنير" class="h-14 sm:h-20 md:h-24 lg:h-28 w-auto object-contain drop-shadow-[0_4px_18px_rgba(212,170,72,0.65)] group-hover:scale-105 transition-transform">
                         </div>
                         <div class="flex flex-col justify-center">
-                            <!-- Handwritten Arabic Calligraphy (Official Artwork from almoneer_calligoraphy.pdf) -->
-                            <div class="flex flex-col items-start gap-1 sm:gap-1.5">
+                            <!-- Handwritten Arabic Calligraphy (Official Artwork) -->
+                            <div class="flex flex-col items-start gap-1.5 sm:gap-2">
                                 <img src="{{ asset('images/calligraphy-sayyid-muneer-gold.png') }}" 
                                      alt="{{ $siteSettings['site.title'] ?? 'سماحة السيد منير الخباز' }}" 
-                                     class="h-8 sm:h-11 md:h-15 lg:h-18 w-auto object-contain drop-shadow-[0_3px_12px_rgba(0,0,0,0.65)] group-hover:brightness-110 transition">
+                                     class="h-10 sm:h-14 md:h-18 lg:h-22 w-auto object-contain drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)] group-hover:brightness-110 transition">
                                 <img src="{{ asset('images/calligraphy-markaz-light.png') }}" 
-                                     alt="{{ $siteSettings['site.subtitle'] ?? 'مركز النتاج الفقهي والفكري والنشاط التبليغي' }}" 
-                                     class="h-2.5 sm:h-3.5 md:h-5 lg:h-6.5 w-auto object-contain opacity-95 group-hover:opacity-100 transition drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">
+                                     alt="{{ $siteSettings['site.subtitle'] ?? 'موقع يُعنى بمجمع النتاج الفقهي والفكري والنشاط التبليغي' }}" 
+                                     class="h-3.5 sm:h-5 md:h-6.5 lg:h-8 w-auto object-contain opacity-95 group-hover:opacity-100 transition drop-shadow-[0_2px_8px_rgba(0,0,0,0.55)]">
                             </div>
-                            <h1 class="sr-only">{{ $siteSettings['site.title'] ?? 'سماحة السيد منير الخباز' }} - {{ $siteSettings['site.subtitle'] ?? 'مركز النتاج الفقهي والفكري والنشاط التبليغي' }}</h1>
+                            <h1 class="sr-only">{{ $siteSettings['site.title'] ?? 'سماحة السيد منير الخباز' }} - {{ $siteSettings['site.subtitle'] ?? 'موقع يُعنى بمجمع النتاج الفقهي والفكري والنشاط التبليغي' }}</h1>
                         </div>
                     </a>
                 </div>
