@@ -57,7 +57,9 @@
                         <div class="relative mx-auto w-44 h-44 sm:w-52 sm:h-52">
                             <div class="absolute -inset-1.5 bg-gradient-to-tr from-gold-400 via-gold-500 to-emerald-500 rounded-full blur opacity-75 animate-pulse"></div>
                             <div class="relative w-full h-full rounded-full p-1.5 bg-gradient-to-tr from-gold-300 via-gold-500 to-emerald-800 shadow-2xl overflow-hidden border-2 border-gold-400">
-                                <img src="{{ asset('images/sayyid-muneer-portrait.jpg') }}" alt="سماحة العلامة السيد منير الخباز" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                                <div class="w-full h-full rounded-full overflow-hidden bg-gradient-to-b from-[#083b45] to-[#041f25]">
+                                    <img src="{{ asset('images/sayyid-muneer-portrait.png') }}" alt="سماحة العلامة السيد منير الخباز" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                                </div>
                             </div>
                         </div>
 
