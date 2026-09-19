@@ -20,6 +20,7 @@ use App\Http\Controllers\Auth\LoginController;
 // 1. الواجهة العامة (Frontend Public Routes)
 // =========================================================================
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index']);
 Route::get('/bio', [BioController::class, 'index'])->name('bio');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 
