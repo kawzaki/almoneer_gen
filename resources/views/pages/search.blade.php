@@ -71,14 +71,29 @@
                     @foreach($books as $book)
                     <a href="{{ route('books.show', $book->slug) }}" class="bg-white rounded-xl border border-slate-200 hover:border-gold-400 p-4 transition shadow-sm hover:shadow-md flex flex-col justify-between group">
                         <div class="space-y-2">
-                            <span class="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">كتاب</span>
-                            <h4 class="font-scholarly font-bold text-slate-800 group-hover:text-emerald-800 text-sm leading-snug line-clamp-2">{{ $book->title }}</h4>
-                            @if($book->description)
-                            <p class="text-xs text-slate-500 line-clamp-2">{{ $book->description }}</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">كتاب</span>
+                                @if($book->publication_year)
+                                    <span class="text-[10px] text-slate-400">{{ $book->publication_year }}م</span>
+                                @endif
+                            </div>
+                            <div class="flex gap-3 items-start">
+                                @if($book->cover_image)
+                                    <img src="{{ str_starts_with($book->cover_image, 'http') ? $book->cover_image : asset($book->cover_image) }}" 
+                                         alt="{{ $book->title }}" 
+                                         class="w-12 h-16 rounded-md object-cover flex-shrink-0 border border-slate-200 shadow-xs">
+                                @endif
+                                <div class="min-w-0 flex-grow">
+                                    <h4 class="font-scholarly font-bold text-slate-800 group-hover:text-emerald-800 text-sm leading-snug line-clamp-2">{{ $book->title }}</h4>
+                                    <p class="text-[11px] text-slate-400 mt-0.5">{{ $book->author }}</p>
+                                </div>
+                            </div>
+                            @if($book->summary)
+                            <p class="text-xs text-slate-500 line-clamp-2 font-light leading-relaxed">{{ $book->summary }}</p>
                             @endif
                         </div>
                         <div class="pt-3 border-t border-slate-100 mt-3 text-[11px] text-gold-600 font-semibold flex items-center justify-between">
-                            <span>عرض الكتاب</span>
+                            <span>عرض وتنزيل الكتاب</span>
                             <i class="fa-solid fa-arrow-left text-[9px] group-hover:-translate-x-1 transition-transform"></i>
                         </div>
                     </a>

@@ -242,10 +242,18 @@
                             <div
                                 class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex gap-4 hover:shadow-md transition">
                                 <!-- Book Icon / Cover placeholder -->
-                                <div
-                                    class="w-16 h-24 rounded-lg bg-emerald-900 text-gold-300 flex items-center justify-center flex-shrink-0 shadow text-2xl font-scholarly">
-                                    <i class="fa-solid fa-book"></i>
-                                </div>
+                                @if($book->cover_image)
+                                    <a href="{{ route('books.show', $book->slug) }}" class="flex-shrink-0">
+                                        <img src="{{ str_starts_with($book->cover_image, 'http') ? $book->cover_image : asset($book->cover_image) }}"
+                                            alt="{{ $book->title }}"
+                                            class="w-16 h-24 rounded-lg object-cover shadow border border-slate-200 hover:scale-105 transition duration-200">
+                                    </a>
+                                @else
+                                    <div
+                                        class="w-16 h-24 rounded-lg bg-emerald-900 text-gold-300 flex items-center justify-center flex-shrink-0 shadow text-2xl font-scholarly">
+                                        <i class="fa-solid fa-book"></i>
+                                    </div>
+                                @endif
                                 <div class="flex flex-col justify-between min-w-0">
                                     <div>
                                         <h4 class="font-bold text-xs sm:text-sm text-slate-800 truncate"

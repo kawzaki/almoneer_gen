@@ -30,10 +30,31 @@
             <tbody class="divide-y divide-slate-100">
                 @forelse($books as $b)
                 <tr class="hover:bg-slate-50 transition">
-                    <td class="p-4 font-bold text-slate-800">{{ $b->title }}</td>
+                    <td class="p-4 font-bold text-slate-800">
+                        <div class="flex items-center gap-3">
+                            @if($b->cover_image)
+                                <img src="{{ str_starts_with($b->cover_image, 'http') ? $b->cover_image : asset($b->cover_image) }}" class="w-9 h-12 object-cover rounded-lg shadow-xs flex-shrink-0 border border-slate-200" alt="">
+                            @else
+                                <div class="w-9 h-12 rounded-lg bg-emerald-950 text-gold-300 flex items-center justify-center flex-shrink-0 text-xs border border-emerald-800/40">
+                                    <i class="fa-solid fa-book"></i>
+                                </div>
+                            @endif
+                            <div>
+                                <div class="font-bold text-slate-800 leading-snug">{{ $b->title }}</div>
+                                <div class="flex items-center gap-1.5 mt-1">
+                                    @if($b->category)
+                                        <span class="text-[10px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md font-semibold">{{ $b->category->name }}</span>
+                                    @endif
+                                    @if($b->is_featured)
+                                        <span class="text-[10px] text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded-md font-semibold">مميز</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </td>
                     <td class="p-4 text-slate-500">{{ $b->author }}</td>
                     <td class="p-4 text-slate-500">{{ $b->publication_year ?? '-' }}</td>
-                    <td class="p-4 text-slate-500">{{ $b->pages_count ?? '-' }}</td>
+                    <td class="p-4 text-slate-500">{{ $b->pages_count ? $b->pages_count . ' ص' : '-' }}</td>
                     <td class="p-4 text-slate-500">{{ $b->download_count }}</td>
                     <td class="p-4 text-center">
                         <div class="inline-flex items-center gap-2">

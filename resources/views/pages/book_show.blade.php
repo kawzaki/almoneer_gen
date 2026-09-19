@@ -17,13 +17,21 @@
     <div class="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200 shadow-sm space-y-8">
         
         <div class="flex flex-col sm:flex-row gap-8 items-center sm:items-start text-center sm:text-right pb-8 border-b border-slate-100">
-            <div class="w-36 h-52 rounded-2xl bg-gradient-to-tr from-emerald-950 to-emerald-800 text-gold-300 flex items-center justify-center text-5xl font-scholarly flex-shrink-0 shadow-2xl border border-gold-500/40">
-                <i class="fa-solid fa-book"></i>
-            </div>
+            @if($book->cover_image)
+                <div class="w-36 h-52 rounded-2xl overflow-hidden shadow-2xl border border-slate-200 flex-shrink-0 bg-white">
+                    <img src="{{ str_starts_with($book->cover_image, 'http') ? $book->cover_image : asset($book->cover_image) }}"
+                         alt="{{ $book->title }}"
+                         class="w-full h-full object-cover">
+                </div>
+            @else
+                <div class="w-36 h-52 rounded-2xl bg-gradient-to-tr from-emerald-950 to-emerald-800 text-gold-300 flex items-center justify-center text-5xl font-scholarly flex-shrink-0 shadow-2xl border border-gold-500/40">
+                    <i class="fa-solid fa-book"></i>
+                </div>
+            @endif
 
             <div class="space-y-3 flex-grow">
                 <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold">
-                    إصدارات الفكر الإسلامي
+                    {{ $book->category->name ?? 'إصدارات ومؤلفات' }}
                 </span>
                 <h1 class="text-2xl sm:text-3xl font-bold font-scholarly text-slate-900 leading-tight">
                     {{ $book->title }}
@@ -47,10 +55,18 @@
 
                 <!-- Download / Read actions -->
                 <div class="flex flex-wrap items-center gap-3 pt-4 justify-center sm:justify-start">
+                    @if($book->pdf_file)
                     <a href="{{ route('books.download', $book->slug) }}" class="px-6 py-3 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-gold-300 font-bold text-xs shadow-md transition flex items-center gap-2">
                         <i class="fa-solid fa-cloud-arrow-down text-sm"></i>
                         <span>تحميل الكتاب بصيغة PDF</span>
                     </a>
+                    @endif
+                    @if($book->buy_url)
+                    <a href="{{ $book->buy_url }}" target="_blank" rel="noopener noreferrer" class="px-5 py-3 rounded-xl bg-gold-50 hover:bg-gold-100 text-gold-900 border border-gold-300 font-bold text-xs transition flex items-center gap-2">
+                        <i class="fa-solid fa-cart-shopping text-sm text-gold-700"></i>
+                        <span>طلب واقتناء الكتاب</span>
+                    </a>
+                    @endif
                 </div>
             </div>
         </div>
