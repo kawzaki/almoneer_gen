@@ -162,7 +162,7 @@
 
                     @if(!empty($lec->description))
                     <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed font-light">
-                        {{ $lec->description }}
+                        {{ strip_tags($lec->description) }}
                     </p>
                     @endif
 
@@ -251,7 +251,7 @@
                     </h3>
 
                     <p class="text-xs text-slate-500 line-clamp-1 font-light hidden sm:block">
-                        {{ $lec->description ?? 'محاضرة فكرية وعقائدية متكاملة.' }}
+                        {{ !empty($lec->description) ? strip_tags($lec->description) : 'محاضرة فكرية وعقائدية متكاملة.' }}
                     </p>
 
                     @if(!empty($lec->tags_list))

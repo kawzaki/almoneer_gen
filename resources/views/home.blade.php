@@ -201,7 +201,7 @@
                                 </h3>
                                 @if(!empty($yt->description))
                                     <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed font-light">
-                                        {{ $yt->description }}
+                                        {{ strip_tags($yt->description) }}
                                     </p>
                                 @endif
                             </div>

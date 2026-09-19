@@ -2,6 +2,35 @@
 
 @section('title', 'تعديل المادة الإعلامية')
 
+@push('styles')
+<!-- Quill WYSIWYG Editor CSS -->
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+<style>
+    .ql-editor {
+        direction: rtl !important;
+        text-align: right !important;
+        font-family: 'IBM Plex Sans Arabic', sans-serif !important;
+        min-height: 180px !important;
+        font-size: 0.875rem !important;
+        line-height: 1.8 !important;
+    }
+    .ql-toolbar.ql-snow {
+        border-top-left-radius: 0.75rem;
+        border-top-right-radius: 0.75rem;
+        border-color: #e2e8f0;
+        background-color: #f8fafc;
+        direction: ltr !important;
+        text-align: left !important;
+    }
+    .ql-container.ql-snow {
+        border-bottom-left-radius: 0.75rem;
+        border-bottom-right-radius: 0.75rem;
+        border-color: #e2e8f0;
+        background-color: #ffffff;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="max-w-4xl mx-auto space-y-6">
     <div class="flex flex-wrap items-center justify-between gap-4">
@@ -29,7 +58,7 @@
         <a href="{{ route('admin.media.index') }}" class="text-xs text-slate-600 hover:text-slate-900 bg-white border border-slate-200 px-3.5 py-2 rounded-xl shadow-xs transition">← العودة للقائمة</a>
     </div>
 
-    <form action="{{ route('admin.media.update', $item->id) }}" method="POST" class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+    <form id="media-form" action="{{ route('admin.media.update', $item->id) }}" method="POST" class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
         @csrf @method('PUT')
         <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">عنوان المادة الإعلامية:</label>
@@ -81,8 +110,24 @@
         </div>
 
         <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1">الوصف:</label>
-            <textarea name="description" rows="3" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">{{ $item->description }}</textarea>
+            <div class="flex items-center justify-between mb-1">
+                <label class="block text-xs font-semibold text-slate-700">الوصف (محرر مرئي منسق WYSIWYG):</label>
+                <button type="button" onclick="toggleRawHtmlMode()" id="toggle-html-btn" class="text-[11px] text-slate-500 hover:text-emerald-800 font-semibold flex items-center gap-1">
+                    <i class="fa-solid fa-code"></i>
+                    <span>تبديل لكود HTML المصدر</span>
+                </button>
+            </div>
+            
+            <!-- Hidden input that carries formatted HTML content -->
+            <textarea name="description" id="media-description" class="hidden">{{ old('description', $item->description) }}</textarea>
+
+            <!-- Raw HTML textarea (toggled on demand) -->
+            <textarea id="raw-html-editor" rows="6" class="hidden w-full text-xs font-mono rounded-xl border-slate-200 p-3 bg-slate-900 text-slate-100" oninput="syncFromRawHtml(this.value)">{{ old('description', $item->description) }}</textarea>
+
+            <!-- Quill Editor Container -->
+            <div id="quill-editor-wrapper">
+                <div id="quill-editor">{!! old('description', $item->description) !!}</div>
+            </div>
         </div>
 
         <div>
@@ -113,6 +158,63 @@
         </div>
     </form>
 </div>
+@endsection
+
+@push('scripts')
+<!-- Quill WYSIWYG Editor JS -->
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+<script>
+    // 1. Initialize Quill Editor for Description
+    var quill = new Quill('#quill-editor', {
+        theme: 'snow',
+        placeholder: 'اكتب وصف المحاضرة أو الصق النص المنسق هنا...',
+        modules: {
+            toolbar: [
+                [{ 'header': [2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'align': [] }],
+                ['blockquote', 'link'],
+                ['clean']
+            ]
+        }
+    });
+
+    // 2. Sync Quill content to hidden textarea on submit
+    var form = document.getElementById('media-form');
+    var descInput = document.getElementById('media-description');
+    var rawHtmlEditor = document.getElementById('raw-html-editor');
+    var isRawMode = false;
+    var quillWrapper = document.getElementById('quill-editor-wrapper');
+    var toggleBtn = document.getElementById('toggle-html-btn');
+
+    form.onsubmit = function() {
+        if (!isRawMode) {
+            descInput.value = quill.root.innerHTML;
+        } else {
+            descInput.value = rawHtmlEditor.value;
+        }
+    };
+
+    function toggleRawHtmlMode() {
+        isRawMode = !isRawMode;
+        if (isRawMode) {
+            rawHtmlEditor.value = quill.root.innerHTML;
+            quillWrapper.classList.add('hidden');
+            rawHtmlEditor.classList.remove('hidden');
+            toggleBtn.innerHTML = '<i class="fa-solid fa-pen-nib"></i> <span>العودة للمحرر المرئي</span>';
+        } else {
+            quill.root.innerHTML = rawHtmlEditor.value;
+            rawHtmlEditor.classList.add('hidden');
+            quillWrapper.classList.remove('hidden');
+            toggleBtn.innerHTML = '<i class="fa-solid fa-code"></i> <span>تبديل لكود HTML المصدر</span>';
+        }
+    }
+
+    function syncFromRawHtml(val) {
+        descInput.value = val;
+    }
+</script>
 
 <script>
 function cleanTranscriptWithVacum() {
@@ -176,4 +278,4 @@ function cleanTranscriptWithVacum() {
     alert('تم تنظيف وتنسيق النص بنجاح وفق قواعد المخمة!');
 }
 </script>
-@endsection
+@endpush

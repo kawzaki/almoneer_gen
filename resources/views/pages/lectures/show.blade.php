@@ -149,9 +149,9 @@
             </h1>
 
             @if($video->description)
-            <p class="text-slate-600 text-sm leading-relaxed font-light">
-                {{ $video->description }}
-            </p>
+            <div class="prose prose-slate max-w-none text-slate-600 text-sm leading-relaxed font-light">
+                {!! $video->description !!}
+            </div>
             @endif
 
             <!-- Lecture Tags Section (Clickable) -->
