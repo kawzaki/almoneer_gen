@@ -10,9 +10,14 @@
         direction: rtl !important;
         text-align: right !important;
         font-family: 'IBM Plex Sans Arabic', sans-serif !important;
-        min-height: 180px !important;
         font-size: 0.875rem !important;
         line-height: 1.8 !important;
+    }
+    #quill-editor .ql-editor {
+        min-height: 160px !important;
+    }
+    #quill-transcript .ql-editor {
+        min-height: 340px !important;
     }
     .ql-toolbar.ql-snow {
         border-top-left-radius: 0.75rem;
@@ -111,7 +116,7 @@
 
         <div>
             <div class="flex items-center justify-between mb-1">
-                <label class="block text-xs font-semibold text-slate-700">الوصف (محرر مرئي منسق WYSIWYG):</label>
+                <label class="block text-xs font-semibold text-slate-700">الوصف:</label>
                 <button type="button" onclick="toggleRawHtmlMode()" id="toggle-html-btn" class="text-[11px] text-slate-500 hover:text-emerald-800 font-semibold flex items-center gap-1">
                     <i class="fa-solid fa-code"></i>
                     <span>تبديل لكود HTML المصدر</span>
@@ -132,14 +137,30 @@
 
         <div>
             <div class="flex items-center justify-between mb-1">
-                <label class="block text-xs font-semibold text-slate-700">تفريغ المحاضرة (Transcript):</label>
-                <button type="button" onclick="cleanTranscriptWithVacum()" class="px-3 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold transition flex items-center gap-1.5 shadow-sm border border-amber-300/60">
-                    <i class="fa-solid fa-broom text-amber-700"></i>
-                    <span>تنظيف وتنسيق النص (المخمة)</span>
-                </button>
+                <label class="block text-xs font-semibold text-slate-700">تفريغ المحاضرة:</label>
+                <div class="flex items-center gap-3">
+                    <button type="button" onclick="toggleRawTranscriptMode()" id="toggle-transcript-html-btn" class="text-[11px] text-slate-500 hover:text-emerald-800 font-semibold flex items-center gap-1">
+                        <i class="fa-solid fa-code"></i>
+                        <span>تبديل لكود HTML المصدر</span>
+                    </button>
+                    <button type="button" onclick="cleanTranscriptWithVacum()" class="px-3 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold transition flex items-center gap-1.5 shadow-sm border border-amber-300/60">
+                        <i class="fa-solid fa-broom text-amber-700"></i>
+                        <span>تنظيف وتنسيق النص (المخمة)</span>
+                    </button>
+                </div>
             </div>
-            <textarea name="transcript" id="transcript-input" rows="8" class="w-full text-xs rounded-xl border-slate-200 p-3 bg-slate-50 font-mono leading-relaxed">{{ $item->transcript }}</textarea>
-            <p class="text-[11px] text-slate-400 mt-1">يمكنك لصق النص المنسوخ من Word والضغط على زر "تنظيف وتنسيق النص (المخمة)" لضبط علامات الترقيم والأقواس والأرقام والآيات آلياً.</p>
+
+            <!-- Hidden input that carries formatted HTML transcript -->
+            <textarea name="transcript" id="media-transcript" class="hidden">{{ old('transcript', $item->transcript) }}</textarea>
+
+            <!-- Raw HTML textarea (toggled on demand) -->
+            <textarea id="raw-transcript-editor" rows="12" class="hidden w-full text-xs font-mono rounded-xl border-slate-200 p-3 bg-slate-900 text-slate-100" oninput="syncFromRawTranscript(this.value)">{{ old('transcript', $item->transcript) }}</textarea>
+
+            <!-- Quill Transcript Editor Container -->
+            <div id="quill-transcript-wrapper">
+                <div id="quill-transcript">{!! old('transcript', $item->transcript) !!}</div>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-1">يمكنك لصق النص المنسوخ من Word وتنسيقه بحرية أو الضغط على زر "تنظيف وتنسيق النص (المخمة)" لضبط علامات الترقيم والأقواس والأرقام والآيات آلياً.</p>
         </div>
 
         <div class="flex items-center gap-6 pt-2">
@@ -164,23 +185,30 @@
 <!-- Quill WYSIWYG Editor JS -->
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 <script>
+    var toolbarOptions = [
+        [{ 'header': [2, 3, 4, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'align': [] }],
+        ['blockquote', 'link'],
+        ['clean']
+    ];
+
     // 1. Initialize Quill Editor for Description
     var quill = new Quill('#quill-editor', {
         theme: 'snow',
         placeholder: 'اكتب وصف المحاضرة أو الصق النص المنسق هنا...',
-        modules: {
-            toolbar: [
-                [{ 'header': [2, 3, false] }],
-                ['bold', 'italic', 'underline', 'strike'],
-                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                [{ 'align': [] }],
-                ['blockquote', 'link'],
-                ['clean']
-            ]
-        }
+        modules: { toolbar: toolbarOptions }
     });
 
-    // 2. Sync Quill content to hidden textarea on submit
+    // 2. Initialize Quill Editor for Transcript
+    var quillTranscript = new Quill('#quill-transcript', {
+        theme: 'snow',
+        placeholder: 'اكتب أو الصق تفريغ المحاضرة هنا مع التنسيقات...',
+        modules: { toolbar: toolbarOptions }
+    });
+
+    // 3. Form elements & submit sync
     var form = document.getElementById('media-form');
     var descInput = document.getElementById('media-description');
     var rawHtmlEditor = document.getElementById('raw-html-editor');
@@ -188,14 +216,27 @@
     var quillWrapper = document.getElementById('quill-editor-wrapper');
     var toggleBtn = document.getElementById('toggle-html-btn');
 
+    var transcriptInput = document.getElementById('media-transcript');
+    var rawTranscriptEditor = document.getElementById('raw-transcript-editor');
+    var isRawTranscriptMode = false;
+    var quillTranscriptWrapper = document.getElementById('quill-transcript-wrapper');
+    var toggleTranscriptBtn = document.getElementById('toggle-transcript-html-btn');
+
     form.onsubmit = function() {
         if (!isRawMode) {
             descInput.value = quill.root.innerHTML;
         } else {
             descInput.value = rawHtmlEditor.value;
         }
+
+        if (!isRawTranscriptMode) {
+            transcriptInput.value = quillTranscript.root.innerHTML;
+        } else {
+            transcriptInput.value = rawTranscriptEditor.value;
+        }
     };
 
+    // Toggle description raw mode
     function toggleRawHtmlMode() {
         isRawMode = !isRawMode;
         if (isRawMode) {
@@ -214,68 +255,112 @@
     function syncFromRawHtml(val) {
         descInput.value = val;
     }
-</script>
 
-<script>
-function cleanTranscriptWithVacum() {
-    const el = document.getElementById('transcript-input');
-    let text = el.value;
-    if (!text.trim()) {
-        alert('يرجى كتابة أو لصق النص أولاً');
-        return;
+    // Toggle transcript raw mode
+    function toggleRawTranscriptMode() {
+        isRawTranscriptMode = !isRawTranscriptMode;
+        if (isRawTranscriptMode) {
+            rawTranscriptEditor.value = quillTranscript.root.innerHTML;
+            quillTranscriptWrapper.classList.add('hidden');
+            rawTranscriptEditor.classList.remove('hidden');
+            toggleTranscriptBtn.innerHTML = '<i class="fa-solid fa-pen-nib"></i> <span>العودة للمحرر المرئي</span>';
+        } else {
+            quillTranscript.root.innerHTML = rawTranscriptEditor.value;
+            rawTranscriptEditor.classList.add('hidden');
+            quillTranscriptWrapper.classList.remove('hidden');
+            toggleTranscriptBtn.innerHTML = '<i class="fa-solid fa-code"></i> <span>تبديل لكود HTML المصدر</span>';
+        }
     }
-    text = text.replace(/,/g, "،")
-               .replace(/\،\s*/g, "، ")
-               .replace(/\.\s*/g, ". ")
-               .replace(/:\s*/g, ": ")
-               .replace(/؛\s*/g, "؛ ")
-               .replace(/؟\s*/g, "؟ ")
-               .replace(/!\s*/g, "! ")
-               .replace(/\(\(/g, "«")
-               .replace(/\)\)/g, "»")
-               .replace(/«\s*/g, " «")
-               .replace(/\s*»/g, "» ")
-               .replace(/"([^"]+?)"/g, " ”$1“ ")
-               .replace(/﴿/g, "{")
-               .replace(/﴾/g, "}")
-               .replace(/–/g, "-")
-               .replace(/(?<!\w)-(?!\w)/g, " - ")
-               .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d))
-               .replace(/[\t]+/g, " ")
-               .replace(/[ ]{2,}/g, " ")
-               .replace(/^[ \t]+|[ \t]+$/gm, "")
-               .replace(/ـ/g, "")
-               .replace(/\sه\s/g, " هـ ")
-               .replace(/«صلى الله عليه وآله وسلم»/g, "(ص)")
-               .replace(/"صلى الله عليه وآله وسلم"/g, "(ص)")
-               .replace(/صلى الله عليه وآله وسلم/g, "(ص)")
-               .replace(/«صلى الله عليه وآله»/g, "(ص)")
-               .replace(/صلى الله عليه وآله/g, "(ص)")
-               .replace(/«عليه السلام»/g, "(ع)")
-               .replace(/"عليه السلام"/g, "(ع)")
-               .replace(/عليه السلام/g, "(ع)")
-               .replace(/«عليهم السلام»/g, "(عع)")
-               .replace(/عليهم السلام/g, "(عع)")
-               .replace(/«عليها السلام»/g, "(عه)")
-               .replace(/عليها السلام/g, "(عه)")
-               .replace(/\. \./g, "..")
-               .replace(/\، \،/g, "،،")
-               .replace(/\s+،/g, "،")
-               .replace(/\s+\./g, ".")
-               .replace(/\s+:/g, ":")
-               .replace(/«\s+/g, "«")
-               .replace(/\s+»/g, "»")
-               .replace(/\{\s+/g, "{")
-               .replace(/\s+\}/g, "}")
-               .replace(/\sو\s/g, " و")
-               .replace(/\nو\s/g, "\nو")
-               .replace(/^و\s/gm, "و")
-               .replace(/\[\s*(\d+)\s*\]/g, "($1)")
-               .replace(/(\d+\.)\s+(\d+)/g, "$1$2")
-               .replace(/\n{3,}/g, "\n\n");
 
-    el.value = text.trim();
-    alert('تم تنظيف وتنسيق النص بنجاح وفق قواعد المخمة!');
-}
+    function syncFromRawTranscript(val) {
+        transcriptInput.value = val;
+    }
+
+    // 4. Vacum Rules for Transcript Cleaning
+    function applyVacumString(text) {
+        return text.replace(/,/g, "،")
+                   .replace(/\،\s*/g, "، ")
+                   .replace(/\.\s*/g, ". ")
+                   .replace(/:\s*/g, ": ")
+                   .replace(/؛\s*/g, "؛ ")
+                   .replace(/؟\s*/g, "؟ ")
+                   .replace(/!\s*/g, "! ")
+                   .replace(/\(\(/g, "«")
+                   .replace(/\)\)/g, "»")
+                   .replace(/«\s*/g, " «")
+                   .replace(/\s*»/g, "» ")
+                   .replace(/"([^"]+?)"/g, " ”$1“ ")
+                   .replace(/﴿/g, "{")
+                   .replace(/﴾/g, "}")
+                   .replace(/–/g, "-")
+                   .replace(/(?<!\w)-(?!\w)/g, " - ")
+                   .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d))
+                   .replace(/[\t]+/g, " ")
+                   .replace(/[ ]{2,}/g, " ")
+                   .replace(/ـ/g, "")
+                   .replace(/\sه\s/g, " هـ ")
+                   .replace(/«صلى الله عليه وآله وسلم»/g, "(ص)")
+                   .replace(/"صلى الله عليه وآله وسلم"/g, "(ص)")
+                   .replace(/صلى الله عليه وآله وسلم/g, "(ص)")
+                   .replace(/«صلى الله عليه وآله»/g, "(ص)")
+                   .replace(/صلى الله عليه وآله/g, "(ص)")
+                   .replace(/«عليه السلام»/g, "(ع)")
+                   .replace(/"عليه السلام"/g, "(ع)")
+                   .replace(/عليه السلام/g, "(ع)")
+                   .replace(/«عليهم السلام»/g, "(عع)")
+                   .replace(/عليهم السلام/g, "(عع)")
+                   .replace(/«عليها السلام»/g, "(عه)")
+                   .replace(/عليها السلام/g, "(عه)")
+                   .replace(/\. \./g, "..")
+                   .replace(/\، \،/g, "،،")
+                   .replace(/\s+،/g, "،")
+                   .replace(/\s+\./g, ".")
+                   .replace(/\s+:/g, ":")
+                   .replace(/«\s+/g, "«")
+                   .replace(/\s+»/g, "»")
+                   .replace(/\{\s+/g, "{")
+                   .replace(/\s+\}/g, "}")
+                   .replace(/\sو\s/g, " و")
+                   .replace(/\nو\s/g, "\nو")
+                   .replace(/^و\s/gm, "و")
+                   .replace(/\[\s*(\d+)\s*\]/g, "($1)")
+                   .replace(/(\d+\.)\s+(\d+)/g, "$1$2");
+    }
+
+    function cleanTranscriptWithVacum() {
+        if (isRawTranscriptMode) {
+            let text = rawTranscriptEditor.value;
+            if (!text.trim()) {
+                alert('يرجى كتابة أو لصق النص أولاً');
+                return;
+            }
+            text = applyVacumString(text);
+            text = text.replace(/^[ \t]+|[ \t]+$/gm, "").replace(/\n{3,}/g, "\n\n");
+            rawTranscriptEditor.value = text.trim();
+            transcriptInput.value = text.trim();
+            alert('تم تنظيف وتنسيق النص بنجاح وفق قواعد المخمة!');
+            return;
+        }
+
+        if (!quillTranscript.getText().trim()) {
+            alert('يرجى كتابة أو لصق النص أولاً');
+            return;
+        }
+
+        // Clean text nodes in Quill while preserving HTML tags/formatting
+        var walker = document.createTreeWalker(quillTranscript.root, NodeFilter.SHOW_TEXT, null, false);
+        var node;
+        var textNodes = [];
+        while (node = walker.nextNode()) {
+            textNodes.push(node);
+        }
+
+        textNodes.forEach(function(n) {
+            n.nodeValue = applyVacumString(n.nodeValue);
+        });
+
+        transcriptInput.value = quillTranscript.root.innerHTML;
+        alert('تم تنظيف وتنسيق النص بنجاح وفق قواعد المخمة!');
+    }
 </script>
 @endpush

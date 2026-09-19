@@ -141,6 +141,40 @@ class TranscriptFormatter
             return '<p class="text-slate-500 italic">لا يوجد تفريغ نصي متوفر لهذه المحاضرة حالياً.</p>';
         }
 
+        $isHtml = (bool) preg_match('/<\s*(?:p|div|h[1-6]|ul|ol|li|blockquote)\b/i', $text);
+
+        if ($isHtml) {
+            $formatted = $text;
+
+            // 1. استبدال العناوين [t]عنوان[/t] إذا وجدت
+            $formatted = preg_replace_callback('/\[t\](.*?)\[\/t\]/u', function ($matches) {
+                $title = trim($matches[1]);
+                return '<h3 class="text-lg sm:text-xl font-bold font-scholarly text-emerald-900 border-r-4 border-gold-500 pr-3.5 mt-8 mb-4 pt-1 leading-snug drop-shadow-sm">' . e($title) . '</h3>';
+            }, $formatted);
+
+            // 2. استبدال الآيات القرآنية {الآية} أو ﴿الآية﴾ بالخط العثماني
+            $formatted = preg_replace_callback('/(?:\{|﴿)([^}﴾]+)(?:\}|﴾)/u', function ($matches) {
+                $verse = trim($matches[1]);
+                return '<span class="quran-verse font-quran text-emerald-950 font-normal">﴿ ' . e($verse) . ' ﴾</span>';
+            }, $formatted);
+
+            // 3. استبدال مراجع السور والآيات [المؤمنون : 115] أو [البقرة: 2]
+            $formatted = preg_replace_callback('/\[([\p{Arabic}\s]+:\s*\d+)\]/u', function ($matches) {
+                return '<span class="quran-ref inline-flex items-center gap-1 font-sans text-xs bg-gold-50 text-gold-700 px-2 py-0.5 rounded-md border border-gold-200 font-semibold">' . e($matches[0]) . '</span>';
+            }, $formatted);
+
+            // 4. استبدال الصلوات والأدعية المختصرة (ص)، (ع)، (عع)، (عه)
+            $formatted = preg_replace('/(?:\(|«)(ص)(?:\)|»)/u', '<span class="text-gold-600 font-bold text-xs px-0.5" title="صلى الله عليه وآله وسلم">(ص)</span>', $formatted);
+            $formatted = preg_replace('/(?:\(|«)(ع)(?:\)|»)/u', '<span class="text-gold-600 font-bold text-xs px-0.5" title="عليه السلام">(ع)</span>', $formatted);
+            $formatted = preg_replace('/(?:\(|«)(عع)(?:\)|»)/u', '<span class="text-gold-600 font-bold text-xs px-0.5" title="عليهم السلام">(عع)</span>', $formatted);
+            $formatted = preg_replace('/(?:\(|«)(عه)(?:\)|»)/u', '<span class="text-gold-600 font-bold text-xs px-0.5" title="عليها السلام">(عه)</span>', $formatted);
+
+            // 5. استبدال علامات التنصيص المقتبسة «...» بتنسيق بارز
+            $formatted = preg_replace('/«([^»]+)»/u', '<span class="text-emerald-900 font-medium font-scholarly px-0.5">«$1»</span>', $formatted);
+
+            return $formatted;
+        }
+
         // Clean first if not already formatted
         $cleaned = self::clean($text);
 
