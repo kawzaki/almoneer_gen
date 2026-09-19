@@ -110,9 +110,10 @@
                             </div>
                             <p class="text-[11px] text-slate-500 mt-0.5">تصفح صور الأغلفة والوسائط المرفوعة في الموقع واختيار أحدها بضغطة واحدة.</p>
                         </div>
-                        <button type="button" onclick="openCoverPickerModal()" class="px-3.5 py-2 bg-emerald-800 hover:bg-emerald-900 text-gold-300 hover:text-gold-200 font-bold text-xs rounded-xl shadow-xs transition flex items-center gap-1.5 flex-shrink-0">
-                            <i class="fa-solid fa-images"></i>
-                            <span>تصفح الصور ({{ count($availableCovers) }})</span>
+                        <button type="button" onclick="openCoverPickerModal()" class="px-4 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl shadow-md hover:shadow-lg transition flex items-center gap-2 flex-shrink-0">
+                            <i class="fa-solid fa-images text-amber-300 text-sm"></i>
+                            <span class="text-white font-bold">تصفح واختيار صورة</span>
+                            <span class="px-1.5 py-0.5 rounded-md bg-emerald-950/70 text-amber-300 text-[10px] font-bold">({{ count($availableCovers) }})</span>
                         </button>
                     </div>
 
