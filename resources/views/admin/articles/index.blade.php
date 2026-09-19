@@ -39,8 +39,7 @@
                     <td class="p-4 font-bold text-slate-800 max-w-xs truncate">{{ $art->title }}</td>
                     <td class="p-4"><span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800">{{ $art->type }}</span></td>
                     <td class="p-4 text-slate-500">{{ $art->category->name ?? '-' }}</td>
-                    <td class="p-4 text-slate-500">{{ $art->views_count }}</td>
-                    <td class="p-4 text-slate-400">{{ $art->created_at ? $art->created_at->format('Y-m-d') : '' }}</td>
+                    <td class="p-4 text-slate-500 font-medium">{{ $art->published_at ? $art->published_at->format('Y-m-d') : ($art->created_at ? $art->created_at->format('Y-m-d') : '') }}</td>
                     <td class="p-4 text-center">
                         <div class="inline-flex items-center gap-2">
                             <a href="{{ route('admin.articles.edit', $art->id) }}" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg" title="تعديل"><i class="fa-solid fa-pen"></i></a>

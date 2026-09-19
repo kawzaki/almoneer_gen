@@ -29,7 +29,7 @@ class NewsController extends Controller
             }
         }
 
-        $articles = $query->latest()->paginate(9)->withQueryString();
+        $articles = $query->orderByRaw('COALESCE(published_at, created_at) DESC')->paginate(9)->withQueryString();
         $categories = Category::where('module', 'article')->active()->orderBy('order')->get();
 
         // Extract distinct tags across all active news articles
@@ -62,7 +62,7 @@ class NewsController extends Controller
         $recentNews = Article::active()
             ->where('id', '!=', $article->id)
             ->where('type', '!=', 'bio')
-            ->latest()
+            ->orderByRaw('COALESCE(published_at, created_at) DESC')
             ->take(4)
             ->get();
 

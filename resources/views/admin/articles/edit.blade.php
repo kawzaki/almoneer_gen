@@ -59,8 +59,8 @@
             <input type="text" name="title" value="{{ old('title', $article->title) }}" required class="w-full text-xs sm:text-sm rounded-xl border-slate-200 p-3 bg-slate-50 focus:bg-white focus:border-emerald-800 focus:ring-1 focus:ring-emerald-800/20 transition">
         </div>
 
-        <!-- Type and Category -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Type, Category and Published Date -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1.5">النوع:</label>
                 <select name="type" required class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 focus:bg-white transition">
@@ -84,6 +84,18 @@
                     <option value="{{ $cat->id }}" {{ old('category_id', $article->category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
                     @endforeach
                 </select>
+            </div>
+            <div>
+                <div class="flex items-center justify-between mb-1.5">
+                    <label class="block text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                        <i class="fa-regular fa-calendar-days text-emerald-800"></i>
+                        <span>تاريخ النشر:</span>
+                    </label>
+                    <span class="text-[10px] text-slate-400">يدعم الأخبار السابقة</span>
+                </div>
+                <input type="date" name="published_at" 
+                       value="{{ old('published_at', $article->published_at ? $article->published_at->format('Y-m-d') : ($article->created_at ? $article->created_at->format('Y-m-d') : date('Y-m-d'))) }}" 
+                       class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 focus:bg-white focus:border-emerald-800 focus:ring-1 focus:ring-emerald-800/20 transition text-slate-700 font-medium dir-ltr">
             </div>
         </div>
 

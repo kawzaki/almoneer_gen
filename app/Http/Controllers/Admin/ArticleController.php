@@ -13,7 +13,9 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        $articles = Article::with('category')->latest()->paginate(15);
+        $articles = Article::with('category')
+            ->orderByRaw('COALESCE(published_at, created_at) DESC')
+            ->paginate(15);
         return view('admin.articles.index', compact('articles'));
     }
 
@@ -26,10 +28,11 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title'      => 'required|string|max:255',
-            'content'    => 'required',
-            'type'       => 'required|in:news,activity,bio,article',
-            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:10240',
+            'title'        => 'required|string|max:255',
+            'content'      => 'required',
+            'type'         => 'required|in:news,activity,bio,article',
+            'image_file'   => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:10240',
+            'published_at' => 'nullable|date',
         ]);
 
         $slug = Str::slug($request->title, '-', null);
@@ -54,6 +57,15 @@ class ArticleController extends Controller
             $imagePath = 'uploads/articles/' . $filename;
         }
 
+        $publishedAt = now();
+        if ($request->filled('published_at')) {
+            try {
+                $publishedAt = \Carbon\Carbon::parse($request->published_at);
+            } catch (\Exception $e) {
+                $publishedAt = now();
+            }
+        }
+
         Article::create([
             'title'        => $request->title,
             'slug'         => $slug,
@@ -65,7 +77,7 @@ class ArticleController extends Controller
             'tags'         => $request->tags,
             'is_featured'  => $request->boolean('is_featured'),
             'is_active'    => $request->boolean('is_active', true),
-            'published_at' => $request->published_at ?? now(),
+            'published_at' => $publishedAt,
         ]);
 
         return redirect()->route('admin.articles.index')->with('success', 'تم حفظ الخبر بنجاح وتحديث كاش الموقع تلقائياً!');
@@ -80,9 +92,10 @@ class ArticleController extends Controller
     public function update(Request $request, Article $article)
     {
         $request->validate([
-            'title'      => 'required|string|max:255',
-            'content'    => 'required',
-            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:10240',
+            'title'        => 'required|string|max:255',
+            'content'      => 'required',
+            'image_file'   => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:10240',
+            'published_at' => 'nullable|date',
         ]);
 
         $imagePath = $article->image;
@@ -102,6 +115,15 @@ class ArticleController extends Controller
             $imagePath = $request->image;
         }
 
+        $publishedAt = $article->published_at ?? $article->created_at;
+        if ($request->filled('published_at')) {
+            try {
+                $publishedAt = \Carbon\Carbon::parse($request->published_at);
+            } catch (\Exception $e) {
+                // keep existing
+            }
+        }
+
         $article->update([
             'title'        => $request->title,
             'category_id'  => $request->category_id,
@@ -112,7 +134,7 @@ class ArticleController extends Controller
             'tags'         => $request->tags,
             'is_featured'  => $request->boolean('is_featured'),
             'is_active'    => $request->boolean('is_active', true),
-            'published_at' => $request->published_at ?? $article->published_at,
+            'published_at' => $publishedAt,
         ]);
 
         return redirect()->route('admin.articles.index')->with('success', 'تم تحديث الخبر بنجاح وتحديث كاش الموقع تلقائياً!');
