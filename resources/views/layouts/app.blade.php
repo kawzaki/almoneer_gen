@@ -527,6 +527,27 @@
     </main>
 
     <!-- Footer -->
+    <!-- Footer Styles for Dynamic Menus -->
+    <style>
+        .footer-dynamic-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .footer-dynamic-menu li a {
+            color: #cbd5e1;
+            transition: all 0.2s ease-in-out;
+            display: inline-block;
+        }
+        .footer-dynamic-menu li a:hover {
+            color: #facc15;
+            transform: translateX(-3px);
+        }
+    </style>
+
     <footer class="bg-emerald-950 text-slate-300 border-t border-gold-500/30 pt-12 pb-8 mt-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
@@ -536,43 +557,65 @@
                     <h4 class="font-scholarly text-xl text-gold-300 font-bold">{{ $siteSettings['site.title'] ?? 'سماحة السيد منير الخباز' }}</h4>
                     <p class="text-xs text-gold-400/90 font-medium">{{ $siteSettings['site.subtitle'] ?? 'مركز النتاج الفقهي والفكري والنشاط التبليغي' }}</p>
                     <p class="text-sm leading-relaxed text-slate-300 font-light">
-                        البوابة العامة لنشر المحاضرات الفكرية، ديوان الشعر، المؤلفات، والندوات، مع الربط المباشر ببوابة الدروس الحوزوية والبحث الخارج.
+                        {{ $siteSettings['site.footer_about'] ?? 'البوابة العامة لنشر المحاضرات الفكرية، ديوان الشعر، المؤلفات، والندوات، مع الربط المباشر ببوابة الدروس الحوزوية والبحث الخارج.' }}
                     </p>
+                    @if(($siteSettings['site.footer_show_hadith'] ?? '1') !== '0')
                     <div class="pt-2 text-xs text-gold-400 font-medium flex items-center gap-2">
                         <i class="fa-solid fa-quote-right"></i>
-                        <span>{{ $siteSettings['site.hadith'] ?? 'لا يزال المرء عالماً ما طلب العلم' }}</span>
+                        <span>{{ $siteSettings['site.hadith'] ?? 'لا يزال المرء عالماً ما طلب العلم، فإذا ظن أنه قد علم فقد جهل' }}</span>
+                    </div>
+                    @endif
+                </div>
+
+                <!-- Col 2: Quick Links (Footer Menu 1) -->
+                <div>
+                    <h4 class="text-white font-bold text-sm mb-4 border-r-2 border-gold-400 pr-2">
+                        {{ $siteSettings['site.footer_col1_title'] ?? 'أقسام الموقع' }}
+                    </h4>
+                    <div class="footer-dynamic-menu text-xs text-slate-300">
+                        @if(!empty(trim($globalFooterMenu1 ?? '')))
+                            {!! $globalFooterMenu1 !!}
+                        @else
+                            <ul class="space-y-2">
+                                <li><a href="{{ route('home') }}">الصفحة الرئيسية</a></li>
+                                <li><a href="{{ route('bio') }}">نبذة عن حياته الشريفة</a></li>
+                                <li><a href="{{ route('lectures.index') }}">أرشيف المحاضرات والمواسم</a></li>
+                                <li><a href="{{ route('poems.index') }}">ديوان الشعر والقصائد</a></li>
+                                <li><a href="{{ route('books.index') }}">المؤلفات والكتب الإلكترونية</a></li>
+                            </ul>
+                        @endif
                     </div>
                 </div>
 
-                <!-- Col 2: Quick Links -->
+                <!-- Col 3: Services & Links (Footer Menu 2) -->
                 <div>
-                    <h4 class="text-white font-bold text-sm mb-4 border-r-2 border-gold-400 pr-2">أقسام الموقع</h4>
-                    <ul class="space-y-2 text-xs text-slate-300">
-                        <li><a href="{{ route('home') }}" class="hover:text-gold-300 transition">الصفحة الرئيسية</a></li>
-                        <li><a href="{{ route('bio') }}" class="hover:text-gold-300 transition">نبذة عن حياته الشريفة</a></li>
-                        <li><a href="{{ route('lectures.index') }}" class="text-gold-400 font-bold hover:underline transition">أرشيف المحاضرات والمواسم (مرئية • صوتية • مكتوبة)</a></li>
-                        <li><a href="{{ route('poems.index') }}" class="hover:text-gold-300 transition">ديوان الشعر والقصائد</a></li>
-                        <li><a href="{{ route('books.index') }}" class="hover:text-gold-300 transition">المؤلفات والكتب الإلكترونية</a></li>
-                    </ul>
-                </div>
-
-                <!-- Col 3: Media & Inquiries -->
-                <div>
-                    <h4 class="text-white font-bold text-sm mb-4 border-r-2 border-gold-400 pr-2">الخدمات والتواصل</h4>
-                    <ul class="space-y-2 text-xs text-slate-300">
-                        <li><a href="{{ route('inquiries.index') }}" class="hover:text-gold-300 transition">إرسال استفسار أو مسألة</a></li>
-                        <li><a href="{{ route('inquiries.track') }}" class="hover:text-gold-300 transition">متابعة حالة استفسار سابق</a></li>
-                        <li><a href="{{ route('gallery.index') }}" class="hover:text-gold-300 transition">ألبوم الصور والمناسبات</a></li>
-                        <li><a href="{{ route('social.index') }}" class="hover:text-gold-300 transition">المركز الإعلامي وشبكات التواصل</a></li>
-                        <li><a href="{{ route('contact.index') }}" class="hover:text-gold-300 transition">عناوين المكاتب والاتصال</a></li>
-                        <li><a href="{{ $hawzaPortalUrl }}" target="_blank" class="text-gold-400 font-semibold hover:underline">بوابة الدروس الحوزوية ↗</a></li>
-                    </ul>
+                    <h4 class="text-white font-bold text-sm mb-4 border-r-2 border-gold-400 pr-2">
+                        {{ $siteSettings['site.footer_col2_title'] ?? 'الخدمات والتواصل' }}
+                    </h4>
+                    <div class="footer-dynamic-menu text-xs text-slate-300">
+                        @if(!empty(trim($globalFooterMenu2 ?? '')))
+                            {!! $globalFooterMenu2 !!}
+                        @else
+                            <ul class="space-y-2">
+                                <li><a href="{{ route('inquiries.index') }}">إرسال استفسار أو مسألة</a></li>
+                                <li><a href="{{ route('inquiries.track') }}">متابعة حالة استفسار سابق</a></li>
+                                <li><a href="{{ route('gallery.index') }}">ألبوم الصور والمناسبات</a></li>
+                                <li><a href="{{ route('social.index') }}">المركز الإعلامي وشبكات التواصل</a></li>
+                                <li><a href="{{ route('contact.index') }}">عناوين المكاتب والاتصال</a></li>
+                                <li><a href="{{ $hawzaPortalUrl }}" target="_blank">بوابة الدروس الحوزوية ↗</a></li>
+                            </ul>
+                        @endif
+                    </div>
                 </div>
 
                 <!-- Col 4: Official Accounts -->
                 <div class="space-y-4">
-                    <h4 class="text-white font-bold text-sm border-r-2 border-gold-400 pr-2">الحسابات الرسمية المعتمدة</h4>
-                    <p class="text-xs text-slate-400 leading-relaxed">تابعوا جديد المحاضرات والمقاطع اليومية عبر الحسابات الرسمية الموثقة:</p>
+                    <h4 class="text-white font-bold text-sm border-r-2 border-gold-400 pr-2">
+                        {{ $siteSettings['site.footer_col3_title'] ?? 'الحسابات الرسمية المعتمدة' }}
+                    </h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        {{ $siteSettings['site.footer_social_text'] ?? 'تابعوا جديد المحاضرات والمقاطع اليومية عبر الحسابات الرسمية الموثقة:' }}
+                    </p>
                     <div class="flex flex-wrap items-center gap-2 pt-1">
                         @if(!empty($siteSettings['social.youtube']))
                         <a href="{{ $siteSettings['social.youtube'] }}" target="_blank" class="w-9 h-9 rounded-xl bg-emerald-900 hover:bg-red-600 text-white flex items-center justify-center transition shadow-md hover:scale-105" title="قناة اليوتيوب الرسمية"><i class="fa-brands fa-youtube"></i></a>
@@ -601,7 +644,7 @@
 
             <!-- Bottom Copyright -->
             <div class="pt-8 border-t border-emerald-900/80 flex flex-wrap justify-between items-center gap-4 text-xs text-slate-400">
-                <p>© {{ date('Y') }} {{ $siteSettings['site.title'] ?? 'سماحة السيد منير الخباز' }} - جميع الحقوق محفوظة.</p>
+                <p>© {{ date('Y') }} {{ $siteSettings['site.title'] ?? 'سماحة السيد منير الخباز' }} - {{ $siteSettings['site.copyright_text'] ?? 'جميع الحقوق محفوظة.' }}</p>
                 <div class="flex items-center gap-4">
                     <a href="{{ route('home') }}" class="hover:text-gold-300">الرئيسية</a>
                     <span>•</span>

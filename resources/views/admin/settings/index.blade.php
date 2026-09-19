@@ -117,6 +117,59 @@
             </div>
         </div>
 
+        <!-- 4. Footer Content Settings -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 class="font-bold text-sm text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-shoe-prints text-gold-500"></i>
+                    <span>محتوى أسفل الموقع (الفوتر - Footer)</span>
+                </h3>
+                <a href="{{ route('admin.menus.index') }}" class="text-xs font-bold text-emerald-800 hover:underline flex items-center gap-1">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span>إدارة روابط الفوتر في شاشة القوائم ←</span>
+                </a>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">النبذة التعريفية في الفوتر (عن المركز والمنصة):</label>
+                <textarea name="site.footer_about" rows="3" class="w-full text-xs rounded-xl border-slate-200 p-3 bg-slate-50 leading-relaxed font-light">{{ $settings['site.footer_about'] ?? 'البوابة العامة لنشر المحاضرات الفكرية، ديوان الشعر، المؤلفات، والندوات، مع الربط المباشر ببوابة الدروس الحوزوية والبحث الخارج.' }}</textarea>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">عنوان عمود الروابط 1:</label>
+                    <input type="text" name="site.footer_col1_title" value="{{ $settings['site.footer_col1_title'] ?? 'أقسام الموقع' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">عنوان عمود الروابط 2:</label>
+                    <input type="text" name="site.footer_col2_title" value="{{ $settings['site.footer_col2_title'] ?? 'الخدمات والتواصل' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">عنوان عمود الحسابات:</label>
+                    <input type="text" name="site.footer_col3_title" value="{{ $settings['site.footer_col3_title'] ?? 'الحسابات الرسمية المعتمدة' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">نص الدعوة لمتابعة الحسابات:</label>
+                    <input type="text" name="site.footer_social_text" value="{{ $settings['site.footer_social_text'] ?? 'تابعوا جديد المحاضرات والمقاطع اليومية عبر الحسابات الرسمية الموثقة:' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">نص حقوق النشر (Copyright):</label>
+                    <input type="text" name="site.copyright_text" value="{{ $settings['site.copyright_text'] ?? 'جميع الحقوق محفوظة.' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">إظهار الحديث الشريف في الفوتر:</label>
+                <select name="site.footer_show_hadith" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+                    <option value="1" {{ ($settings['site.footer_show_hadith'] ?? '1') === '1' ? 'selected' : '' }}>نعم، إظهار الحديث الشريف في أسفل النبذة</option>
+                    <option value="0" {{ ($settings['site.footer_show_hadith'] ?? '1') === '0' ? 'selected' : '' }}>إخفاء الحديث الشريف من الفوتر</option>
+                </select>
+            </div>
+        </div>
+
         <div class="flex justify-end">
             <button type="submit" class="px-8 py-3 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2">
                 <i class="fa-solid fa-floppy-disk"></i>

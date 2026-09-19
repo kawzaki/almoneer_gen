@@ -61,6 +61,8 @@ trait ClearsFrontendCache
             case 'MenuItem':
                 Cache::forget('site.menus.horizontal');
                 Cache::forget('site.menus.vertical');
+                Cache::forget('site.menus.footer1');
+                Cache::forget('site.menus.footer2');
                 break;
 
             case 'Category':
@@ -79,6 +81,8 @@ trait ClearsFrontendCache
             'site.settings',
             'site.menus.horizontal',
             'site.menus.vertical',
+            'site.menus.footer1',
+            'site.menus.footer2',
             'site.theme.active',
             'site.articles.recent',
             'site.media.recent',

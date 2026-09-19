@@ -38,6 +38,16 @@ class AppServiceProvider extends ServiceProvider
                 return File::exists($path) ? File::get($path) : '';
             });
 
+            $footerMenu1 = Cache::rememberForever('site.menus.footer1', function () {
+                $path = storage_path('app/menus/menu_f1.htm');
+                return File::exists($path) ? File::get($path) : '';
+            });
+
+            $footerMenu2 = Cache::rememberForever('site.menus.footer2', function () {
+                $path = storage_path('app/menus/menu_f2.htm');
+                return File::exists($path) ? File::get($path) : '';
+            });
+
             $siteSettings = Cache::rememberForever('site.settings', function () {
                 try {
                     return Setting::pluck('value', 'key')->toArray();
@@ -60,6 +70,8 @@ class AppServiceProvider extends ServiceProvider
             $view->with([
                 'globalHorizontalMenu' => $horizontalMenu,
                 'globalVerticalMenu'   => $verticalMenu,
+                'globalFooterMenu1'    => $footerMenu1,
+                'globalFooterMenu2'    => $footerMenu2,
                 'siteSettings'         => $siteSettings,
                 'activeTheme'          => $activeTheme,
                 'hawzaPortalUrl'       => $hawzaPortalUrl,

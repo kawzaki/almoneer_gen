@@ -18,15 +18,23 @@
         </div>
     </div>
 
-    <!-- Dual Tab Selector -->
-    <div class="flex border-b border-slate-200 gap-2" id="menu-tabs">
-        <button onclick="switchTab('horizontal')" id="tab-btn-horizontal" class="px-5 py-3 text-sm font-bold border-b-2 border-emerald-800 text-emerald-900 flex items-center gap-2">
+    <!-- Tab Selector -->
+    <div class="flex flex-wrap border-b border-slate-200 gap-2" id="menu-tabs">
+        <button onclick="switchTab('horizontal')" id="tab-btn-horizontal" class="px-5 py-3 text-xs sm:text-sm font-bold border-b-2 border-emerald-800 text-emerald-900 flex items-center gap-2">
             <i class="fa-solid fa-arrows-left-right"></i>
             <span>القائمة الأفقية (الهيدر العام)</span>
         </button>
-        <button onclick="switchTab('vertical')" id="tab-btn-vertical" class="px-5 py-3 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-700 flex items-center gap-2">
+        <button onclick="switchTab('vertical')" id="tab-btn-vertical" class="px-5 py-3 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-700 flex items-center gap-2">
             <i class="fa-solid fa-arrows-up-down"></i>
             <span>القائمة العمودية (القائمة الجانبية والجوال)</span>
+        </button>
+        <button onclick="switchTab('footer1')" id="tab-btn-footer1" class="px-5 py-3 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-700 flex items-center gap-2">
+            <i class="fa-solid fa-table-columns"></i>
+            <span>روابط الفوتر: أقسام الموقع</span>
+        </button>
+        <button onclick="switchTab('footer2')" id="tab-btn-footer2" class="px-5 py-3 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-700 flex items-center gap-2">
+            <i class="fa-solid fa-headset"></i>
+            <span>روابط الفوتر: الخدمات والتواصل</span>
         </button>
     </div>
 
@@ -71,6 +79,46 @@
                 <div class="p-3 bg-slate-50 rounded-xl border border-dashed border-slate-300">
                     <div id="vertical-menu-builder" class="space-y-2">
                         {!! $verticalMenu !!}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer 1 Menu Container -->
+            <div id="container-footer1" class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4 hidden">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <h3 class="font-bold text-sm text-slate-700 flex items-center gap-2">
+                        <i class="fa-solid fa-table-columns text-emerald-800"></i>
+                        <span>روابط الفوتر - العمود الأول (أقسام الموقع)</span>
+                    </h3>
+                    <button onclick="saveMenu('footer1')" class="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs shadow-md transition flex items-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>حفظ وتحديث الكاش</span>
+                    </button>
+                </div>
+                
+                <div class="p-3 bg-slate-50 rounded-xl border border-dashed border-slate-300">
+                    <div id="footer1-menu-builder" class="space-y-2">
+                        {!! $footerMenu1 !!}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer 2 Menu Container -->
+            <div id="container-footer2" class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4 hidden">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <h3 class="font-bold text-sm text-slate-700 flex items-center gap-2">
+                        <i class="fa-solid fa-headset text-emerald-800"></i>
+                        <span>روابط الفوتر - العمود الثاني (الخدمات والتواصل)</span>
+                    </h3>
+                    <button onclick="saveMenu('footer2')" class="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs shadow-md transition flex items-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>حفظ وتحديث الكاش</span>
+                    </button>
+                </div>
+                
+                <div class="p-3 bg-slate-50 rounded-xl border border-dashed border-slate-300">
+                    <div id="footer2-menu-builder" class="space-y-2">
+                        {!! $footerMenu2 !!}
                     </div>
                 </div>
             </div>
@@ -145,32 +193,29 @@
 
     function switchTab(tab) {
         activeTab = tab;
-        if (tab === 'horizontal') {
-            document.getElementById('container-horizontal').classList.remove('hidden');
-            document.getElementById('container-vertical').classList.add('hidden');
-            document.getElementById('tab-btn-horizontal').className = 'px-5 py-3 text-sm font-bold border-b-2 border-emerald-800 text-emerald-900 flex items-center gap-2';
-            document.getElementById('tab-btn-vertical').className = 'px-5 py-3 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-700 flex items-center gap-2';
-        } else {
-            document.getElementById('container-horizontal').classList.add('hidden');
-            document.getElementById('container-vertical').classList.remove('hidden');
-            document.getElementById('tab-btn-vertical').className = 'px-5 py-3 text-sm font-bold border-b-2 border-emerald-800 text-emerald-900 flex items-center gap-2';
-            document.getElementById('tab-btn-horizontal').className = 'px-5 py-3 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-700 flex items-center gap-2';
-        }
+        const tabs = ['horizontal', 'vertical', 'footer1', 'footer2'];
+        tabs.forEach(t => {
+            const container = document.getElementById(`container-${t}`);
+            const btn = document.getElementById(`tab-btn-${t}`);
+            if (t === tab) {
+                if (container) container.classList.remove('hidden');
+                if (btn) btn.className = 'px-5 py-3 text-xs sm:text-sm font-bold border-b-2 border-emerald-800 text-emerald-900 flex items-center gap-2';
+            } else {
+                if (container) container.classList.add('hidden');
+                if (btn) btn.className = 'px-5 py-3 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-700 flex items-center gap-2';
+            }
+        });
     }
 
-    // Initialize Sortable on both lists
+    // Initialize Sortable on all 4 lists
     document.addEventListener('DOMContentLoaded', function() {
-        const hUl = document.querySelector('#horizontal-menu-builder ul') || document.querySelector('#horizontal-menu-builder');
-        const vUl = document.querySelector('#vertical-menu-builder ul') || document.querySelector('#vertical-menu-builder');
-
-        if (hUl) {
-            new Sortable(hUl, { animation: 150, ghostClass: 'bg-gold-100', handle: '.drag-handle' });
-            enhanceListItems(hUl);
-        }
-        if (vUl) {
-            new Sortable(vUl, { animation: 150, ghostClass: 'bg-gold-100', handle: '.drag-handle' });
-            enhanceListItems(vUl);
-        }
+        ['horizontal', 'vertical', 'footer1', 'footer2'].forEach(key => {
+            const el = document.querySelector(`#${key}-menu-builder ul`) || document.querySelector(`#${key}-menu-builder`);
+            if (el) {
+                new Sortable(el, { animation: 150, ghostClass: 'bg-gold-100', handle: '.drag-handle' });
+                enhanceListItems(el);
+            }
+        });
     });
 
     function enhanceListItems(container) {
@@ -332,9 +377,8 @@
             return;
         }
 
-        const targetContainer = (activeTab === 'horizontal') 
-            ? (document.querySelector('#horizontal-menu-builder ul') || document.getElementById('horizontal-menu-builder'))
-            : (document.querySelector('#vertical-menu-builder ul') || document.getElementById('vertical-menu-builder'));
+        const targetContainer = document.querySelector(`#${activeTab}-menu-builder ul`) 
+            || document.getElementById(`${activeTab}-menu-builder`);
 
         const li = document.createElement('li');
         li.setAttribute('data-title', title);
@@ -382,11 +426,14 @@
     }
 
     function saveMenu(id) {
-        const builder = (id === 'horizontal') 
-            ? document.getElementById('horizontal-menu-builder')
-            : document.getElementById('vertical-menu-builder');
-
-        const listId = (id === 'horizontal') ? 'ittsc-menu' : 'ittsc-menu2';
+        const builder = document.getElementById(`${id}-menu-builder`);
+        const listIds = {
+            'horizontal': 'ittsc-menu',
+            'vertical': 'ittsc-menu2',
+            'footer1': 'ittsc-menu-f1',
+            'footer2': 'ittsc-menu-f2'
+        };
+        const listId = listIds[id] || 'ittsc-menu';
 
         // Collect all active <li> items and serialize cleanly
         const liElements = builder.querySelectorAll('li');
