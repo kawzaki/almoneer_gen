@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="{{ rtrim(url('/'), '/') }}/">
     <title>@yield('title', 'لوحة التحكم') | شبكة العلامة المنير</title>
     
     <!-- Google Fonts: IBM Plex Sans Arabic -->

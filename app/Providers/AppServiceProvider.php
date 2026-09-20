@@ -67,11 +67,30 @@ class AppServiceProvider extends ServiceProvider
 
             $hawzaPortalUrl = env('HAWZA_PORTAL_URL', 'https://almoneer-droos.onrender.com');
 
+            $normalizeMenu = function ($html) {
+                if (empty($html)) return '';
+                $baseUrl = rtrim(url('/'), '/');
+                $basePath = parse_url($baseUrl, PHP_URL_PATH);
+                if ($basePath && $basePath !== '/') {
+                    $sub = ltrim($basePath, '/');
+                    $html = preg_replace_callback('/href=([\'"])\/([^\'"]*)\1/', function ($matches) use ($basePath, $sub) {
+                        $quote = $matches[1];
+                        $path = $matches[2];
+                        if (str_starts_with($path, $sub . '/') || $path === $sub) {
+                            return "href={$quote}/{$path}{$quote}";
+                        }
+                        $target = $path === '' ? $basePath : "{$basePath}/{$path}";
+                        return "href={$quote}{$target}{$quote}";
+                    }, $html);
+                }
+                return $html;
+            };
+
             $view->with([
-                'globalHorizontalMenu' => $horizontalMenu,
-                'globalVerticalMenu'   => $verticalMenu,
-                'globalFooterMenu1'    => $footerMenu1,
-                'globalFooterMenu2'    => $footerMenu2,
+                'globalHorizontalMenu' => $normalizeMenu($horizontalMenu),
+                'globalVerticalMenu'   => $normalizeMenu($verticalMenu),
+                'globalFooterMenu1'    => $normalizeMenu($footerMenu1),
+                'globalFooterMenu2'    => $normalizeMenu($footerMenu2),
                 'siteSettings'         => $siteSettings,
                 'activeTheme'          => $activeTheme,
                 'hawzaPortalUrl'       => $hawzaPortalUrl,

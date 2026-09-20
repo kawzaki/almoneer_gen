@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="{{ rtrim(url('/'), '/') }}/">
     <title>@yield('title', ($siteSettings['site.title'] ?? 'سماحة السيد منير الخباز') . ' | الموقع الرسمي')</title>
     <meta name="description" content="@yield('description', 'الموقع العام والفكري لسماحة العلامة السيد منير الخباز - المحاضرات العامة، ديوان الشعر، الكتب والمؤلفات، الاستفسارات الفكرية والفقهية.')">
 
