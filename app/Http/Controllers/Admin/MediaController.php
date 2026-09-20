@@ -25,10 +25,11 @@ class MediaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title'     => 'required|string|max:255',
-            'type'      => 'required|in:audio,video,short',
-            'media_url' => 'nullable|string',
-            'tags'      => 'nullable|string',
+            'title'          => 'required|string|max:255',
+            'type'           => 'required|in:audio,video,short',
+            'media_url'      => 'nullable|string',
+            'tags'           => 'nullable|string',
+            'lecture_number' => 'nullable|integer|min:1|max:999',
         ]);
 
         $slug = Str::slug($request->title, '-', null) ?: 'media-' . time();
@@ -60,10 +61,7 @@ class MediaController extends Controller
             $seasonSlug = 'fatimiya';
         }
 
-        $num = null;
-        if (preg_match('/14\d\d-\d\d-(\d+)/', $title, $m)) {
-            $num = (int)$m[1];
-        }
+        $num = $this->resolveLectureNumber($request, $title);
 
         MediaItem::create([
             'title'          => $request->title,
@@ -97,10 +95,11 @@ class MediaController extends Controller
     public function update(Request $request, MediaItem $medium)
     {
         $request->validate([
-            'title'     => 'required|string|max:255',
-            'type'      => 'required|in:audio,video,short',
-            'media_url' => 'nullable|string',
-            'tags'      => 'nullable|string',
+            'title'          => 'required|string|max:255',
+            'type'           => 'required|in:audio,video,short',
+            'media_url'      => 'nullable|string',
+            'tags'           => 'nullable|string',
+            'lecture_number' => 'nullable|integer|min:1|max:999',
         ]);
 
         $updateData = [
@@ -142,13 +141,56 @@ class MediaController extends Controller
             $seasonSlug = 'fatimiya';
         }
 
-        $updateData['hijri_year'] = $year;
-        $updateData['season'] = $season;
-        $updateData['season_slug'] = $seasonSlug;
+        $num = $this->resolveLectureNumber($request, $title);
+
+        $updateData['hijri_year']     = $year;
+        $updateData['season']         = $season;
+        $updateData['season_slug']    = $seasonSlug;
+        $updateData['lecture_number'] = $num;
 
         $medium->update($updateData);
 
         return redirect()->route('admin.media.index')->with('success', 'تم تحديث المادة الإعلامية بنجاح!');
+    }
+
+    private function resolveLectureNumber(Request $request, string $title): ?int
+    {
+        // 1. If explicitly specified in form
+        if ($request->has('lecture_number')) {
+            $raw = $request->input('lecture_number');
+            if ($raw !== null && $raw !== '') {
+                return (int) $raw;
+            }
+        }
+
+        // 2. Try auto-detecting: 1448-02-19 format in title
+        if (preg_match('/14\d\d-\d\d-(\d+)/', $title, $m)) {
+            return (int) $m[1];
+        }
+
+        // 3. Try auto-detecting: الليلة 19 or ليلة 19 or محاضرة 19
+        if (preg_match('/(?:الليلة|ليلة|محاضرة)\s*(\d+)/u', $title, $m)) {
+            return (int) $m[1];
+        }
+
+        // 4. Try auto-detecting Arabic ordinal words
+        $ordinals = [
+            'الأولى' => 1, 'الاولى' => 1, 'الثانية' => 2, 'الثالثة' => 3, 'الرابعة' => 4,
+            'الخامسة' => 5, 'السادسة' => 6, 'السابعة' => 7, 'الثامنة' => 8, 'التاسعة' => 9,
+            'العاشرة' => 10, 'الحادية عشرة' => 11, 'الحادية عشر' => 11, 'الثانية عشرة' => 12,
+            'الثانية عشر' => 12, 'الثالثة عشرة' => 13, 'الثالثة عشر' => 13, 'الرابعة عشرة' => 14,
+            'الرابعة عشر' => 14, 'الخامسة عشرة' => 15, 'الخامسة عشر' => 15, 'السادسة عشرة' => 16,
+            'السادسة عشر' => 16, 'السابعة عشرة' => 17, 'السابعة عشر' => 17, 'الثامنة عشرة' => 18,
+            'الثامنة عشر' => 18, 'التاسعة عشرة' => 19, 'التاسعة عشر' => 19, 'العشرون' => 20,
+            'العشرين' => 20
+        ];
+        foreach ($ordinals as $word => $number) {
+            if (mb_strpos($title, 'الليلة ' . $word) !== false || mb_strpos($title, 'ليلة ' . $word) !== false) {
+                return $number;
+            }
+        }
+
+        return null;
     }
 
     public function destroy(MediaItem $medium)

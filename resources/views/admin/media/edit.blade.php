@@ -70,7 +70,7 @@
             <input type="text" name="title" value="{{ $item->title }}" required class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">النوع:</label>
                 <select name="type" required class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
@@ -91,6 +91,13 @@
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">الموسم / السنة:</label>
                 <input type="text" name="season_year" value="{{ $item->season_year }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                    <span>رقم الليلة / المحاضرة:</span>
+                    <span class="text-slate-400 font-normal text-[10px]">(اختياري)</span>
+                </label>
+                <input type="number" name="lecture_number" min="1" max="999" placeholder="مثال: 1 أو 19" value="{{ old('lecture_number', $item->lecture_number) }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 font-mono text-center">
             </div>
         </div>
 

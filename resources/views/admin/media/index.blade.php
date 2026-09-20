@@ -36,7 +36,12 @@
                             {{ $m->type === 'audio' ? 'صوتي' : ($m->type === 'short' ? 'ريلز قصير' : 'مرئي') }}
                         </span>
                     </td>
-                    <td class="p-4 text-slate-500">{{ $m->season_year ?? '-' }}</td>
+                    <td class="p-4 text-slate-500">
+                        <div>{{ $m->season_year ?? '-' }}</div>
+                        @if($m->lecture_number)
+                            <span class="inline-block mt-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-900">الليلة {{ $m->lecture_number }}</span>
+                        @endif
+                    </td>
                     <td class="p-4 text-slate-500 font-mono">{{ $m->duration ?? '-' }}</td>
                     <td class="p-4 text-slate-500">{{ $m->views_count }}</td>
                     <td class="p-4 text-center">
