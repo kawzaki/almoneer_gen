@@ -34,7 +34,6 @@
                         <i class="fa-solid fa-calendar-days text-gold-500"></i>
                         <span>استعراض المواسم بحسب السنوات الهجرية</span>
                     </h2>
-                    <p class="text-xs text-slate-500 mt-0.5">تصفح مواسم ومحاضرات كل عام هجري على حدة.</p>
                 </div>
 
                 <!-- Year Selector Dropdown -->
