@@ -28,13 +28,35 @@
 
         <!-- Seasonal Hijri Years Explorer Cards -->
         <div class="space-y-4">
-            <div class="flex items-center justify-between">
-                <h2 class="text-lg font-bold font-scholarly text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-calendar-days text-gold-500"></i>
-                    <span>استعراض المواسم بحسب السنوات الهجرية</span>
-                </h2>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <h2 class="text-lg font-bold font-scholarly text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-days text-gold-500"></i>
+                        <span>استعراض المواسم بحسب السنوات الهجرية</span>
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-0.5">تصفح مواسم ومحاضرات كل عام هجري على حدة.</p>
+                </div>
+
+                <!-- Year Selector Dropdown -->
+                <div class="flex items-center gap-2">
+                    <label class="text-xs font-bold text-slate-600 flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fa-solid fa-clock-rotate-left text-emerald-800"></i>
+                        <span class="hidden sm:inline">أرشيف الأعوام:</span>
+                    </label>
+                    <select onchange="if(this.value) window.location.href=this.value" 
+                            class="text-xs font-bold rounded-xl border border-slate-200 py-2 pr-3 pl-8 bg-white text-emerald-950 focus:border-emerald-800 focus:ring-1 focus:ring-emerald-800 shadow-xs cursor-pointer">
+                        <option value="">-- اختر سنة لعرض مواسمها ({{ $allYearsWithCounts->count() }} عام) ▾ --</option>
+                        @foreach($allYearsWithCounts as $yItem)
+                            <option value="{{ route('lectures.year', ['year' => $yItem->hijri_year]) }}" {{ ($selectedYear == $yItem->hijri_year) ? 'selected' : '' }}>
+                                مواسم سنة {{ $yItem->hijri_year }} هـ ({{ $yItem->total }} محاضرة)
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
 
+
+            <!-- 3 Featured Recent Years Cards Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 @foreach($yearsData as $yearNum => $seasons)
                     <div
@@ -77,41 +99,57 @@
                         <div class="pt-4 mt-4 border-t border-emerald-800/40 relative z-10">
                             <a href="{{ route('lectures.year', ['year' => $yearNum]) }}"
                                 class="w-full py-2 bg-emerald-800 hover:bg-gold-500 hover:text-emerald-950 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-2">
-                                <span>كافة محاضرات {{ $yearNum }} هـ</span>
+                                <span>كافة مواسم ومحاضرات {{ $yearNum }} هـ</span>
                                 <i class="fa-solid fa-arrow-left text-[10px]"></i>
                             </a>
                         </div>
                     </div>
                 @endforeach
             </div>
+
         </div>
 
         <!-- Filter Bar & Display View Switcher -->
         <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm space-y-4">
             <div class="flex flex-wrap items-center justify-between gap-4">
 
-                <!-- Format Filter Pills -->
-                <div class="flex flex-wrap items-center gap-2 text-xs">
-                    <span class="text-slate-500 font-bold ml-1">تصفية حسب الصيغة:</span>
-                    <a href="{{ route('lectures.index', array_merge(request()->query(), ['format' => 'all'])) }}"
-                        class="px-3.5 py-1.5 rounded-full font-semibold transition {{ $selectedFormat === 'all' ? 'bg-emerald-800 text-gold-300' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
-                        الكل
-                    </a>
-                    <a href="{{ route('lectures.index', array_merge(request()->query(), ['format' => 'video'])) }}"
-                        class="px-3.5 py-1.5 rounded-full font-semibold transition flex items-center gap-1.5 {{ $selectedFormat === 'video' ? 'bg-red-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
-                        <i class="fa-solid fa-video text-xs"></i>
-                        <span>مرئية</span>
-                    </a>
-                    <a href="{{ route('lectures.index', array_merge(request()->query(), ['format' => 'audio'])) }}"
-                        class="px-3.5 py-1.5 rounded-full font-semibold transition flex items-center gap-1.5 {{ $selectedFormat === 'audio' ? 'bg-amber-500 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
-                        <i class="fa-solid fa-headphones text-xs"></i>
-                        <span>صوتية</span>
-                    </a>
-                    <a href="{{ route('lectures.index', array_merge(request()->query(), ['format' => 'text'])) }}"
-                        class="px-3.5 py-1.5 rounded-full font-semibold transition flex items-center gap-1.5 {{ $selectedFormat === 'text' ? 'bg-emerald-700 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
-                        <i class="fa-solid fa-file-lines text-xs"></i>
-                        <span>مكتوبة</span>
-                    </a>
+                <!-- Format & Year Filters -->
+                <div class="flex flex-wrap items-center gap-3 text-xs">
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-slate-500 font-bold ml-1">الصيغة:</span>
+                        <a href="{{ route('lectures.index', array_merge(request()->query(), ['format' => 'all'])) }}"
+                            class="px-3 py-1 rounded-full font-semibold transition {{ $selectedFormat === 'all' ? 'bg-emerald-800 text-gold-300' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                            الكل
+                        </a>
+                        <a href="{{ route('lectures.index', array_merge(request()->query(), ['format' => 'video'])) }}"
+                            class="px-3 py-1 rounded-full font-semibold transition flex items-center gap-1.5 {{ $selectedFormat === 'video' ? 'bg-red-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                            <i class="fa-solid fa-video text-xs"></i>
+                            <span>مرئية</span>
+                        </a>
+                        <a href="{{ route('lectures.index', array_merge(request()->query(), ['format' => 'audio'])) }}"
+                            class="px-3 py-1 rounded-full font-semibold transition flex items-center gap-1.5 {{ $selectedFormat === 'audio' ? 'bg-amber-500 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                            <i class="fa-solid fa-headphones text-xs"></i>
+                            <span>صوتية</span>
+                        </a>
+                        <a href="{{ route('lectures.index', array_merge(request()->query(), ['format' => 'text'])) }}"
+                            class="px-3 py-1 rounded-full font-semibold transition flex items-center gap-1.5 {{ $selectedFormat === 'text' ? 'bg-emerald-700 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                            <i class="fa-solid fa-file-lines text-xs"></i>
+                            <span>مكتوبة</span>
+                        </a>
+                    </div>
+
+                    <!-- Year Filter Select -->
+                    <div class="flex items-center gap-1.5 border-r border-slate-200 pr-3 mr-1">
+                        <span class="text-slate-500 font-bold">السنة:</span>
+                        <select onchange="window.location.href=this.value" class="text-xs font-semibold rounded-xl border border-slate-200 py-1 px-2.5 bg-slate-50 text-slate-700 focus:bg-white focus:ring-1 focus:ring-emerald-800 cursor-pointer">
+                            <option value="{{ route('lectures.index', array_merge(request()->query(), ['year' => ''])) }}">كافة السنوات</option>
+                            @foreach($allYearsWithCounts as $y)
+                                <option value="{{ route('lectures.index', array_merge(request()->query(), ['year' => $y->hijri_year])) }}" {{ $selectedYear == $y->hijri_year ? 'selected' : '' }}>
+                                    {{ $y->hijri_year }} هـ ({{ $y->total }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
 
                 <!-- View Switcher (Grid vs List Icons) -->

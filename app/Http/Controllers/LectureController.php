@@ -77,9 +77,21 @@ class LectureController extends Controller
             ->paginate(12)
             ->withQueryString();
 
-        // Build seasons data per recent years
+        // Build all years list with lecture counts
+        $allYearsWithCounts = MediaItem::active()
+            ->whereNotNull('hijri_year')
+            ->select('hijri_year')
+            ->selectRaw('count(*) as total')
+            ->groupBy('hijri_year')
+            ->orderBy('hijri_year', 'desc')
+            ->get();
+
+        $topYears = $years->take(3);
+        $olderYears = $allYearsWithCounts->slice(3);
+
+        // Build seasons data for the featured years cards
         $yearsData = [];
-        foreach ($years->take(3) as $yr) {
+        foreach ($topYears as $yr) {
             $seasonsInYear = MediaItem::active()
                 ->where('hijri_year', $yr)
                 ->whereNotNull('season_slug')
@@ -87,6 +99,12 @@ class LectureController extends Controller
                 ->select('season_slug', 'season')
                 ->selectRaw('count(*) as count')
                 ->groupBy('season_slug', 'season')
+                ->orderByRaw("CASE 
+                    WHEN season_slug = 'muharram' THEN 1 
+                    WHEN season_slug = 'safar' THEN 2 
+                    WHEN season_slug = 'ramadan' THEN 3 
+                    WHEN season_slug = 'fatimiya' THEN 4 
+                    ELSE 5 END")
                 ->get();
 
             $yearsData[$yr] = $seasonsInYear;
@@ -95,6 +113,8 @@ class LectureController extends Controller
         return view('pages.lectures.index', compact(
             'lectures',
             'years',
+            'allYearsWithCounts',
+            'olderYears',
             'yearsData',
             'selectedYear',
             'selectedFormat',
