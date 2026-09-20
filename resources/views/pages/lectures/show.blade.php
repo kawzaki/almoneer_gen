@@ -280,7 +280,7 @@
                         <div>
                             <div class="font-bold text-xs text-slate-900 group-hover:text-emerald-950 transition">التفريغ
                                 النصي</div>
-                            <div class="text-[11px] text-emerald-800">قراءة النص بالرسم العثماني ↓</div>
+                            <div class="text-[11px] text-emerald-800">قراءة المحاضرة المنقحة ↓</div>
                         </div>
                     </a>
 
