@@ -672,7 +672,7 @@
                             <p id="player-title" class="text-xs sm:text-sm font-bold text-gold-200 truncate">عنوان المادة الصوتية</p>
                             <span id="player-type-badge" class="hidden px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-300 border border-orange-500/30 text-[10px] font-bold">SoundCloud</span>
                         </div>
-                        <p id="player-time" class="text-[11px] text-slate-400">00:00 / 00:00</p>
+                        <p id="player-time" class="text-[11px] text-slate-400 font-mono en-num" dir="ltr">00:00 / 00:00</p>
                     </div>
                 </div>
 
@@ -687,7 +687,7 @@
 
                 <!-- Right Controls: Speed, Pop-out, Toggle Drawer, Close -->
                 <div class="flex items-center gap-2 shrink-0">
-                    <button onclick="changeSpeed()" id="speed-btn" class="px-2 py-1 bg-emerald-800 text-[11px] font-bold rounded text-gold-300 hover:bg-emerald-700">1.0x</button>
+                    <button onclick="changeSpeed()" id="speed-btn" class="px-2 py-1 bg-emerald-800 text-[11px] font-bold rounded text-gold-300 hover:bg-emerald-700 en-num font-mono" dir="ltr">1.0x</button>
                     
                     <!-- Popout Mini Window Button -->
                     <button type="button" onclick="openGlobalPopout()" class="px-2.5 py-1 bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 text-xs font-semibold rounded-lg border border-gold-500/40 flex items-center gap-1.5 transition" title="فتح نافذة مشغل مستقلة تستمر أثناء تصفحك لكافة الصفحات">
@@ -929,6 +929,98 @@
                 } catch (e) {}
             });
         });
+
+        // Automatic Eastern Arabic / Indic Digits Converter (الأرقام المشرقية / الهندية: ٠، ١، ٢، ...)
+        (function() {
+            const digitMap = {
+                '0': '٠', '1': '١', '2': '٢', '3': '٣', '4': '٤',
+                '5': '٥', '6': '٦', '7': '٧', '8': '٨', '9': '٩'
+            };
+            const digitRegex = /[0-9]/;
+            const globalDigitRegex = /[0-9]/g;
+            const skipSelector = 'script, style, textarea, pre, code, kbd, input, .en-num, .latin-num, .no-indic, [dir="ltr"], [data-no-indic]';
+
+            function shouldSkip(node) {
+                const parent = node.parentElement;
+                if (!parent) return true;
+                if (parent.closest(skipSelector)) return true;
+                return false;
+            }
+
+            function convertText(text) {
+                if (!digitRegex.test(text)) return text;
+                // Preserve URLs and email addresses from digit conversion
+                const parts = text.split(/(https?:\/\/[^\s]+|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g);
+                for (let i = 0; i < parts.length; i++) {
+                    if (i % 2 === 0) {
+                        parts[i] = parts[i].replace(globalDigitRegex, function(d) {
+                            return digitMap[d];
+                        });
+                    }
+                }
+                return parts.join('');
+            }
+
+            function processNode(root) {
+                if (!root) return;
+                if (root.nodeType === Node.TEXT_NODE) {
+                    if (!shouldSkip(root) && digitRegex.test(root.nodeValue)) {
+                        root.nodeValue = convertText(root.nodeValue);
+                    }
+                    return;
+                }
+                if (root.nodeType === Node.ELEMENT_NODE) {
+                    if (root.matches && root.matches(skipSelector)) return;
+                    if (root.closest && root.closest(skipSelector)) return;
+                }
+
+                const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+                    acceptNode: function(node) {
+                        if (shouldSkip(node)) return NodeFilter.FILTER_REJECT;
+                        if (!digitRegex.test(node.nodeValue)) return NodeFilter.FILTER_SKIP;
+                        return NodeFilter.FILTER_ACCEPT;
+                    }
+                });
+
+                let textNode;
+                while ((textNode = walker.nextNode())) {
+                    textNode.nodeValue = convertText(textNode.nodeValue);
+                }
+            }
+
+            function initIndicDigits() {
+                try {
+                    if (digitRegex.test(document.title)) {
+                        document.title = convertText(document.title);
+                    }
+                } catch (e) {}
+
+                processNode(document.body);
+
+                // Observe dynamically added content
+                try {
+                    const observer = new MutationObserver(function(mutations) {
+                        for (let i = 0; i < mutations.length; i++) {
+                            const addedNodes = mutations[i].addedNodes;
+                            for (let j = 0; j < addedNodes.length; j++) {
+                                processNode(addedNodes[j]);
+                            }
+                        }
+                    });
+
+                    observer.observe(document.body, {
+                        childList: true,
+                        subtree: true
+                    });
+                } catch (e) {}
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initIndicDigits);
+            } else {
+                initIndicDigits();
+            }
+        })();
     </script>
 
     @stack('scripts')
