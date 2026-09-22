@@ -53,19 +53,28 @@
     </style>
     @stack('styles')
 </head>
-<body class="bg-slate-100 text-slate-800 min-h-screen flex">
+<body class="bg-slate-100 text-slate-800 min-h-screen flex relative overflow-x-hidden">
 
-    <!-- Sidebar -->
-    <aside class="w-64 bg-emerald-950 text-white flex-shrink-0 flex flex-col min-h-screen border-l border-emerald-800 shadow-xl">
-        <!-- Brand -->
-        <div class="p-5 border-b border-emerald-900 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gold-500 text-emerald-950 flex items-center justify-center text-xl font-bold shadow-md">
-                <i class="fa-solid fa-feather"></i>
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-slate-900/60 z-40 backdrop-blur-xs hidden transition-opacity duration-300 opacity-0 lg:hidden" aria-hidden="true"></div>
+
+    <!-- Sidebar (Drawer on mobile, fixed column on desktop) -->
+    <aside id="adminSidebar" class="fixed lg:static inset-y-0 right-0 z-50 w-72 lg:w-64 bg-emerald-950 text-white flex-shrink-0 flex flex-col min-h-screen border-l border-emerald-800 shadow-2xl lg:shadow-xl transform translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+        <!-- Brand & Mobile Close Button -->
+        <div class="p-4 sm:p-5 border-b border-emerald-900 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gold-500 text-emerald-950 flex items-center justify-center text-xl font-bold shadow-md shrink-0">
+                    <i class="fa-solid fa-feather"></i>
+                </div>
+                <div class="min-w-0">
+                    <h1 class="text-sm font-bold text-gold-300 truncate">لوحة الإدارة الذكية</h1>
+                    <p class="text-[11px] text-slate-400 truncate">شبكة العلامة المنير</p>
+                </div>
             </div>
-            <div>
-                <h1 class="text-sm font-bold text-gold-300">لوحة الإدارة الذكية</h1>
-                <p class="text-[11px] text-slate-400">شبكة العلامة المنير</p>
-            </div>
+            <!-- Close Button for Mobile -->
+            <button id="closeSidebarBtn" type="button" class="lg:hidden w-8 h-8 rounded-lg bg-emerald-900/80 hover:bg-emerald-900 text-slate-300 hover:text-white flex items-center justify-center text-sm transition" aria-label="إغلاق القائمة">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
 
         <!-- Navigation Links -->
@@ -165,30 +174,51 @@
     </aside>
 
     <!-- Main Admin Content Area -->
-    <div class="flex-grow flex flex-col min-w-0">
+    <div class="flex-grow flex flex-col min-w-0 w-full overflow-x-hidden">
         
         <!-- Top Admin Header -->
-        <header class="bg-white border-b border-slate-200 px-6 py-3.5 flex items-center justify-between shadow-sm">
-            <div class="flex items-center gap-4">
-                <a href="{{ route('home') }}" target="_blank" class="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 text-xs font-semibold flex items-center gap-1.5 transition">
-                    <i class="fa-solid fa-globe"></i>
-                    <span>معاينة الموقع الرئيسي</span>
-                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                </a>
+        <header class="bg-white border-b border-slate-200 px-3.5 sm:px-6 py-2.5 sm:py-3.5 flex items-center justify-between shadow-xs sticky top-0 z-30">
+            <div class="flex items-center gap-2.5 sm:gap-4 min-w-0">
+                <!-- Mobile Hamburger Toggle Button -->
+                <button id="openSidebarBtn" type="button" class="lg:hidden w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-base transition shadow-2xs shrink-0" aria-label="فتح القائمة الجانبية">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
 
-                <a href="{{ $hawzaPortalUrl ?? 'https://almoneer-droos.onrender.com' }}" target="_blank" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1.5 transition">
-                    <i class="fa-solid fa-graduation-cap text-gold-600"></i>
-                    <span>بوابة الدروس الحوزوية</span>
-                </a>
+                <!-- Compact Mobile Brand Title -->
+                <div class="flex items-center gap-2 lg:hidden min-w-0">
+                    <span class="w-8 h-8 rounded-lg bg-gold-500 text-emerald-950 flex items-center justify-center text-sm font-bold shadow-xs shrink-0">
+                        <i class="fa-solid fa-feather"></i>
+                    </span>
+                    <span class="text-xs font-bold text-slate-800 truncate">شبكة المنير</span>
+                </div>
+
+                <!-- Desktop / Tablet Quick Links -->
+                <div class="hidden sm:flex items-center gap-2 sm:gap-3">
+                    <a href="{{ route('home') }}" target="_blank" class="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 text-xs font-semibold flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-globe"></i>
+                        <span>معاينة الموقع الرئيسي</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </a>
+
+                    <a href="{{ $hawzaPortalUrl ?? 'https://almoneer-droos.onrender.com' }}" target="_blank" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-graduation-cap text-gold-600"></i>
+                        <span class="hidden md:inline">بوابة الدروس الحوزوية</span>
+                        <span class="md:hidden">الحوزوية</span>
+                    </a>
+                </div>
             </div>
 
-            <!-- Instant Cache Flush Button -->
-            <div class="flex items-center gap-3">
-                <form action="{{ route('admin.cache.flush') }}" method="POST">
+            <!-- Instant Cache Flush & Quick Mobile Actions -->
+            <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                <a href="{{ route('home') }}" target="_blank" class="sm:hidden w-8 h-8 rounded-xl bg-emerald-50 text-emerald-900 text-xs flex items-center justify-center border border-emerald-200" title="معاينة الموقع الرئيسي">
+                    <i class="fa-solid fa-globe"></i>
+                </a>
+
+                <form action="{{ route('admin.cache.flush') }}" method="POST" class="inline-block">
                     @csrf
-                    <button type="submit" class="px-3.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 text-xs font-bold transition flex items-center gap-2 shadow-sm" title="تفريغ كافة ملفات الكاش وتحديث الموقع فورياً">
+                    <button type="submit" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 text-xs font-bold transition flex items-center gap-1.5 shadow-2xs" title="تفريغ كافة ملفات الكاش وتحديث الموقع فورياً">
                         <i class="fa-solid fa-bolt text-amber-600"></i>
-                        <span>تفريغ الكاش وتحديث الموقع</span>
+                        <span class="hidden sm:inline">تفريغ الكاش</span>
                     </button>
                 </form>
             </div>
@@ -196,30 +226,73 @@
 
         <!-- Flash messages -->
         @if(session('success'))
-        <div class="p-4 mx-6 mt-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-sm flex items-center justify-between shadow-sm">
+        <div class="p-3.5 sm:p-4 mx-3.5 sm:mx-6 mt-3 sm:mt-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs sm:text-sm flex items-center justify-between shadow-xs">
             <div class="flex items-center gap-2">
-                <i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>
+                <i class="fa-solid fa-circle-check text-emerald-600 text-base shrink-0"></i>
                 <span>{{ session('success') }}</span>
             </div>
-            <button onclick="this.parentElement.remove()" class="text-emerald-700 hover:text-emerald-900"><i class="fa-solid fa-xmark"></i></button>
+            <button onclick="this.parentElement.remove()" class="text-emerald-700 hover:text-emerald-900 p-1"><i class="fa-solid fa-xmark"></i></button>
         </div>
         @endif
 
         @if(session('error'))
-        <div class="p-4 mx-6 mt-4 rounded-xl bg-red-50 border border-red-200 text-red-900 text-sm flex items-center justify-between shadow-sm">
+        <div class="p-3.5 sm:p-4 mx-3.5 sm:mx-6 mt-3 sm:mt-4 rounded-xl bg-red-50 border border-red-200 text-red-900 text-xs sm:text-sm flex items-center justify-between shadow-xs">
             <div class="flex items-center gap-2">
-                <i class="fa-solid fa-circle-exclamation text-red-600 text-base"></i>
+                <i class="fa-solid fa-circle-exclamation text-red-600 text-base shrink-0"></i>
                 <span>{{ session('error') }}</span>
             </div>
-            <button onclick="this.parentElement.remove()" class="text-red-700 hover:text-red-900"><i class="fa-solid fa-xmark"></i></button>
+            <button onclick="this.parentElement.remove()" class="text-red-700 hover:text-red-900 p-1"><i class="fa-solid fa-xmark"></i></button>
         </div>
         @endif
 
         <!-- Main View Content -->
-        <main class="p-6 flex-grow">
+        <main class="p-3.5 sm:p-5 md:p-6 flex-grow">
             @yield('content')
         </main>
     </div>
+
+    <!-- Mobile Drawer JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebar = document.getElementById('adminSidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            const openBtn = document.getElementById('openSidebarBtn');
+            const closeBtn = document.getElementById('closeSidebarBtn');
+
+            function openSidebar() {
+                if (!sidebar || !backdrop) return;
+                sidebar.classList.remove('translate-x-full');
+                backdrop.classList.remove('hidden');
+                requestAnimationFrame(() => {
+                    backdrop.classList.remove('opacity-0');
+                    backdrop.classList.add('opacity-100');
+                });
+                document.body.classList.add('overflow-hidden', 'lg:overflow-auto');
+            }
+
+            function closeSidebar() {
+                if (!sidebar || !backdrop) return;
+                sidebar.classList.add('translate-x-full');
+                backdrop.classList.remove('opacity-100');
+                backdrop.classList.add('opacity-0');
+                setTimeout(() => {
+                    backdrop.classList.add('hidden');
+                }, 300);
+                document.body.classList.remove('overflow-hidden', 'lg:overflow-auto');
+            }
+
+            if (openBtn) openBtn.addEventListener('click', openSidebar);
+            if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+            if (backdrop) backdrop.addEventListener('click', closeSidebar);
+
+            // Close on Escape key
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && sidebar && !sidebar.classList.contains('translate-x-full')) {
+                    closeSidebar();
+                }
+            });
+        });
+    </script>
 
     @stack('scripts')
 </body>

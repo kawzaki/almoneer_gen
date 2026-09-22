@@ -3,29 +3,29 @@
 @section('title', 'الرئيسية والإحصائيات')
 
 @section('content')
-<div class="space-y-8">
+<div class="space-y-6 sm:space-y-8">
 
     <!-- Welcome & Top Alert Banner -->
-    <div class="p-6 rounded-3xl bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-950 text-white shadow-xl flex flex-wrap items-center justify-between gap-6 border border-gold-500/30">
+    <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-950 text-white shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 border border-gold-500/30">
         <div class="space-y-1">
             <span class="text-xs text-gold-300 font-semibold">أهلاً بك في لوحة الإدارة</span>
-            <h2 class="text-2xl font-bold font-scholarly text-white">إدارة شبكة سماحة العلامة السيد منير الخباز</h2>
+            <h2 class="text-lg sm:text-2xl font-bold font-scholarly text-white">إدارة شبكة سماحة العلامة السيد منير الخباز</h2>
             <p class="text-xs text-slate-300">منظومة إدارة المحتوى للموقع العام والفكري — نظام الكاش التلقائي مفعل ونشط.</p>
         </div>
 
-        <div class="flex items-center gap-3">
-            <form action="{{ route('admin.cache.flush') }}" method="POST">
+        <div class="flex items-center gap-3 shrink-0">
+            <form action="{{ route('admin.cache.flush') }}" method="POST" class="w-full sm:w-auto">
                 @csrf
-                <button type="submit" class="px-5 py-2.5 rounded-xl bg-gold-500 hover:bg-gold-400 text-emerald-950 font-bold text-xs shadow-md transition flex items-center gap-2">
+                <button type="submit" class="w-full sm:w-auto px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-gold-500 hover:bg-gold-400 text-emerald-950 font-bold text-xs shadow-md transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-bolt"></i>
-                    <span>تفريغ الكاش وتحديث الموقع فوراً</span>
+                    <span>تفريغ الكاش وتحديث الموقع</span>
                 </button>
             </form>
         </div>
     </div>
 
     <!-- Stat Cards (6 Cards) -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
         
         <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-2">
             <div class="flex items-center justify-between text-xs text-slate-400">
@@ -84,10 +84,10 @@
     </div>
 
     <!-- Dual Sections Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
         
         <!-- Left 6 Cols: Recent Inquiries -->
-        <div class="lg:col-span-6 bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+        <div class="lg:col-span-6 bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-sm space-y-4">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                 <h3 class="font-bold text-sm text-slate-800 flex items-center gap-2">
                     <i class="fa-solid fa-circle-question text-amber-500"></i>
@@ -114,7 +114,7 @@
         </div>
 
         <!-- Right 6 Cols: Audit Log Stream -->
-        <div class="lg:col-span-6 bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+        <div class="lg:col-span-6 bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-sm space-y-4">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                 <h3 class="font-bold text-sm text-slate-800 flex items-center gap-2">
                     <i class="fa-solid fa-shield-halved text-emerald-800"></i>

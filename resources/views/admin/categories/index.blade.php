@@ -95,17 +95,18 @@
                 <span class="text-slate-400">العدد الكلي: {{ $categories->total() }}</span>
             </div>
 
-            <table class="w-full text-right text-xs">
-                <thead class="bg-slate-50/50 text-slate-500 border-b border-slate-100">
-                    <tr>
-                        <th class="p-4 font-bold">#</th>
-                        <th class="p-4 font-bold">اسم التصنيف</th>
-                        <th class="p-4 font-bold">المعرف (Slug)</th>
-                        <th class="p-4 font-bold text-center">المواد المرتبطة</th>
-                        <th class="p-4 font-bold text-center">الحالة</th>
-                        <th class="p-4 font-bold text-center">الإجراءات</th>
-                    </tr>
-                </thead>
+            <div class="overflow-x-auto w-full">
+                <table class="w-full text-right text-xs">
+                    <thead class="bg-slate-50/50 text-slate-500 border-b border-slate-100 whitespace-nowrap">
+                        <tr>
+                            <th class="p-3.5 sm:p-4 font-bold">#</th>
+                            <th class="p-3.5 sm:p-4 font-bold">اسم التصنيف</th>
+                            <th class="p-3.5 sm:p-4 font-bold">المعرف (Slug)</th>
+                            <th class="p-3.5 sm:p-4 font-bold text-center">المواد المرتبطة</th>
+                            <th class="p-3.5 sm:p-4 font-bold text-center">الحالة</th>
+                            <th class="p-3.5 sm:p-4 font-bold text-center">الإجراءات</th>
+                        </tr>
+                    </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse($categories as $cat)
                     <tr class="hover:bg-slate-50 transition">
@@ -166,6 +167,7 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
 
             @if($categories->hasPages())
             <div class="p-4 border-t border-slate-100">

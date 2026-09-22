@@ -43,7 +43,7 @@
         <a href="{{ route('admin.media.index') }}" class="text-xs text-slate-500 hover:text-slate-800">← العودة للقائمة</a>
     </div>
 
-    <form id="media-form" action="{{ route('admin.media.store') }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+    <form id="media-form" action="{{ route('admin.media.store') }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-sm space-y-4">
         @csrf
         <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">عنوان المادة الإعلامية:</label>

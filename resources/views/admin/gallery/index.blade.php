@@ -46,18 +46,19 @@
     @endif
 
     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <table class="w-full text-right text-xs">
-            <thead class="bg-slate-50 text-slate-600 border-b border-slate-200">
-                <tr>
-                    <th class="p-4 font-bold w-20">الغلاف</th>
-                    <th class="p-4 font-bold">عنوان الألبوم</th>
-                    <th class="p-4 font-bold">التصنيف الأب</th>
-                    <th class="p-4 font-bold">تاريخ المناسبة</th>
-                    <th class="p-4 font-bold">عدد الصور</th>
-                    <th class="p-4 font-bold">الحالة</th>
-                    <th class="p-4 font-bold text-center w-28">الإجراءات</th>
-                </tr>
-            </thead>
+        <div class="overflow-x-auto w-full">
+            <table class="w-full text-right text-xs">
+                <thead class="bg-slate-50 text-slate-600 border-b border-slate-200 whitespace-nowrap">
+                    <tr>
+                        <th class="p-3.5 sm:p-4 font-bold w-20">الغلاف</th>
+                        <th class="p-3.5 sm:p-4 font-bold">عنوان الألبوم</th>
+                        <th class="p-3.5 sm:p-4 font-bold">التصنيف الأب</th>
+                        <th class="p-3.5 sm:p-4 font-bold">تاريخ المناسبة</th>
+                        <th class="p-3.5 sm:p-4 font-bold">عدد الصور</th>
+                        <th class="p-3.5 sm:p-4 font-bold">الحالة</th>
+                        <th class="p-3.5 sm:p-4 font-bold text-center w-28">الإجراءات</th>
+                    </tr>
+                </thead>
             <tbody class="divide-y divide-slate-100">
                 @forelse($albums as $album)
                 <tr class="hover:bg-slate-50 transition">
@@ -127,6 +128,7 @@
                 @endforelse
             </tbody>
         </table>
+        </div>
     </div>
 
     <div>{{ $albums->links() }}</div>
