@@ -364,6 +364,55 @@
                             font-size: calc(var(--transcript-font-size) * 0.75) !important;
                         }
 
+                        /* تنسيق القوائم النقطية (مطابقة للـ PDF) */
+                        #transcript-body ul,
+                        #transcript-body .lecture-bullets {
+                            list-style-type: disc !important;
+                            padding-right: 2.25rem !important;
+                            margin: 1.25rem 0 !important;
+                        }
+
+                        #transcript-body ul li,
+                        #transcript-body .lecture-bullet-item {
+                            list-style-type: disc !important;
+                            display: list-item !important;
+                            margin-bottom: 0.6rem !important;
+                            font-weight: bold !important;
+                            color: #1e293b !important;
+                            line-height: 2.1 !important;
+                        }
+
+                        /* تنسيق العناوين والمحاور الرئيسية باللون الأحمر الداكن والخط العريض */
+                        #transcript-body h3,
+                        #transcript-body h4,
+                        #transcript-body h5,
+                        #transcript-body .lecture-heading {
+                            color: #990000 !important;
+                            font-weight: bold !important;
+                            font-size: 1.55rem !important;
+                            margin-top: 2.25rem !important;
+                            margin-bottom: 1rem !important;
+                            display: block !important;
+                            font-family: 'Traditional Arabic', serif !important;
+                        }
+
+                        #transcript-body .lecture-subheading {
+                            color: #8B4513 !important;
+                            font-weight: bold !important;
+                            font-size: 1.35rem !important;
+                            margin-top: 1.75rem !important;
+                            margin-bottom: 0.75rem !important;
+                            display: block !important;
+                            font-family: 'Traditional Arabic', serif !important;
+                        }
+
+                        #transcript-body .prophet-symbol {
+                            font-family: 'Traditional Arabic', serif !important;
+                            font-size: 1.15em !important;
+                            font-weight: bold !important;
+                            color: #0f172a !important;
+                        }
+
                         /* ========================================================
                            قواعد الطباعة الفاخرة (Print & PDF Export Styling)
                            ======================================================== */
@@ -440,13 +489,41 @@
                             }
 
                             #transcript-body h3,
+                            #transcript-body h4,
+                            #transcript-body h5,
                             #transcript-body .lecture-heading {
                                 color: #990000 !important;
                                 font-weight: bold !important;
-                                font-size: 16.5pt !important;
+                                font-size: 17pt !important;
                                 margin-top: 22pt !important;
+                                margin-bottom: 12pt !important;
+                                page-break-after: avoid;
+                            }
+
+                            #transcript-body .lecture-subheading {
+                                color: #8B4513 !important;
+                                font-weight: bold !important;
+                                font-size: 15pt !important;
+                                margin-top: 18pt !important;
                                 margin-bottom: 10pt !important;
                                 page-break-after: avoid;
+                            }
+
+                            #transcript-body ul,
+                            #transcript-body .lecture-bullets {
+                                list-style-type: disc !important;
+                                padding-right: 25pt !important;
+                                margin: 14pt 0 !important;
+                            }
+
+                            #transcript-body ul li,
+                            #transcript-body .lecture-bullet-item {
+                                list-style-type: disc !important;
+                                display: list-item !important;
+                                margin-bottom: 6pt !important;
+                                font-weight: bold !important;
+                                color: #000000 !important;
+                                font-size: 13.5pt !important;
                             }
 
                             @page {
