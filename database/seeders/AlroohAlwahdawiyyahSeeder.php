@@ -20,6 +20,10 @@ class AlroohAlwahdawiyyahSeeder extends Seeder
         $transcript = '';
         if (file_exists($rawFilePath)) {
             $transcript = file_get_contents($rawFilePath);
+            // Decode literal escape sequences from MySQL dump & HTML entities
+            $transcript = str_replace(["\\r\\n", "\\n", "\\r"], "\n", $transcript);
+            $transcript = str_replace("\\t", " ", $transcript);
+            $transcript = html_entity_decode($transcript, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         }
 
         $pdfPath = 'transcripts/1441-01-05-alrooh-alwahdawiyyah.pdf';

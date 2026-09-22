@@ -313,6 +313,26 @@
             color: #fef08a !important;
             font-weight: 700 !important;
         }
+
+        /* ------------------------------------------------------------- */
+        /* Global Print Rules                                            */
+        /* ------------------------------------------------------------- */
+        @media print {
+            header,
+            nav,
+            footer,
+            #mobile-menu-drawer,
+            #global-audio-player,
+            .fixed,
+            .no-print,
+            [class*="no-print"] {
+                display: none !important;
+            }
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+            }
+        }
     </style>
 
     @stack('styles')
@@ -717,7 +737,7 @@
     </div>
 
     <!-- Sticky Mobile Bottom App Bar -->
-    <div class="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-emerald-950 border-t border-gold-500/30 py-2 px-4 flex justify-around items-center text-center shadow-lg">
+    <div class="no-print lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-emerald-950 border-t border-gold-500/30 py-2 px-4 flex justify-around items-center text-center shadow-lg">
         <a href="{{ route('home') }}" class="flex flex-col items-center text-xs {{ request()->routeIs('home') ? 'text-gold-400 font-bold' : 'text-slate-400 hover:text-slate-200' }}">
             <i class="fa-solid fa-house text-base"></i>
             <span class="text-[10px] mt-1">الرئيسية</span>

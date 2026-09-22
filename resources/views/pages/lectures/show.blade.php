@@ -378,7 +378,11 @@
                             .related-lectures-section,
                             .back-to-top,
                             button,
-                            a[download] {
+                            a[download],
+                            .fixed,
+                            .no-print,
+                            [class*="no-print"],
+                            #transcript-section > div.no-print {
                                 display: none !important;
                             }
 

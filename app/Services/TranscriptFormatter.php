@@ -14,6 +14,11 @@ class TranscriptFormatter
             return '';
         }
 
+        // 0. معالجة كسر الأسطر الحرفية وفك رموز HTML (إن وجدت من تفريغ قواعد البيانات أو النسخ المشفر)
+        $text = str_replace(["\\r\\n", "\\n", "\\r"], "\n", $text);
+        $text = str_replace("\\t", " ", $text);
+        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
         // 1. علامات الترقيم والتنصيص
         $text = str_replace(',', '،', $text);
         $text = preg_replace('/،\s*/u', '، ', $text);
@@ -141,13 +146,17 @@ class TranscriptFormatter
             return '<p class="text-slate-500 italic">لا يوجد تفريغ نصي متوفر لهذه المحاضرة حالياً.</p>';
         }
 
+        // تنظيف كسر الأسطر الحرفية وفك رموز HTML المشفرة (مثل &#1648; للألف الخنجرية)
+        $text = str_replace(["\\r\\n", "\\n", "\\r"], "\n", $text);
+        $text = str_replace("\\t", " ", $text);
+        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
         $isHtml = (bool) preg_match('/<\s*(?:p|div|h[1-6]|ul|ol|li|blockquote)\b/i', $text);
 
         if ($isHtml) {
             $formatted = $text;
 
             // 1. استبدال العناوين [t]عنوان[/t] إذا وجدت
-            // 1. استبدال العناوين [t]عنوان[/t]
             $formatted = preg_replace_callback('/\[t\](.*?)\[\/t\]/u', function ($matches) {
                 $title = trim($matches[1]);
                 return '<h3 class="text-lg sm:text-xl font-bold font-scholarly text-red-800 border-r-4 border-red-600 pr-3.5 mt-8 mb-4 pt-1 leading-snug drop-shadow-sm">' . e($title) . '</h3>';
@@ -160,8 +169,8 @@ class TranscriptFormatter
 
             // 2. استبدال الآيات القرآنية {الآية} أو ﴿الآية﴾ بالخط العثماني
             $formatted = preg_replace_callback('/(?:\{|﴿)([^}﴾]+)(?:\}|﴾)/u', function ($matches) {
-                $verse = trim($matches[1]);
-                return '<span class="quran-verse font-quran text-red-900 font-normal" style="color: #BB1111;">﴿ ' . e($verse) . ' ﴾</span>';
+                $verse = html_entity_decode(trim($matches[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                return '<span class="quran-verse font-quran text-red-900 font-normal" style="color: #BB1111;">﴿ ' . $verse . ' ﴾</span>';
             }, $formatted);
 
             // 3. استبدال مراجع السور والآيات [المؤمنون : 115] أو [البقرة: 2]
@@ -197,8 +206,8 @@ class TranscriptFormatter
 
         // 2. استبدال الآيات القرآنية {الآية} أو ﴿الآية﴾ بالخط العثماني
         $cleaned = preg_replace_callback('/(?:\{|﴿)([^}﴾]+)(?:\}|﴾)/u', function ($matches) {
-            $verse = trim($matches[1]);
-            return '<span class="quran-verse font-quran text-red-900 font-normal" style="color: #BB1111;">﴿ ' . e($verse) . ' ﴾</span>';
+            $verse = html_entity_decode(trim($matches[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            return '<span class="quran-verse font-quran text-red-900 font-normal" style="color: #BB1111;">﴿ ' . $verse . ' ﴾</span>';
         }, $cleaned);
 
         // 3. استبدال مراجع السور والآيات [المؤمنون : 115] أو [البقرة: 2]

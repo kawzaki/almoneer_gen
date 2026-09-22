@@ -140,6 +140,14 @@ function cleanIt() {
         return;
     }
 
+    // 0. معالجة كسر الأسطر الحرفية وفك رموز HTML المشفرة (مثل &#1648; للألف الخنجرية وعلامات الوقف)
+    inText = inText.replace(/\\r\\n|\\n|\\r/g, "\n");
+    inText = inText.replace(/\\t/g, " ");
+
+    const tempDecoder = document.createElement('textarea');
+    tempDecoder.innerHTML = inText;
+    inText = tempDecoder.value;
+
     // قواعد المخمة الأصلية المطابقة لـ vacum.js
     inText = inText.replace(/,/g, "،");
     inText = inText.replace(/\،\s*/g, "، ");
