@@ -355,8 +355,8 @@
                         }
 
                         #transcript-body .quran-verse {
-                            font-size: calc(var(--transcript-font-size) * 1.35) !important;
-                            line-height: 2.4 !important;
+                            font-size: calc(var(--transcript-font-size) * 1.05) !important;
+                            line-height: inherit !important;
                             color: #BB1111 !important;
                         }
 
@@ -482,9 +482,9 @@
 
                             #transcript-body .quran-verse {
                                 color: #BB1111 !important;
-                                font-family: 'Traditional Arabic', serif !important;
-                                font-size: 17pt !important;
-                                line-height: 2.2 !important;
+                                font-family: 'Amiri Quran', 'Traditional Arabic', serif !important;
+                                font-size: 14.5pt !important;
+                                line-height: inherit !important;
                                 page-break-inside: avoid;
                             }
 

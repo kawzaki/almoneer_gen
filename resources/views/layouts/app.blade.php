@@ -99,7 +99,7 @@
         }
         .quran-verse {
             color: #04242a;
-            font-size: 1.25em;
+            font-size: 1.05em;
             font-weight: 400;
             display: inline;
             padding: 0 3px;
