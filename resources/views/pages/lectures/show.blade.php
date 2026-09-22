@@ -458,9 +458,9 @@
 
                             .print-header-banner {
                                 display: block !important;
-                                margin-bottom: 24px;
-                                padding-bottom: 16px;
-                                border-bottom: 2px solid #cbd5e1;
+                                margin-bottom: 18px;
+                                padding-bottom: 0 !important;
+                                border-bottom: none !important;
                                 text-align: center;
                             }
 
@@ -475,9 +475,21 @@
                             #transcript-body .transcript-p {
                                 font-size: 14pt !important;
                                 line-height: 2.1 !important;
-                                text-align: justify !important;
+                                text-align: justify;
                                 margin-bottom: 14pt !important;
                                 color: #000000 !important;
+                            }
+
+                            /* توسيط البسملة والآية الافتتاحية ودعاء الختام في الطباعة كصفحة الويب تماماً */
+                            #transcript-body p[style*="text-align: center"],
+                            #transcript-body p[style*="text-align:center"],
+                            #transcript-body p.text-center,
+                            #transcript-body .text-center {
+                                text-align: center !important;
+                                margin-left: auto !important;
+                                margin-right: auto !important;
+                                display: block !important;
+                                width: 100% !important;
                             }
 
                             #transcript-body .quran-verse {
@@ -526,9 +538,25 @@
                                 font-size: 13.5pt !important;
                             }
 
+                            /* شريط تذييل الصفحة المطبوعة متضمناً الرابط في الأسفل */
+                            .print-footer-bar {
+                                display: block !important;
+                                position: fixed;
+                                bottom: 0;
+                                left: 0;
+                                right: 0;
+                                padding-top: 5pt;
+                                border-top: 1px solid #cbd5e1;
+                                font-size: 8pt;
+                                color: #64748b;
+                                font-family: 'IBM Plex Sans Arabic', sans-serif;
+                                background: #ffffff;
+                                z-index: 9999;
+                            }
+
                             @page {
                                 size: A4;
-                                margin: 20mm 15mm 20mm 15mm;
+                                margin: 15mm 15mm 20mm 15mm;
                             }
                         }
                     </style>
@@ -601,9 +629,16 @@
                 @if(!empty($video->transcript))
                     {!! \App\Services\TranscriptFormatter::format($video->transcript) !!}
                 @else
-                    <p class="text-slate-400 text-center py-6 text-sm font-sans">التفريغ النصي لهذه المحاضرة قيد التدقيق وسيتم
-                        إدراجه قريباً إن شاء الله.</p>
+                    <p class="text-slate-400 text-center py-6 text-sm font-sans">التفريغ النصي لهذه المحاضرة قيد التدقيق وسيتم إدراجه قريباً إن شاء الله.</p>
                 @endif
+            </div>
+
+            <!-- Print Footer Bar (Fixed at bottom of every printed page) -->
+            <div class="print-footer-bar hidden">
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 8pt; color: #64748b; direction: rtl; font-family: 'IBM Plex Sans Arabic', sans-serif;">
+                    <span>شبكة المنير — سماحة العلامة السيد منير الخباز</span>
+                    <span style="direction: ltr; font-family: monospace; font-size: 7.5pt; color: #475569;">{{ url()->current() }}</span>
+                </div>
             </div>
         </div>
 

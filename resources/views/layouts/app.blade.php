@@ -325,7 +325,10 @@
             #global-audio-player,
             .fixed,
             .no-print,
-            [class*="no-print"] {
+            [class*="no-print"],
+            .hawza-link,
+            [class*="theme-switch"],
+            [class*="switcher"] {
                 display: none !important;
             }
             body {
@@ -340,7 +343,7 @@
 <body class="theme-{{ $activeTheme }} min-h-screen flex flex-col antialiased selection:bg-gold-500 selection:text-white">
 
     <!-- 1. Top Cross-Portal Switcher Bar (Connecting with Hawza Portal on Port 8000) -->
-    <div class="bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-950 text-gold-300 text-xs border-b border-gold-500/30 py-1.5 px-4 shadow-sm">
+    <div class="no-print bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-950 text-gold-300 text-xs border-b border-gold-500/30 py-1.5 px-4 shadow-sm">
         <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
             <div class="flex items-center gap-3">
                 <span class="inline-flex items-center gap-1.5 font-medium">
