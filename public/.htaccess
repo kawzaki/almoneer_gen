@@ -1,9 +1,22 @@
-<IfModule mod_rewrite.c>
+<IfModule mod_fcgid.c>
+    # Force PHP 8.3 specifically for the new application on Hetzner
+    Options +ExecCGI -MultiViews -Indexes
+
+    <FilesMatch "\.php$">
+        SetHandler fcgid-script
+        FCGIWrapper /home/httpd/cgi-bin/php83-fcgi-starter.fcgi .php
+    </FilesMatch>
+</IfModule>
+
+<IfModule !mod_fcgid.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
     </IfModule>
+</IfModule>
 
+<IfModule mod_rewrite.c>
     RewriteEngine On
+    RewriteBase /home/
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
