@@ -413,6 +413,11 @@
                             color: #0f172a !important;
                         }
 
+                        /* إخفاء تذييل الطباعة في وضع التصفح العادي على الشاشة */
+                        tfoot.print-footer-group {
+                            display: none;
+                        }
+
                         /* ========================================================
                            قواعد الطباعة الفاخرة (Print & PDF Export Styling)
                            ======================================================== */
@@ -478,6 +483,8 @@
                                 text-align: justify;
                                 margin-bottom: 14pt !important;
                                 color: #000000 !important;
+                                orphans: 3 !important;
+                                widows: 3 !important;
                             }
 
                             /* توسيط البسملة والآية الافتتاحية ودعاء الختام في الطباعة كصفحة الويب تماماً */
@@ -497,7 +504,8 @@
                                 font-family: 'Amiri Quran', 'Traditional Arabic', serif !important;
                                 font-size: 14.5pt !important;
                                 line-height: inherit !important;
-                                page-break-inside: avoid;
+                                break-inside: avoid !important;
+                                page-break-inside: avoid !important;
                             }
 
                             #transcript-body h3,
@@ -509,7 +517,10 @@
                                 font-size: 17pt !important;
                                 margin-top: 22pt !important;
                                 margin-bottom: 12pt !important;
-                                page-break-after: avoid;
+                                break-inside: avoid !important;
+                                page-break-inside: avoid !important;
+                                break-after: avoid !important;
+                                page-break-after: avoid !important;
                             }
 
                             #transcript-body .lecture-subheading {
@@ -518,7 +529,10 @@
                                 font-size: 15pt !important;
                                 margin-top: 18pt !important;
                                 margin-bottom: 10pt !important;
-                                page-break-after: avoid;
+                                break-inside: avoid !important;
+                                page-break-inside: avoid !important;
+                                break-after: avoid !important;
+                                page-break-after: avoid !important;
                             }
 
                             #transcript-body ul,
@@ -526,6 +540,8 @@
                                 list-style-type: disc !important;
                                 padding-right: 25pt !important;
                                 margin: 14pt 0 !important;
+                                break-inside: avoid !important;
+                                page-break-inside: avoid !important;
                             }
 
                             #transcript-body ul li,
@@ -536,27 +552,45 @@
                                 font-weight: bold !important;
                                 color: #000000 !important;
                                 font-size: 13.5pt !important;
+                                break-inside: avoid !important;
+                                page-break-inside: avoid !important;
                             }
 
-                            /* شريط تذييل الصفحة المطبوعة متضمناً الرابط في الأسفل */
+                            /* جدول الطباعة لضمان تكرار التذييل في كل صفحة دون أي تداخل مع النص */
+                            table.print-layout-table {
+                                width: 100% !important;
+                                border-collapse: collapse !important;
+                                border: none !important;
+                                margin: 0 !important;
+                                padding: 0 !important;
+                            }
+
+                            table.print-layout-table > tbody > tr > td {
+                                padding: 0 !important;
+                                margin: 0 !important;
+                                border: none !important;
+                            }
+
+                            tfoot.print-footer-group {
+                                display: table-footer-group !important;
+                            }
+
+                            .print-footer-cell {
+                                height: 14mm !important;
+                                vertical-align: bottom !important;
+                                padding: 0 !important;
+                                margin: 0 !important;
+                                border: none !important;
+                            }
+
                             .print-footer-bar {
                                 display: block !important;
-                                position: fixed;
-                                bottom: 0;
-                                left: 0;
-                                right: 0;
-                                padding-top: 5pt;
-                                border-top: 1px solid #cbd5e1;
-                                font-size: 8pt;
-                                color: #64748b;
-                                font-family: 'IBM Plex Sans Arabic', sans-serif;
-                                background: #ffffff;
-                                z-index: 9999;
+                                width: 100% !important;
                             }
 
                             @page {
                                 size: A4;
-                                margin: 15mm 15mm 20mm 15mm;
+                                margin: 15mm 15mm 15mm 15mm;
                             }
                         }
                     </style>
@@ -587,7 +621,7 @@
                             class="px-2.5 py-1 hover:bg-white rounded-lg transition flex items-center gap-1.5 text-[11px] text-slate-700"
                             title="نسخ الرابط المختصر للمحاضرة almoneer.org/l/{{ $video->id }}">
                             <i class="fa-solid fa-share-nodes text-slate-500"></i>
-                            <span class="font-mono text-slate-600 font-semibold dir-ltr">almoneer.org/l/{{ $video->id }}</span>
+                            <span class="font-mono text-slate-600 font-semibold" lang="en" dir="ltr" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important; font-variant-numeric: lining-nums tabular-nums !important; font-feature-settings: 'locl' 0 !important; unicode-bidi: isolate;">almoneer.org/l/{{ $video->id }}</span>
                         </button>
                         <a href="https://api.whatsapp.com/send?text={{ rawurlencode($video->title . "\n\nhttps://almoneer.org/l/" . $video->id) }}"
                             target="_blank"
@@ -637,23 +671,36 @@
                 <hr style="border: 0; border-top: 1.5px solid #cbd5e1; margin-bottom: 18px;">
             </div>
 
-            <!-- Transcript Content Area (with Uthmanic Quranic Font) -->
-            <div id="transcript-body"
-                class="prose prose-slate max-w-none text-slate-800 leading-loose font-scholarly bg-amber-50/20 p-6 sm:p-10 rounded-2xl border border-amber-100/60 transition-all">
-                @if(!empty($video->transcript))
-                    {!! \App\Services\TranscriptFormatter::format($video->transcript) !!}
-                @else
-                    <p class="text-slate-400 text-center py-6 text-sm font-sans">التفريغ النصي لهذه المحاضرة قيد التدقيق وسيتم إدراجه قريباً إن شاء الله.</p>
-                @endif
-            </div>
-
-            <!-- Print Footer Bar (Fixed at bottom of every printed page) -->
-            <div class="print-footer-bar hidden">
-                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 8.5pt; color: #64748b; direction: rtl; font-family: 'IBM Plex Sans Arabic', sans-serif;">
-                    <span>شبكة المنير — سماحة العلامة السيد منير الخباز</span>
-                    <span style="direction: ltr; font-family: monospace; font-size: 8.5pt; color: #1e293b; font-weight: 600;">almoneer.org/l/{{ $video->id }}</span>
-                </div>
-            </div>
+            <!-- Print Layout Table (Ensures perfect page pagination without footer overlap) -->
+            <table class="print-layout-table w-full border-none border-collapse p-0 m-0">
+                <tbody>
+                    <tr>
+                        <td class="p-0 border-none m-0">
+                            <!-- Transcript Content Area (with Uthmanic Quranic Font) -->
+                            <div id="transcript-body"
+                                class="prose prose-slate max-w-none text-slate-800 leading-loose font-scholarly bg-amber-50/20 p-6 sm:p-10 rounded-2xl border border-amber-100/60 transition-all">
+                                @if(!empty($video->transcript))
+                                    {!! \App\Services\TranscriptFormatter::format($video->transcript) !!}
+                                @else
+                                    <p class="text-slate-400 text-center py-6 text-sm font-sans">التفريغ النصي لهذه المحاضرة قيد التدقيق وسيتم إدراجه قريباً إن شاء الله.</p>
+                                @endif
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot class="print-footer-group">
+                    <tr>
+                        <td class="print-footer-cell p-0 border-none m-0">
+                            <div class="print-footer-bar">
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 8.5pt; color: #64748b; direction: rtl; font-family: 'IBM Plex Sans Arabic', sans-serif; border-top: 1px solid #cbd5e1; padding-top: 5px;">
+                                    <span>شبكة المنير — سماحة العلامة السيد منير الخباز</span>
+                                    <span lang="en" dir="ltr" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important; font-variant-numeric: lining-nums tabular-nums !important; font-feature-settings: 'locl' 0 !important; font-size: 8.5pt; color: #1e293b; font-weight: bold; unicode-bidi: isolate; display: inline-block;">almoneer.org/l/{{ $video->id }}</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
 
         <!-- Related Lectures from the Same Season -->
