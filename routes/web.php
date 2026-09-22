@@ -31,6 +31,9 @@ Route::get('/lectures/{year}/{season}', [LectureController::class, 'season'])->w
 Route::get('/lectures/{year}/{season}/{slug}', [LectureController::class, 'show'])->where('year', '[0-9]{4}')->name('lectures.show');
 Route::get('/lectures/{slug}', [LectureController::class, 'showBySlug'])->name('lectures.single');
 
+// الروابط المختصرة (Short URLs for Print & Social Sharing)
+Route::get('/l/{id}', [LectureController::class, 'shortRedirect'])->whereNumber('id')->name('lectures.short');
+
 // توافق المسارات القديمة وتوجيهها تلقائياً للمحاضرات (Backwards Compatibility)
 Route::get('/videos', fn() => redirect()->route('lectures.index'))->name('videos.index');
 Route::get('/videos/{slug}', fn($slug) => redirect()->route('lectures.single', ['slug' => $slug]))->name('videos.show');
@@ -40,11 +43,13 @@ Route::get('/audios/{slug}', fn($slug) => redirect()->route('lectures.single', [
 // الشعر والقصائد (Poetry)
 Route::get('/poems', [PoemController::class, 'index'])->name('poems.index');
 Route::get('/poems/{slug}', [PoemController::class, 'show'])->name('poems.show');
+Route::get('/p/{id}', [PoemController::class, 'shortRedirect'])->whereNumber('id')->name('poems.short');
 
 // كتب ومؤلفات (Books & Publications)
 Route::get('/books', [BookController::class, 'index'])->name('books.index');
 Route::get('/books/{slug}', [BookController::class, 'show'])->name('books.show');
 Route::get('/books/{slug}/download', [BookController::class, 'download'])->name('books.download');
+Route::get('/b/{id}', [BookController::class, 'shortRedirect'])->whereNumber('id')->name('books.short');
 
 // أخبار ونشاطات (News & Activities)
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');

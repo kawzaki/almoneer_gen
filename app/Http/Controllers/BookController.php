@@ -47,4 +47,13 @@ class BookController extends Controller
 
         return redirect()->back()->with('error', 'الملف غير متوفر حالياً للتحميل');
     }
+
+    /**
+     * Short URL redirect: /b/{id} -> canonical book URL
+     */
+    public function shortRedirect($id)
+    {
+        $book = Book::active()->where('id', $id)->firstOrFail();
+        return redirect()->route('books.show', ['slug' => $book->slug], 301);
+    }
 }

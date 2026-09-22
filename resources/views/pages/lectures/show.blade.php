@@ -583,6 +583,20 @@
                             <span>نسخ</span>
                         </button>
                         <div class="h-4 w-[1px] bg-slate-300/60 mx-1"></div>
+                        <button type="button" onclick="copyShortUrl('https://almoneer.org/l/{{ $video->id }}')" id="short-link-btn"
+                            class="px-2.5 py-1 hover:bg-white rounded-lg transition flex items-center gap-1.5 text-[11px] text-slate-700"
+                            title="نسخ الرابط المختصر للمحاضرة almoneer.org/l/{{ $video->id }}">
+                            <i class="fa-solid fa-share-nodes text-slate-500"></i>
+                            <span class="font-mono text-slate-600 font-semibold dir-ltr">almoneer.org/l/{{ $video->id }}</span>
+                        </button>
+                        <a href="https://api.whatsapp.com/send?text={{ rawurlencode($video->title . "\n\nhttps://almoneer.org/l/" . $video->id) }}"
+                            target="_blank"
+                            class="px-2.5 py-1 hover:bg-emerald-50 rounded-lg transition flex items-center gap-1 text-[11px] text-emerald-800 font-bold"
+                            title="مشاركة المحاضرة عبر واتساب برابط مختصر">
+                            <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i>
+                            <span>واتساب</span>
+                        </a>
+                        <div class="h-4 w-[1px] bg-slate-300/60 mx-1"></div>
                         <button type="button" onclick="window.print()"
                             class="px-2.5 py-1 hover:bg-white rounded-lg transition flex items-center gap-1 text-[11px] text-emerald-900 font-bold"
                             title="طباعة المحاضرة أو تصديرها كملف PDF مطابق للأصل">
@@ -616,7 +630,7 @@
                     {{ $video->title }}
                 </h1>
                 @if($video->lecture_number)
-                    <div style="font-size: 12.5pt; font-weight: bold; color: #0044cc; margin-bottom: 14px; font-family: 'Traditional Arabic', serif;">
+                    <div style="font-size: 11pt; color: #64748b; font-family: 'Traditional Arabic', serif; margin-bottom: 12px;">
                         الليلة {{ $video->lecture_number }} من موسم {{ $resolvedSeasonName }} {{ $resolvedYear }}هـ
                     </div>
                 @endif
@@ -635,9 +649,9 @@
 
             <!-- Print Footer Bar (Fixed at bottom of every printed page) -->
             <div class="print-footer-bar hidden">
-                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 8pt; color: #64748b; direction: rtl; font-family: 'IBM Plex Sans Arabic', sans-serif;">
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 8.5pt; color: #64748b; direction: rtl; font-family: 'IBM Plex Sans Arabic', sans-serif;">
                     <span>شبكة المنير — سماحة العلامة السيد منير الخباز</span>
-                    <span style="direction: ltr; font-family: monospace; font-size: 7.5pt; color: #475569;">{{ url()->current() }}</span>
+                    <span style="direction: ltr; font-family: monospace; font-size: 8.5pt; color: #1e293b; font-weight: 600;">almoneer.org/l/{{ $video->id }}</span>
                 </div>
             </div>
         </div>
@@ -714,6 +728,17 @@
                     const btn = document.getElementById('copy-btn');
                     const originalHtml = btn.innerHTML;
                     btn.innerHTML = '<i class="fa-solid fa-check text-emerald-600"></i> تم النسخ!';
+                    setTimeout(() => {
+                        btn.innerHTML = originalHtml;
+                    }, 2500);
+                });
+            }
+
+            function copyShortUrl(url) {
+                navigator.clipboard.writeText(url).then(() => {
+                    const btn = document.getElementById('short-link-btn');
+                    const originalHtml = btn.innerHTML;
+                    btn.innerHTML = '<i class="fa-solid fa-check text-emerald-600"></i> <span class="text-emerald-700 font-bold">تم نسخ الرابط!</span>';
                     setTimeout(() => {
                         btn.innerHTML = originalHtml;
                     }, 2500);

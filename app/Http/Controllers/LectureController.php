@@ -337,4 +337,21 @@ class LectureController extends Controller
             'slug'   => $slug
         ]);
     }
+
+    /**
+     * Short URL redirect: /l/{id} -> canonical lecture URL
+     */
+    public function shortRedirect($id)
+    {
+        $video = MediaItem::active()->where('id', $id)->firstOrFail();
+        $year = $video->hijri_year ?? '1448';
+        $season = $video->season_slug ?? 'general';
+
+        return redirect()->route('lectures.show', [
+            'year'   => $year,
+            'season' => $season,
+            'slug'   => $video->slug,
+        ], 301);
+    }
 }
+

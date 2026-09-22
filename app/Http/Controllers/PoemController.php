@@ -27,4 +27,14 @@ class PoemController extends Controller
 
         return view('pages.poem_show', compact('poem', 'otherPoems'));
     }
+
+    /**
+     * Short URL redirect: /p/{id} -> canonical poem URL
+     */
+    public function shortRedirect($id)
+    {
+        $poem = Poem::active()->where('id', $id)->firstOrFail();
+        return redirect()->route('poems.show', ['slug' => $poem->slug], 301);
+    }
 }
+
