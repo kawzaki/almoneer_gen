@@ -3,7 +3,10 @@
 @section('title', $video->title . ' | شبكة العلامة المنير')
 
 @section('content')
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-8">
+    <div class="lecture-page-container max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-8">
+
+        <!-- Top Section (No Print) -->
+        <div class="no-print space-y-8">
 
         <!-- Seasonal Breadcrumbs -->
         <nav class="flex flex-wrap items-center gap-2 text-xs text-slate-500">
@@ -321,10 +324,11 @@
             @endif
 
         </div>
+        </div>
 
         <!-- Full Transcribed Text (التفريغ النصي الكامل للمحاضرة) -->
-        <div id="transcript-section" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
-            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
+        <div id="transcript-section" class="transcript-card bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+            <div class="no-print flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
                 <div class="flex items-center gap-3">
                     <div
                         class="w-10 h-10 rounded-2xl bg-emerald-800 text-gold-300 flex items-center justify-center text-lg font-bold shadow-sm">
@@ -353,15 +357,103 @@
                         #transcript-body .quran-verse {
                             font-size: calc(var(--transcript-font-size) * 1.35) !important;
                             line-height: 2.4 !important;
+                            color: #BB1111 !important;
                         }
 
                         #transcript-body .quran-ref {
                             font-size: calc(var(--transcript-font-size) * 0.75) !important;
                         }
+
+                        /* ========================================================
+                           قواعد الطباعة الفاخرة (Print & PDF Export Styling)
+                           ======================================================== */
+                        @media print {
+                            /* إخفاء عناصر الموقع غير المتعلقة بالنص */
+                            nav, header, footer,
+                            #video-player-container,
+                            .video-header-nav,
+                            .video-action-grid,
+                            .reading-controls-bar,
+                            .floating-audio-bar,
+                            .related-lectures-section,
+                            .back-to-top,
+                            button,
+                            a[download] {
+                                display: none !important;
+                            }
+
+                            body {
+                                background: #ffffff !important;
+                                color: #111827 !important;
+                                font-size: 13.5pt !important;
+                                margin: 0 !important;
+                                padding: 0 !important;
+                            }
+
+                            .lecture-page-container {
+                                max-width: 100% !important;
+                                padding: 0 !important;
+                                margin: 0 !important;
+                            }
+
+                            .transcript-card {
+                                border: none !important;
+                                box-shadow: none !important;
+                                padding: 0 !important;
+                                background: transparent !important;
+                            }
+
+                            .print-header-banner {
+                                display: block !important;
+                                margin-bottom: 24px;
+                                padding-bottom: 16px;
+                                border-bottom: 2px solid #cbd5e1;
+                                text-align: center;
+                            }
+
+                            #transcript-body {
+                                background: transparent !important;
+                                border: none !important;
+                                padding: 0 !important;
+                                box-shadow: none !important;
+                            }
+
+                            #transcript-body p,
+                            #transcript-body .transcript-p {
+                                font-size: 14pt !important;
+                                line-height: 2.1 !important;
+                                text-align: justify !important;
+                                margin-bottom: 14pt !important;
+                                color: #000000 !important;
+                            }
+
+                            #transcript-body .quran-verse {
+                                color: #BB1111 !important;
+                                font-family: 'Traditional Arabic', serif !important;
+                                font-size: 17pt !important;
+                                line-height: 2.2 !important;
+                                page-break-inside: avoid;
+                            }
+
+                            #transcript-body h3,
+                            #transcript-body .lecture-heading {
+                                color: #990000 !important;
+                                font-weight: bold !important;
+                                font-size: 16.5pt !important;
+                                margin-top: 22pt !important;
+                                margin-bottom: 10pt !important;
+                                page-break-after: avoid;
+                            }
+
+                            @page {
+                                size: A4;
+                                margin: 20mm 15mm 20mm 15mm;
+                            }
+                        }
                     </style>
                 @endpush
 
-                <div class="flex flex-wrap items-center gap-2">
+                <div class="reading-controls-bar flex flex-wrap items-center gap-2">
                     <!-- Reading Controls -->
                     <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs text-slate-700">
                         <button type="button" onclick="changeFontSize(-1)"
@@ -381,6 +473,13 @@
                             <i class="fa-regular fa-copy"></i>
                             <span>نسخ</span>
                         </button>
+                        <div class="h-4 w-[1px] bg-slate-300/60 mx-1"></div>
+                        <button type="button" onclick="window.print()"
+                            class="px-2.5 py-1 hover:bg-white rounded-lg transition flex items-center gap-1 text-[11px] text-emerald-900 font-bold"
+                            title="طباعة المحاضرة أو تصديرها كملف PDF مطابق للأصل">
+                            <i class="fa-solid fa-print text-emerald-700"></i>
+                            <span>طباعة</span>
+                        </button>
                     </div>
 
                     @if(!empty($video->pdf_file))
@@ -391,6 +490,28 @@
                         </a>
                     @endif
                 </div>
+            </div>
+
+            <!-- Print Header (Visible ONLY on print) -->
+            <div class="print-header-banner hidden">
+                <div style="text-align: center; margin-bottom: 12px;">
+                    <img src="{{ asset('images/calligraphy-sayyid-muneer-dark.png') }}" alt="سماحة العلامة السيد منير الخباز" style="height: 65px; margin: 0 auto; display: inline-block;">
+                </div>
+                <div style="font-size: 11pt; color: #475569; margin-bottom: 6px; font-family: 'Traditional Arabic', serif;">
+                    المحاضرات المكتوبة » موسم {{ $resolvedSeasonName }} {{ $resolvedYear }}هـ
+                    @if($video->lecture_number)
+                        » الليلة {{ $video->lecture_number }}
+                    @endif
+                </div>
+                <h1 style="font-size: 19pt; font-weight: bold; color: #0f172a; margin: 10px 0; font-family: 'Traditional Arabic', serif;">
+                    {{ $video->title }}
+                </h1>
+                @if($video->lecture_number)
+                    <div style="font-size: 12.5pt; font-weight: bold; color: #0044cc; margin-bottom: 14px; font-family: 'Traditional Arabic', serif;">
+                        الليلة {{ $video->lecture_number }} من موسم {{ $resolvedSeasonName }} {{ $resolvedYear }}هـ
+                    </div>
+                @endif
+                <hr style="border: 0; border-top: 1.5px solid #cbd5e1; margin-bottom: 18px;">
             </div>
 
             <!-- Transcript Content Area (with Uthmanic Quranic Font) -->
@@ -407,7 +528,7 @@
 
         <!-- Related Lectures from the Same Season -->
         @if($relatedVideos->count() > 0)
-            <div class="space-y-4 pt-6">
+            <div class="no-print space-y-4 pt-6">
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-bold font-scholarly text-slate-900 flex items-center gap-2">
                         <i class="fa-solid fa-layer-group text-gold-500"></i>
