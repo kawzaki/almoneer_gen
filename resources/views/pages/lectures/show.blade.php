@@ -623,13 +623,6 @@
                             <i class="fa-solid fa-share-nodes text-slate-500"></i>
                             <span class="font-mono text-slate-600 font-semibold" lang="en" dir="ltr" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important; font-variant-numeric: lining-nums tabular-nums !important; font-feature-settings: 'locl' 0 !important; unicode-bidi: isolate;">almoneer.org/l/{{ $video->id }}</span>
                         </button>
-                        <a href="https://api.whatsapp.com/send?text={{ rawurlencode($video->title . "\n\nhttps://almoneer.org/l/" . $video->id) }}"
-                            target="_blank"
-                            class="px-2.5 py-1 hover:bg-emerald-50 rounded-lg transition flex items-center gap-1 text-[11px] text-emerald-800 font-bold"
-                            title="مشاركة المحاضرة عبر واتساب برابط مختصر">
-                            <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i>
-                            <span>واتساب</span>
-                        </a>
                         <div class="h-4 w-[1px] bg-slate-300/60 mx-1"></div>
                         <button type="button" onclick="window.print()"
                             class="px-2.5 py-1 hover:bg-white rounded-lg transition flex items-center gap-1 text-[11px] text-emerald-900 font-bold"
