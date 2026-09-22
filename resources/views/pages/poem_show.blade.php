@@ -17,13 +17,17 @@
     <div class="bg-white rounded-3xl p-8 sm:p-12 border border-gold-500/40 shadow-sm space-y-8 text-center">
         
         <div class="space-y-2 pb-6 border-b border-slate-100">
-            <span class="px-3 py-1 rounded-full bg-gold-50 text-gold-700 text-xs font-bold border border-gold-200">
-                {{ $poem->occasion ?? 'قصيدة ولائية' }}
-            </span>
+            @if(!empty($poem->occasion))
+                <span class="px-3 py-1 rounded-full bg-gold-50 text-gold-700 text-xs font-bold border border-gold-200 inline-block mb-2">
+                    {{ $poem->occasion }}
+                </span>
+            @endif
             <h1 class="text-2xl sm:text-3xl font-bold font-scholarly text-emerald-950 pt-2">
                 {{ $poem->title }}
             </h1>
-            <p class="text-xs text-slate-400">نظم: سماحة العلامة السيد منير الخباز — البحر: {{ $poem->meter ?? 'البسيط' }}</p>
+            <p class="text-xs text-slate-400">
+                نظم: سماحة العلامة السيد منير الخباز@if(!empty($poem->meter)) — البحر: {{ $poem->meter }}@endif
+            </p>
         </div>
 
         @if($poem->description)

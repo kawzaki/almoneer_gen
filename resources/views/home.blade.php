@@ -290,9 +290,15 @@
                     @if($featuredPoem)
                         <div class="bg-white rounded-2xl p-6 border border-gold-500/30 shadow-md space-y-4">
                             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                                <span
-                                    class="text-xs font-semibold px-2.5 py-0.5 rounded bg-gold-50 text-gold-700">{{ $featuredPoem->occasion ?? 'في رثاء سيد الشهداء (ع)' }}</span>
-                                <span class="text-[11px] text-slate-400">{{ $featuredPoem->meter ?? 'بحر البسيط' }}</span>
+                                @if(!empty($featuredPoem->occasion))
+                                    <span
+                                        class="text-xs font-semibold px-2.5 py-0.5 rounded bg-gold-50 text-gold-700">{{ $featuredPoem->occasion }}</span>
+                                @else
+                                    <span></span>
+                                @endif
+                                @if(!empty($featuredPoem->meter))
+                                    <span class="text-[11px] text-slate-400">{{ $featuredPoem->meter }}</span>
+                                @endif
                             </div>
 
                             <h3 class="text-lg font-bold font-scholarly text-emerald-950 text-center">
