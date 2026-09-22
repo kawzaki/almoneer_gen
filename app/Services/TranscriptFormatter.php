@@ -147,15 +147,21 @@ class TranscriptFormatter
             $formatted = $text;
 
             // 1. استبدال العناوين [t]عنوان[/t] إذا وجدت
+            // 1. استبدال العناوين [t]عنوان[/t]
             $formatted = preg_replace_callback('/\[t\](.*?)\[\/t\]/u', function ($matches) {
                 $title = trim($matches[1]);
-                return '<h3 class="text-lg sm:text-xl font-bold font-scholarly text-emerald-900 border-r-4 border-gold-500 pr-3.5 mt-8 mb-4 pt-1 leading-snug drop-shadow-sm">' . e($title) . '</h3>';
+                return '<h3 class="text-lg sm:text-xl font-bold font-scholarly text-red-800 border-r-4 border-red-600 pr-3.5 mt-8 mb-4 pt-1 leading-snug drop-shadow-sm">' . e($title) . '</h3>';
+            }, $formatted);
+
+            // استبدال العناوين والصفات الفرعية [c]...[/c]
+            $formatted = preg_replace_callback('/\[c\](.*?)\[\/c\]/u', function ($matches) {
+                return '<span class="text-amber-800 font-bold font-scholarly inline-block my-2" style="color: #8B4513;">' . e(trim($matches[1])) . '</span>';
             }, $formatted);
 
             // 2. استبدال الآيات القرآنية {الآية} أو ﴿الآية﴾ بالخط العثماني
             $formatted = preg_replace_callback('/(?:\{|﴿)([^}﴾]+)(?:\}|﴾)/u', function ($matches) {
                 $verse = trim($matches[1]);
-                return '<span class="quran-verse font-quran text-emerald-950 font-normal">﴿ ' . e($verse) . ' ﴾</span>';
+                return '<span class="quran-verse font-quran text-red-900 font-normal" style="color: #BB1111;">﴿ ' . e($verse) . ' ﴾</span>';
             }, $formatted);
 
             // 3. استبدال مراجع السور والآيات [المؤمنون : 115] أو [البقرة: 2]
@@ -181,13 +187,18 @@ class TranscriptFormatter
         // 1. استبدال العناوين [t]عنوان[/t]
         $cleaned = preg_replace_callback('/\[t\](.*?)\[\/t\]/u', function ($matches) {
             $title = trim($matches[1]);
-            return '<h3 class="text-lg sm:text-xl font-bold font-scholarly text-emerald-900 border-r-4 border-gold-500 pr-3.5 mt-8 mb-4 pt-1 leading-snug drop-shadow-sm">' . e($title) . '</h3>';
+            return '<h3 class="text-lg sm:text-xl font-bold font-scholarly text-red-800 border-r-4 border-red-600 pr-3.5 mt-8 mb-4 pt-1 leading-snug drop-shadow-sm">' . e($title) . '</h3>';
+        }, $cleaned);
+
+        // استبدال العناوين والصفات الفرعية [c]...[/c]
+        $cleaned = preg_replace_callback('/\[c\](.*?)\[\/c\]/u', function ($matches) {
+            return '<span class="text-amber-800 font-bold font-scholarly inline-block my-2" style="color: #8B4513;">' . e(trim($matches[1])) . '</span>';
         }, $cleaned);
 
         // 2. استبدال الآيات القرآنية {الآية} أو ﴿الآية﴾ بالخط العثماني
         $cleaned = preg_replace_callback('/(?:\{|﴿)([^}﴾]+)(?:\}|﴾)/u', function ($matches) {
             $verse = trim($matches[1]);
-            return '<span class="quran-verse font-quran text-emerald-950 font-normal">﴿ ' . e($verse) . ' ﴾</span>';
+            return '<span class="quran-verse font-quran text-red-900 font-normal" style="color: #BB1111;">﴿ ' . e($verse) . ' ﴾</span>';
         }, $cleaned);
 
         // 3. استبدال مراجع السور والآيات [المؤمنون : 115] أو [البقرة: 2]
@@ -216,7 +227,21 @@ class TranscriptFormatter
             if (str_starts_with($p, '<h3')) {
                 $html .= $p . "\n";
             } else {
-                $html .= '<p class="transcript-p mb-6 leading-loose text-justify text-slate-800 font-scholarly">' . nl2br($p) . '</p>' . "\n";
+                // فحص القوائم النقطية
+                $lines = array_filter(array_map('trim', explode("\n", $p)));
+                $isList = count($lines) > 1 && count(array_filter($lines, fn($l) => str_starts_with($l, '- ') || str_starts_with($l, '• '))) === count($lines);
+                if ($isList) {
+                    $html .= '<ul class="list-disc pr-6 space-y-1.5 my-4 text-slate-800">' . "\n";
+                    foreach ($lines as $line) {
+                        $item = preg_replace('/^[-•]\s*/u', '', $line);
+                        $html .= '  <li>' . $item . '</li>' . "\n";
+                    }
+                    $html .= '</ul>' . "\n";
+                } elseif (preg_match('/^(بسم الله الرحمن الرحيم|صدق الله العلي العظيم|والحمد لله رب العالمين|والحمدلله رب العالمين)$/u', $p)) {
+                    $html .= '<p class="text-center font-bold text-slate-900 my-4 text-base font-scholarly">' . $p . '</p>' . "\n";
+                } else {
+                    $html .= '<p class="transcript-p mb-6 leading-loose text-justify text-slate-800 font-scholarly">' . nl2br($p) . '</p>' . "\n";
+                }
             }
         }
 

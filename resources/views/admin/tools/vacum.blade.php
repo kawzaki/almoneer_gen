@@ -170,9 +170,15 @@ function cleanIt() {
     inText = inText.replace(/\n[ \t]+/g, "\n");
     inText = inText.replace(/[ \t]+\n/g, "\n");
 
-    // العناوين
-    inText = inText.replace(/@@(.*?)\n/g, function($0, $1) { return "[t]" + $1.trim() + "[/t]\n\n"; });
-    inText = inText.replace(/@@(.*?)@@/g, function($0, $1) { return "[t]" + $1.trim() + "[/t]\n\n"; });
+    // العناوين والنصوص المميزة (مطابقة لنظام الموقع القديم)
+    inText = inText.replace(/@@(.*?)@@/g, function($0, $1) { return "\n\n[t]" + $1.trim() + "[/t]\n\n"; });
+    inText = inText.replace(/@@(.*?)\n/g, function($0, $1) { return "\n\n[t]" + $1.trim() + "[/t]\n\n"; });
+    inText = inText.replace(/@@/g, "");
+
+    // النصوص والعناوين الفرعية الملونة (كالصفات والخطوات %%...%%)
+    inText = inText.replace(/%%(.*?)%%/g, function($0, $1) { return "[c]" + $1.trim() + "[/c]"; });
+    inText = inText.replace(/%%(.*?)\n/g, function($0, $1) { return "[c]" + $1.trim() + "[/c]\n"; });
+    inText = inText.replace(/%%/g, "");
 
     // الاختصارات والأدعية
     inText = inText.replace(/ـ/g, "");
@@ -237,14 +243,41 @@ function generateHtml(cleanText) {
     paragraphs.forEach(p => {
         p = p.trim();
         if (!p) return;
+
+        // فحص ما إذا كانت الفقرة عبارة عن عنوان رئيسي
         if (p.startsWith('[t]') && p.endsWith('[/t]')) {
             const title = p.replace('[t]', '').replace('[/t]', '').trim();
-            html += `<h3>${title}</h3>\n\n`;
+            html += `<h3 class="lecture-heading" style="color: #990000; font-weight: bold; margin: 20px 0 10px 0;">${title}</h3>\n\n`;
+            return;
+        }
+
+        // فحص ما إذا كانت الفقرة قائمة نقطية
+        const lines = p.split('\n').map(l => l.trim()).filter(Boolean);
+        const isBulletList = lines.length > 1 && lines.every(l => l.startsWith('- ') || l.startsWith('• ') || l.startsWith('* '));
+        if (isBulletList) {
+            html += '<ul style="margin: 15px 0; padding-right: 25px; list-style-type: disc;">\n';
+            lines.forEach(l => {
+                let item = l.replace(/^[-•*]\s*/, '').trim();
+                item = item.replace(/\{([^}]+)\}/g, '<span class="quran-verse" style="color: #BB1111; font-family: \'Traditional Arabic\', serif;">﴿ $1 ﴾</span>');
+                item = item.replace(/\[c\](.*?)\[\/c\]/g, '<span style="color: #8B4513; font-weight: bold;">$1</span>');
+                html += `  <li style="margin-bottom: 6px;">${item}</li>\n`;
+            });
+            html += '</ul>\n\n';
+            return;
+        }
+
+        // معالجة الفقرة العادية
+        // معالجة الآيات
+        let processed = p.replace(/\{([^}]+)\}/g, '<span class="quran-verse" style="color: #BB1111; font-family: \'Traditional Arabic\', serif;">﴿ $1 ﴾</span>');
+        // معالجة النصوص الفرعية الملونة
+        processed = processed.replace(/\[c\](.*?)\[\/c\]/g, '<span style="color: #8B4513; font-weight: bold;">$1</span>');
+        processed = processed.replace(/\n/g, '<br />\n');
+
+        // توسيط البسملة والتصديق والحمدلة
+        if (/^(بسم الله الرحمن الرحيم|صدق الله العلي العظيم|والحمد لله رب العالمين|والحمدلله رب العالمين)$/.test(p.trim())) {
+            html += `<p style="text-align: center; font-weight: bold; margin: 15px 0;">${processed}</p>\n\n`;
         } else {
-            // معالجة الآيات
-            let processed = p.replace(/\{([^}]+)\}/g, '<span class="quran-verse">﴿ $1 ﴾</span>');
-            processed = processed.replace(/\n/g, '<br />\n');
-            html += `<p>${processed}</p>\n\n`;
+            html += `<p style="line-height: 2; text-align: justify; margin-bottom: 16px;">${processed}</p>\n\n`;
         }
     });
     document.getElementById('outTextHtml').value = html.trim();
