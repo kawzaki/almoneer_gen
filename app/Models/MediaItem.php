@@ -17,6 +17,7 @@ class MediaItem extends Model
         'type',
         'media_url',
         'soundcloud_url',
+        'audio_file',
         'thumbnail',
         'duration',
         'description',
@@ -103,13 +104,16 @@ class MediaItem extends Model
 
     public function hasAudio(): bool
     {
-        return !empty($this->soundcloud_url) || $this->type === 'audio';
+        return !empty($this->soundcloud_url) || !empty($this->audio_file) || $this->type === 'audio';
     }
 
     public function getEffectiveAudioUrlAttribute(): ?string
     {
         if (!empty($this->soundcloud_url)) {
             return $this->soundcloud_url;
+        }
+        if (!empty($this->audio_file)) {
+            return str_starts_with($this->audio_file, 'http') ? $this->audio_file : asset($this->audio_file);
         }
         if ($this->type === 'audio' && !empty($this->media_url)) {
             return $this->media_url;

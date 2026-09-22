@@ -28,6 +28,9 @@ class MediaController extends Controller
             'title'          => 'required|string|max:255',
             'type'           => 'required|in:audio,video,short',
             'media_url'      => 'nullable|string',
+            'soundcloud_url' => 'nullable|string|max:500',
+            'audio_file'     => 'nullable|file|mimes:mp3,wav,m4a,ogg,aac,mp4|max:153600',
+            'pdf_file'       => 'nullable|file|mimes:pdf|max:102400',
             'tags'           => 'nullable|string',
             'lecture_number' => 'nullable|integer|min:1|max:999',
         ]);
@@ -63,12 +66,30 @@ class MediaController extends Controller
 
         $num = $this->resolveLectureNumber($request, $title);
 
+        $audioPath = null;
+        if ($request->hasFile('audio_file')) {
+            $file = $request->file('audio_file');
+            $filename = 'audio_' . time() . '_' . Str::random(6) . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/audio'), $filename);
+            $audioPath = 'uploads/audio/' . $filename;
+        }
+
+        $pdfPath = null;
+        if ($request->hasFile('pdf_file')) {
+            $file = $request->file('pdf_file');
+            $filename = 'transcript_' . time() . '_' . Str::random(6) . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/pdf'), $filename);
+            $pdfPath = 'uploads/pdf/' . $filename;
+        }
+
         MediaItem::create([
             'title'          => $request->title,
             'slug'           => $slug,
             'category_id'    => $request->category_id,
             'type'           => $request->type,
             'media_url'      => $request->media_url,
+            'soundcloud_url' => $request->soundcloud_url,
+            'audio_file'     => $audioPath,
             'thumbnail'      => $request->thumbnail,
             'duration'       => $request->duration,
             'season_year'    => $request->season_year,
@@ -79,6 +100,7 @@ class MediaController extends Controller
             'description'    => $request->description,
             'tags'           => $request->tags,
             'transcript'     => $request->transcript,
+            'pdf_file'       => $pdfPath,
             'is_featured'    => $request->boolean('is_featured'),
             'is_active'      => $request->boolean('is_active', true),
         ]);
@@ -98,24 +120,60 @@ class MediaController extends Controller
             'title'          => 'required|string|max:255',
             'type'           => 'required|in:audio,video,short',
             'media_url'      => 'nullable|string',
+            'soundcloud_url' => 'nullable|string|max:500',
+            'audio_file'     => 'nullable|file|mimes:mp3,wav,m4a,ogg,aac,mp4|max:153600',
+            'pdf_file'       => 'nullable|file|mimes:pdf|max:102400',
             'tags'           => 'nullable|string',
             'lecture_number' => 'nullable|integer|min:1|max:999',
         ]);
 
         $updateData = [
-            'title'       => $request->title,
-            'category_id' => $request->category_id,
-            'type'        => $request->type,
-            'media_url'   => $request->media_url,
-            'thumbnail'   => $request->thumbnail,
-            'duration'    => $request->duration,
-            'season_year' => $request->season_year,
-            'description' => $request->description,
-            'tags'        => $request->tags,
-            'transcript'  => $request->transcript,
-            'is_featured' => $request->boolean('is_featured'),
-            'is_active'   => $request->boolean('is_active', true),
+            'title'          => $request->title,
+            'category_id'    => $request->category_id,
+            'type'           => $request->type,
+            'media_url'      => $request->media_url,
+            'soundcloud_url' => $request->soundcloud_url,
+            'thumbnail'      => $request->thumbnail,
+            'duration'       => $request->duration,
+            'season_year'    => $request->season_year,
+            'description'    => $request->description,
+            'tags'           => $request->tags,
+            'transcript'     => $request->transcript,
+            'is_featured'    => $request->boolean('is_featured'),
+            'is_active'      => $request->boolean('is_active', true),
         ];
+
+        // Handle Audio file upload or removal
+        if ($request->boolean('remove_audio_file')) {
+            if ($medium->audio_file && file_exists(public_path($medium->audio_file))) {
+                @unlink(public_path($medium->audio_file));
+            }
+            $updateData['audio_file'] = null;
+        } elseif ($request->hasFile('audio_file')) {
+            if ($medium->audio_file && file_exists(public_path($medium->audio_file))) {
+                @unlink(public_path($medium->audio_file));
+            }
+            $file = $request->file('audio_file');
+            $filename = 'audio_' . time() . '_' . Str::random(6) . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/audio'), $filename);
+            $updateData['audio_file'] = 'uploads/audio/' . $filename;
+        }
+
+        // Handle PDF file upload or removal
+        if ($request->boolean('remove_pdf_file')) {
+            if ($medium->pdf_file && file_exists(public_path($medium->pdf_file))) {
+                @unlink(public_path($medium->pdf_file));
+            }
+            $updateData['pdf_file'] = null;
+        } elseif ($request->hasFile('pdf_file')) {
+            if ($medium->pdf_file && file_exists(public_path($medium->pdf_file))) {
+                @unlink(public_path($medium->pdf_file));
+            }
+            $file = $request->file('pdf_file');
+            $filename = 'transcript_' . time() . '_' . Str::random(6) . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/pdf'), $filename);
+            $updateData['pdf_file'] = 'uploads/pdf/' . $filename;
+        }
 
         // Update season metadata from season_year or title
         $sy = $request->season_year ?? '';

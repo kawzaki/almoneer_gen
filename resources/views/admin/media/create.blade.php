@@ -43,7 +43,7 @@
         <a href="{{ route('admin.media.index') }}" class="text-xs text-slate-500 hover:text-slate-800">← العودة للقائمة</a>
     </div>
 
-    <form id="media-form" action="{{ route('admin.media.store') }}" method="POST" class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+    <form id="media-form" action="{{ route('admin.media.store') }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
         @csrf
         <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">عنوان المادة الإعلامية:</label>
@@ -84,14 +84,70 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">
-                    رابط الميديا (يوتيوب أو صوتي):
+                    رابط الفيديو (يوتيوب):
                     <span class="text-slate-400 font-normal text-[11px]">(اختياري - في حال عدم توفر الفيديو بعد)</span>
                 </label>
-                <input type="text" name="media_url" placeholder="https://..." class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50" dir="ltr">
+                <input type="text" name="media_url" placeholder="https://www.youtube.com/watch?v=..." class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50" dir="ltr">
             </div>
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">المدة (مثال: 45:10):</label>
                 <input type="text" name="duration" placeholder="45:10" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 text-center font-mono">
+            </div>
+        </div>
+
+        <!-- Audio Format Options Box (SoundCloud & MP3 Upload) -->
+        <div class="p-4 sm:p-5 rounded-2xl bg-amber-50/40 border border-amber-200/80 space-y-4">
+            <div class="flex items-center gap-2 border-b border-amber-200/60 pb-2.5">
+                <span class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center text-sm shadow-xs">
+                    <i class="fa-solid fa-headphones"></i>
+                </span>
+                <div>
+                    <h3 class="text-xs font-bold text-slate-800">التسجيل الصوتي للمحاضرة</h3>
+                    <p class="text-[11px] text-slate-500">أضف رابط ساوندكلاود أو ارفع ملف صوتي MP3 لتمكين الزوار من الاستماع المباشر واستخدام المشغل العائم.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- SoundCloud URL -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                        <span class="flex items-center gap-1.5">
+                            <i class="fa-brands fa-soundcloud text-orange-500 text-sm"></i>
+                            <span>رابط ساوندكلاود (SoundCloud URL):</span>
+                        </span>
+                        <span class="text-slate-400 font-normal text-[10px]">(اختياري)</span>
+                    </label>
+                    <input type="url" name="soundcloud_url" value="{{ old('soundcloud_url') }}" placeholder="https://soundcloud.com/..." class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-white shadow-2xs focus:ring-1 focus:ring-amber-500 focus:border-amber-500" dir="ltr">
+                    <p class="text-[10px] text-slate-400 mt-1">يُمكّن مشغل SoundCloud المدمج والمشغل العائم أثناء تصفح الموقع.</p>
+                </div>
+
+                <!-- MP3 Audio File Upload -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                        <span class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-audio text-emerald-600 text-sm"></i>
+                            <span>رفع ملف صوتي (MP3 / M4A):</span>
+                        </span>
+                        <span class="text-slate-400 font-normal text-[10px]">(اختياري)</span>
+                    </label>
+                    <input type="file" name="audio_file" accept="audio/*,.mp3,.m4a,.wav,.ogg" class="w-full text-xs rounded-xl border border-slate-200 p-2 bg-white shadow-2xs cursor-pointer file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-800 file:text-white hover:file:bg-emerald-900">
+                </div>
+            </div>
+        </div>
+
+        <!-- PDF File Attachment -->
+        <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+                <span class="w-7 h-7 rounded-lg bg-red-600 text-white flex items-center justify-center text-xs shadow-xs shrink-0">
+                    <i class="fa-solid fa-file-pdf"></i>
+                </span>
+                <div>
+                    <label class="block text-xs font-bold text-slate-800">الملف النصي الموثق (PDF):</label>
+                    <p class="text-[10px] text-slate-500">ملف PDF لتحميل التفريغ النصي للمحاضرة عبر زر التحميل في صفحة المحاضرة.</p>
+                </div>
+            </div>
+            <div>
+                <input type="file" name="pdf_file" accept=".pdf" class="text-xs rounded-xl border border-slate-200 p-1.5 bg-white shadow-2xs cursor-pointer file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-slate-700 file:text-white hover:file:bg-slate-800">
             </div>
         </div>
 
