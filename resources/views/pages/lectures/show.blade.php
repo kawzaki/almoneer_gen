@@ -26,12 +26,13 @@
         <!-- Main Video Frame / Pending Placeholder -->
         <div class="bg-black rounded-3xl overflow-hidden shadow-2xl aspect-video relative border border-slate-800">
             @if($video->hasVideo() && $video->youtube_id)
-                <iframe src="https://www.youtube.com/embed/{{ $video->youtube_id }}?autoplay=1&rel=0"
+                <iframe id="main-youtube-iframe" 
+                    src="https://www.youtube.com/embed/{{ $video->youtube_id }}?autoplay=0&rel=0&enablejsapi=1"
                     title="{{ $video->title }}" class="w-full h-full border-0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen></iframe>
             @elseif($video->hasVideo() && filter_var($video->media_url, FILTER_VALIDATE_URL))
-                <video src="{{ $video->media_url }}" controls class="w-full h-full"></video>
+                <video id="main-html5-video" src="{{ $video->media_url }}" controls class="w-full h-full"></video>
             @else
                 <!-- Placeholder for pending video -->
                 <div class="relative w-full h-full flex items-center justify-center bg-slate-950">
@@ -785,7 +786,7 @@
                 });
             }
 
-            // Lecture Audio Controls
+            // Lecture Audio Controls & Sync with Video
             const lectureAudioData = {
                 url: @json($video->effective_audio_url),
                 embedUrl: @json($video->soundcloud_embed_url),
@@ -793,7 +794,39 @@
                 isSoundcloud: @json($video->is_soundcloud ? true : false)
             };
 
+            // Helpers to prevent simultaneous video & audio playback
+            function pauseVideoTrack() {
+                const ytIframe = document.getElementById('main-youtube-iframe');
+                if (ytIframe && ytIframe.contentWindow) {
+                    ytIframe.contentWindow.postMessage(JSON.stringify({
+                        event: "command",
+                        func: "pauseVideo",
+                        args: ""
+                    }), "*");
+                }
+                const html5Video = document.getElementById('main-html5-video');
+                if (html5Video && !html5Video.paused) {
+                    html5Video.pause();
+                }
+            }
+
+            function pauseAudioTracks() {
+                const localAudio = document.getElementById('local-lecture-audio');
+                if (localAudio && !localAudio.paused) {
+                    localAudio.pause();
+                }
+                const globalAudio = document.getElementById('global-audio-element');
+                if (globalAudio && !globalAudio.paused) {
+                    globalAudio.pause();
+                }
+                const scWidget = document.getElementById('sc-inline-widget');
+                if (scWidget && scWidget.contentWindow) {
+                    scWidget.contentWindow.postMessage('{"method":"pause"}', '*');
+                }
+            }
+
             function playLectureInlineAudio() {
+                pauseVideoTrack();
                 const box = document.getElementById('lecture-audio-box');
                 if (box) {
                     box.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -807,6 +840,7 @@
             }
 
             function detachLectureAudio() {
+                pauseVideoTrack();
                 if (!lectureAudioData.url) return;
                 if (typeof playGlobalAudio === 'function') {
                     playGlobalAudio(
@@ -818,12 +852,51 @@
             }
 
             function openLecturePopup() {
+                pauseVideoTrack();
                 if (!lectureAudioData.url) return;
                 const popupUrl = "{{ route('player.popup') }}?url=" + encodeURIComponent(lectureAudioData.url) +
                     "&title=" + encodeURIComponent(lectureAudioData.title) +
                     "&type=" + (lectureAudioData.isSoundcloud ? 'soundcloud' : 'audio');
                 window.open(popupUrl, 'AlmoneerAudioPlayer', 'width=480,height=280,status=no,toolbar=no,menubar=no,location=no,resizable=yes');
             }
+
+            // Sync Event Listeners
+            document.addEventListener('DOMContentLoaded', function() {
+                const localAudio = document.getElementById('local-lecture-audio');
+                if (localAudio) {
+                    localAudio.addEventListener('play', pauseVideoTrack);
+                }
+
+                const html5Video = document.getElementById('main-html5-video');
+                if (html5Video) {
+                    html5Video.addEventListener('play', pauseAudioTracks);
+                }
+
+                // Listen to YouTube Iframe events via postMessage
+                window.addEventListener('message', function(event) {
+                    try {
+                        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+                        if (data) {
+                            // Check if state is PLAYING (1 in YouTube API)
+                            const state = data.info && typeof data.info.playerState !== 'undefined' 
+                                ? data.info.playerState 
+                                : (data.event === 'onStateChange' ? data.data : null);
+                            if (state === 1) {
+                                pauseAudioTracks();
+                            }
+                        }
+                    } catch(e) {}
+                });
+
+                // Request YouTube postMessage events
+                const ytIframe = document.getElementById('main-youtube-iframe');
+                if (ytIframe) {
+                    ytIframe.addEventListener('load', function() {
+                        ytIframe.contentWindow.postMessage('{"event":"listening"}', '*');
+                        ytIframe.contentWindow.postMessage('{"event":"command","func":"addEventListener","args":["onStateChange"]}', '*');
+                    });
+                }
+            });
         </script>
     @endpush
 @endsection

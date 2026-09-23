@@ -19,6 +19,7 @@ class Book extends Model
         'publication_year',
         'pages_count',
         'isbn',
+        'deposit_number',
         'cover_image',
         'pdf_file',
         'summary',

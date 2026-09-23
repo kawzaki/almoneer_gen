@@ -55,14 +55,18 @@
                         </a>
 
                         <div class="space-y-1 min-w-0">
-                            <span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 text-[10px] font-bold">
-                                {{ $book->publication_year ?? '2024' }}م
-                            </span>
+                            @if($book->publication_year)
+                                <span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 text-[10px] font-bold">
+                                    {{ $book->publication_year }}م
+                                </span>
+                            @endif
                             <h3
                                 class="font-bold text-base text-slate-900 leading-snug hover:text-emerald-800 transition line-clamp-2">
                                 <a href="{{ route('books.show', $book->slug) }}">{{ $book->title }}</a>
                             </h3>
-                            <p class="text-xs text-slate-400">{{ $book->publisher ?? 'دار المحجة البيضاء' }}</p>
+                            @if($book->publisher)
+                                <p class="text-xs text-slate-400">{{ $book->publisher }}</p>
+                            @endif
                             @if($book->pages_count)
                                 <p class="text-[11px] text-slate-400">{{ $book->pages_count }} صفحة</p>
                             @endif

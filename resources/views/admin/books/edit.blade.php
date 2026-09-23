@@ -68,6 +68,30 @@
             </div>
         </div>
 
+        <!-- Media Permit & ISBN Info (Optional) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                    <span class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-stamp text-amber-600"></i>
+                        <span>رقم الإيداع (الفسح الإعلامي):</span>
+                    </span>
+                    <span class="text-[10px] text-slate-400 font-normal">اختياري</span>
+                </label>
+                <input type="text" name="deposit_number" value="{{ old('deposit_number', $book->deposit_number) }}" placeholder="مثال: 1440/3571" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-white focus:ring-1 focus:ring-emerald-700">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                    <span class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-barcode text-slate-600"></i>
+                        <span>الترقيم الدولي (ردمك / ISBN):</span>
+                    </span>
+                    <span class="text-[10px] text-slate-400 font-normal">اختياري</span>
+                </label>
+                <input type="text" name="isbn" value="{{ old('isbn', $book->isbn) }}" placeholder="مثال: 978-603-8255-64-3" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-white focus:ring-1 focus:ring-emerald-700 font-mono" dir="ltr">
+            </div>
+        </div>
+
         <!-- Book Cover Management Section -->
         <div class="p-5 rounded-2xl bg-gradient-to-br from-slate-50 to-emerald-50/20 border border-slate-200/80 space-y-4">
             <div class="flex items-center justify-between border-b border-slate-200/60 pb-2">

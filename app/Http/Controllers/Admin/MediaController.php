@@ -72,6 +72,8 @@ class MediaController extends Controller
             $filename = 'audio_' . time() . '_' . Str::random(6) . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('uploads/audio'), $filename);
             $audioPath = 'uploads/audio/' . $filename;
+        } elseif ($request->filled('audio_url')) {
+            $audioPath = $request->audio_url;
         }
 
         $pdfPath = null;
@@ -157,6 +159,8 @@ class MediaController extends Controller
             $filename = 'audio_' . time() . '_' . Str::random(6) . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('uploads/audio'), $filename);
             $updateData['audio_file'] = 'uploads/audio/' . $filename;
+        } elseif ($request->filled('audio_url')) {
+            $updateData['audio_file'] = $request->audio_url;
         }
 
         // Handle PDF file upload or removal

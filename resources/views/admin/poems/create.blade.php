@@ -9,22 +9,39 @@
         <a href="{{ route('admin.poems.index') }}" class="text-xs text-slate-500 hover:text-slate-800">← العودة للديوان</a>
     </div>
 
-    <form action="{{ route('admin.poems.store') }}" method="POST" class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+    <form action="{{ route('admin.poems.store') }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
         @csrf
         <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">عنوان القصيدة:</label>
             <input type="text" name="title" required class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">المناسبة:</label>
                 <input type="text" name="occasion" placeholder="مثال: في رثاء سيد الشهداء (ع)" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
             </div>
             <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">بحر الشعر:</label>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">تاريخ القصيدة / المناسبة:</label>
+                <input type="text" name="poem_date" placeholder="مثال: 10 محرم 1445هـ أو 2024م" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">بحر الشعر (اختياري):</label>
                 <input type="text" name="meter" placeholder="مثال: بحر البسيط / الطويل" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
             </div>
+        </div>
+
+        <!-- Poem Image (Displays ONLY inside poem page) -->
+        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
+            <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                <span class="flex items-center gap-1.5">
+                    <i class="fa-solid fa-image text-emerald-800"></i>
+                    <span>صورة مخصصة للقصيدة (تُعرض فقط داخل صفحة القصيدة):</span>
+                </span>
+                <span class="text-slate-400 font-normal text-[10px]">(اختياري)</span>
+            </label>
+            <input type="file" name="image" accept="image/*" class="w-full text-xs rounded-xl border border-slate-200 p-2 bg-white cursor-pointer file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-800 file:text-white hover:file:bg-emerald-900">
+            <p class="text-[10px] text-slate-400 mt-1">تظهر هذه الصورة كغلاف فني داخل موضوع القصيدة فقط، ولا تظهر في شبكة بطاقات الديوان العامة للحفاظ على رونق النص.</p>
         </div>
 
         <div>

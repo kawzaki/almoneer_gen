@@ -55,15 +55,39 @@
             </div>
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">دار النشر:</label>
-                <input type="text" name="publisher" value="{{ old('publisher', 'دار المحجة البيضاء') }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 focus:bg-white">
+                <input type="text" name="publisher" value="{{ old('publisher') }}" placeholder="مثال: دار المحجة البيضاء" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 focus:bg-white">
             </div>
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">سنة النشر:</label>
-                <input type="text" name="publication_year" value="{{ old('publication_year', date('Y')) }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 focus:bg-white">
+                <input type="text" name="publication_year" value="{{ old('publication_year') }}" placeholder="مثال: {{ date('Y') }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 focus:bg-white">
             </div>
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">عدد الصفحات:</label>
                 <input type="number" name="pages_count" value="{{ old('pages_count') }}" placeholder="320" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 focus:bg-white">
+            </div>
+        </div>
+
+        <!-- Media Permit & ISBN Info (Optional) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                    <span class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-stamp text-amber-600"></i>
+                        <span>رقم الإيداع (الفسح الإعلامي):</span>
+                    </span>
+                    <span class="text-[10px] text-slate-400 font-normal">اختياري</span>
+                </label>
+                <input type="text" name="deposit_number" value="{{ old('deposit_number') }}" placeholder="مثال: 1440/3571" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-white focus:ring-1 focus:ring-emerald-700">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                    <span class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-barcode text-slate-600"></i>
+                        <span>الترقيم الدولي (ردمك / ISBN):</span>
+                    </span>
+                    <span class="text-[10px] text-slate-400 font-normal">اختياري</span>
+                </label>
+                <input type="text" name="isbn" value="{{ old('isbn') }}" placeholder="مثال: 978-603-8255-64-3" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-white focus:ring-1 focus:ring-emerald-700 font-mono" dir="ltr">
             </div>
         </div>
 

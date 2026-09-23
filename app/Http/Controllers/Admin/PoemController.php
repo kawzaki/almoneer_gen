@@ -34,12 +34,24 @@ class PoemController extends Controller
             $slug .= '-' . time();
         }
 
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/poems'), $filename);
+            $imagePath = 'uploads/poems/' . $filename;
+        } elseif ($request->filled('image_url')) {
+            $imagePath = $request->image_url;
+        }
+
         Poem::create([
             'title'       => $request->title,
             'slug'        => $slug,
             'category_id' => $request->category_id,
             'occasion'    => $request->occasion,
+            'poem_date'   => $request->poem_date,
             'meter'       => $request->meter,
+            'image'       => $imagePath,
             'audio_url'   => $request->audio_url,
             'verses'      => $request->verses,
             'description' => $request->description,
@@ -63,11 +75,23 @@ class PoemController extends Controller
             'verses' => 'required',
         ]);
 
+        $imagePath = $poem->image;
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/poems'), $filename);
+            $imagePath = 'uploads/poems/' . $filename;
+        } elseif ($request->filled('image_url')) {
+            $imagePath = $request->image_url;
+        }
+
         $poem->update([
             'title'       => $request->title,
             'category_id' => $request->category_id,
             'occasion'    => $request->occasion,
+            'poem_date'   => $request->poem_date,
             'meter'       => $request->meter,
+            'image'       => $imagePath,
             'audio_url'   => $request->audio_url,
             'verses'      => $request->verses,
             'description' => $request->description,

@@ -42,7 +42,9 @@ class BookController extends Controller
         $book->increment('download_count');
 
         if ($book->pdf_file && file_exists(public_path($book->pdf_file))) {
-            return response()->download(public_path($book->pdf_file));
+            $cleanTitle = preg_replace('/[^\p{L}\p{N}_\-\s]/u', '', $book->title);
+            $filename = (trim($cleanTitle) ?: 'book-' . $book->id) . '.pdf';
+            return response()->download(public_path($book->pdf_file), $filename);
         }
 
         return redirect()->back()->with('error', 'الملف غير متوفر حالياً للتحميل');
