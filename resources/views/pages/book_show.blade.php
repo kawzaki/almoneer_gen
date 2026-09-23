@@ -130,8 +130,12 @@
             </div>
             
             <div class="relative p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-sand-50/70 via-white to-amber-50/20 border border-amber-100 shadow-xs">
-                <div class="text-sm sm:text-base text-slate-700 leading-loose font-normal whitespace-pre-line text-justify">
-                    {{ $book->summary }}
+                <div class="prose prose-emerald max-w-none text-sm sm:text-base text-slate-700 leading-loose font-normal text-justify">
+                    @if(strip_tags($book->summary) === $book->summary)
+                        {!! nl2br(e($book->summary)) !!}
+                    @else
+                        {!! $book->summary !!}
+                    @endif
                 </div>
             </div>
         </div>
@@ -146,8 +150,12 @@
                 </span>
                 <h3 class="font-bold text-base text-slate-900">فهرس الموضوعات والأبواب:</h3>
             </div>
-            <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-line font-light">
-                {{ $book->table_of_contents }}
+            <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-700 leading-relaxed font-light prose prose-sm max-w-none">
+                @if(strip_tags($book->table_of_contents) === $book->table_of_contents)
+                    {!! nl2br(e($book->table_of_contents)) !!}
+                @else
+                    {!! $book->table_of_contents !!}
+                @endif
             </div>
         </div>
         @endif

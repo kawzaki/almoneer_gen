@@ -74,7 +74,7 @@
                     </div>
 
                     <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed font-light">
-                        {{ $book->summary }}
+                        {{ strip_tags($book->summary) }}
                     </p>
 
                     <div class="pt-4 border-t border-slate-100 flex items-center justify-between">

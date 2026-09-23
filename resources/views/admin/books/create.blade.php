@@ -2,6 +2,40 @@
 
 @section('title', 'إضافة كتاب جديد')
 
+@push('styles')
+<!-- Quill WYSIWYG Editor CSS -->
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+<style>
+    .ql-editor {
+        direction: rtl !important;
+        text-align: right !important;
+        font-family: 'IBM Plex Sans Arabic', sans-serif !important;
+        font-size: 0.875rem !important;
+        line-height: 1.8 !important;
+    }
+    #quill-summary .ql-editor {
+        min-height: 160px !important;
+    }
+    #quill-toc .ql-editor {
+        min-height: 220px !important;
+    }
+    .ql-toolbar.ql-snow {
+        border-top-left-radius: 0.75rem;
+        border-top-right-radius: 0.75rem;
+        border-color: #e2e8f0;
+        background-color: #f8fafc;
+        direction: ltr !important;
+        text-align: left !important;
+    }
+    .ql-container.ql-snow {
+        border-bottom-left-radius: 0.75rem;
+        border-bottom-right-radius: 0.75rem;
+        border-color: #e2e8f0;
+        background-color: #ffffff;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="max-w-4xl mx-auto space-y-6">
     <div class="flex items-center justify-between">
@@ -26,7 +60,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.books.store') }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-5">
+    <form id="book-form" action="{{ route('admin.books.store') }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-5">
         @csrf
 
         <!-- Title, Author, Category -->
@@ -169,15 +203,49 @@
             </div>
         </div>
 
-        <!-- Summary & Table of Contents -->
+        <!-- Summary & Table of Contents (WYSIWYG Editors) -->
         <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1">ملخص عام عن محتوى الكتاب:</label>
-            <textarea name="summary" rows="3" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-emerald-700">{{ old('summary') }}</textarea>
+            <div class="flex items-center justify-between mb-1.5">
+                <label class="block text-xs font-semibold text-slate-700">ملخص عام عن محتوى الكتاب (محرر منسق):</label>
+                <button type="button" onclick="toggleRawSummaryMode()" id="toggle-summary-html-btn" class="text-[11px] text-slate-500 hover:text-emerald-800 font-semibold flex items-center gap-1">
+                    <i class="fa-solid fa-code"></i>
+                    <span>تبديل لكود HTML المصدر</span>
+                </button>
+            </div>
+
+            <!-- Hidden input that carries formatted HTML content -->
+            <textarea name="summary" id="book-summary" class="hidden">{{ old('summary') }}</textarea>
+
+            <!-- Raw HTML textarea (toggled on demand) -->
+            <textarea id="raw-summary-editor" rows="6" class="hidden w-full text-xs font-mono rounded-xl border-slate-200 p-3 bg-slate-900 text-slate-100" oninput="syncFromRawSummary(this.value)">{{ old('summary') }}</textarea>
+
+            <!-- Quill Editor Container for Summary -->
+            <div id="quill-summary-wrapper">
+                <div id="quill-summary">{!! old('summary') !!}</div>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-1">اكتب نبذة أو مقدمة عن الكتاب مع إمكانية التنسيق، التلوين، وإضافة اقتباسات وقوائم.</p>
         </div>
 
         <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1">فهرس الموضوعات والأبواب:</label>
-            <textarea name="table_of_contents" rows="6" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-emerald-700">{{ old('table_of_contents') }}</textarea>
+            <div class="flex items-center justify-between mb-1.5">
+                <label class="block text-xs font-semibold text-slate-700">فهرس الموضوعات والأبواب (محرر منسق):</label>
+                <button type="button" onclick="toggleRawTocMode()" id="toggle-toc-html-btn" class="text-[11px] text-slate-500 hover:text-emerald-800 font-semibold flex items-center gap-1">
+                    <i class="fa-solid fa-code"></i>
+                    <span>تبديل لكود HTML المصدر</span>
+                </button>
+            </div>
+
+            <!-- Hidden input that carries formatted HTML content -->
+            <textarea name="table_of_contents" id="book-toc" class="hidden">{{ old('table_of_contents') }}</textarea>
+
+            <!-- Raw HTML textarea (toggled on demand) -->
+            <textarea id="raw-toc-editor" rows="8" class="hidden w-full text-xs font-mono rounded-xl border-slate-200 p-3 bg-slate-900 text-slate-100" oninput="syncFromRawToc(this.value)">{{ old('table_of_contents') }}</textarea>
+
+            <!-- Quill Editor Container for Table of Contents -->
+            <div id="quill-toc-wrapper">
+                <div id="quill-toc">{!! old('table_of_contents') !!}</div>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-1">اكتب أو الصق فهرس الأبواب والفصول، مع دعم القوائم النقطية أو المرقمة والعناوين الفرعية.</p>
         </div>
 
         <!-- PDF & Buy URL Section -->
@@ -324,7 +392,102 @@
 @endsection
 
 @push('scripts')
+<!-- Quill WYSIWYG Editor JS -->
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 <script>
+    var quillToolbarOptions = [
+        [{ 'header': [2, 3, 4, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ 'color': [] }, { 'background': [] }],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'align': [] }],
+        ['blockquote', 'link'],
+        ['clean']
+    ];
+
+    // Initialize Quill for Summary
+    var quillSummary = new Quill('#quill-summary', {
+        theme: 'snow',
+        placeholder: 'اكتب ملخصاً أو نبذة عن الكتاب مع التنسيقات...',
+        modules: { toolbar: quillToolbarOptions }
+    });
+
+    // Initialize Quill for Table of Contents
+    var quillToc = new Quill('#quill-toc', {
+        theme: 'snow',
+        placeholder: 'اكتب أو الصق فهرس الأبواب والموضوعات هنا مع التنسيقات...',
+        modules: { toolbar: quillToolbarOptions }
+    });
+
+    // Sync to hidden textareas on form submit
+    var bookForm = document.getElementById('book-form');
+    var summaryInput = document.getElementById('book-summary');
+    var tocInput = document.getElementById('book-toc');
+    var rawSummaryEditor = document.getElementById('raw-summary-editor');
+    var rawTocEditor = document.getElementById('raw-toc-editor');
+    var isRawSummaryMode = false;
+    var isRawTocMode = false;
+
+    if (bookForm) {
+        bookForm.onsubmit = function() {
+            if (!isRawSummaryMode) {
+                summaryInput.value = quillSummary.root.innerHTML;
+            } else {
+                summaryInput.value = rawSummaryEditor.value;
+            }
+
+            if (!isRawTocMode) {
+                tocInput.value = quillToc.root.innerHTML;
+            } else {
+                tocInput.value = rawTocEditor.value;
+            }
+        };
+    }
+
+    // Toggle Raw HTML for Summary
+    function toggleRawSummaryMode() {
+        isRawSummaryMode = !isRawSummaryMode;
+        var wrapper = document.getElementById('quill-summary-wrapper');
+        var btn = document.getElementById('toggle-summary-html-btn');
+        if (isRawSummaryMode) {
+            rawSummaryEditor.value = quillSummary.root.innerHTML;
+            wrapper.classList.add('hidden');
+            rawSummaryEditor.classList.remove('hidden');
+            btn.innerHTML = '<i class="fa-solid fa-pen-nib"></i> <span>العودة للمحرر المرئي</span>';
+        } else {
+            quillSummary.root.innerHTML = rawSummaryEditor.value;
+            rawSummaryEditor.classList.add('hidden');
+            wrapper.classList.remove('hidden');
+            btn.innerHTML = '<i class="fa-solid fa-code"></i> <span>تبديل لكود HTML المصدر</span>';
+        }
+    }
+
+    function syncFromRawSummary(val) {
+        summaryInput.value = val;
+    }
+
+    // Toggle Raw HTML for TOC
+    function toggleRawTocMode() {
+        isRawTocMode = !isRawTocMode;
+        var wrapper = document.getElementById('quill-toc-wrapper');
+        var btn = document.getElementById('toggle-toc-html-btn');
+        if (isRawTocMode) {
+            rawTocEditor.value = quillToc.root.innerHTML;
+            wrapper.classList.add('hidden');
+            rawTocEditor.classList.remove('hidden');
+            btn.innerHTML = '<i class="fa-solid fa-pen-nib"></i> <span>العودة للمحرر المرئي</span>';
+        } else {
+            quillToc.root.innerHTML = rawTocEditor.value;
+            rawTocEditor.classList.add('hidden');
+            wrapper.classList.remove('hidden');
+            btn.innerHTML = '<i class="fa-solid fa-code"></i> <span>تبديل لكود HTML المصدر</span>';
+        }
+    }
+
+    function syncFromRawToc(val) {
+        tocInput.value = val;
+    }
+
     let currentFolderFilter = 'all';
 
     function openCoverPickerModal() {
