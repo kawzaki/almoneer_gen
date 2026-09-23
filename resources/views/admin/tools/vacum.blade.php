@@ -42,11 +42,13 @@
         line-height: 2.1 !important;
         margin-bottom: 0.5rem !important;
     }
-    .vacum-preview-box .prophet-symbol {
-        font-family: 'Traditional Arabic', 'Amiri', serif !important;
-        font-size: 1.2em !important;
-        font-weight: bold !important;
-        color: #0f172a !important;
+    .vacum-preview-box .prophet-symbol-icon,
+    .prophet-symbol-icon {
+        display: inline-block !important;
+        vertical-align: -0.22em !important;
+        height: 1.35em !important;
+        width: auto !important;
+        margin: 0 2px !important;
     }
     .vacum-preview-box p {
         line-height: 2.2 !important;

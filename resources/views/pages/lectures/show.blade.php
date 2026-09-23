@@ -407,11 +407,13 @@
                             font-family: 'Traditional Arabic', serif !important;
                         }
 
-                        #transcript-body .prophet-symbol {
-                            font-family: 'Traditional Arabic', serif !important;
-                            font-size: 1.15em !important;
-                            font-weight: bold !important;
-                            color: #0f172a !important;
+                        #transcript-body .prophet-symbol-icon,
+                        .prophet-symbol-icon {
+                            display: inline-block !important;
+                            vertical-align: -0.22em !important;
+                            height: 1.35em !important;
+                            width: auto !important;
+                            margin: 0 2px !important;
                         }
 
                         /* إخفاء تذييل الطباعة في وضع التصفح العادي على الشاشة */
