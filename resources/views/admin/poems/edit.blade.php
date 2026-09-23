@@ -2,6 +2,35 @@
 
 @section('title', 'تعديل القصيدة')
 
+@push('styles')
+<!-- Quill WYSIWYG Editor CSS -->
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+<style>
+    .ql-editor {
+        direction: rtl !important;
+        text-align: right !important;
+        font-family: 'IBM Plex Sans Arabic', sans-serif !important;
+        min-height: 160px !important;
+        font-size: 0.875rem !important;
+        line-height: 1.8 !important;
+    }
+    .ql-toolbar.ql-snow {
+        border-top-left-radius: 0.75rem;
+        border-top-right-radius: 0.75rem;
+        border-color: #e2e8f0;
+        background-color: #f8fafc;
+        direction: ltr !important;
+        text-align: left !important;
+    }
+    .ql-container.ql-snow {
+        border-bottom-left-radius: 0.75rem;
+        border-bottom-right-radius: 0.75rem;
+        border-color: #e2e8f0;
+        background-color: #ffffff;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="max-w-4xl mx-auto space-y-6">
     <div class="flex items-center justify-between">
@@ -9,25 +38,25 @@
         <a href="{{ route('admin.poems.index') }}" class="text-xs text-slate-500 hover:text-slate-800">← العودة للديوان</a>
     </div>
 
-    <form action="{{ route('admin.poems.update', $poem->id) }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+    <form id="poem-form" action="{{ route('admin.poems.update', $poem->id) }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
         @csrf @method('PUT')
         <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">عنوان القصيدة:</label>
-            <input type="text" name="title" value="{{ $poem->title }}" required class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+            <input type="text" name="title" value="{{ old('title', $poem->title) }}" required class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">المناسبة:</label>
-                <input type="text" name="occasion" value="{{ $poem->occasion }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+                <input type="text" name="occasion" value="{{ old('occasion', $poem->occasion) }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
             </div>
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">تاريخ القصيدة / المناسبة:</label>
-                <input type="text" name="poem_date" value="{{ $poem->poem_date }}" placeholder="مثال: 10 محرم 1445هـ أو 2024م" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+                <input type="text" name="poem_date" value="{{ old('poem_date', $poem->poem_date) }}" placeholder="مثال: 10 محرم 1445هـ أو 2024م" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
             </div>
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">بحر الشعر (اختياري):</label>
-                <input type="text" name="meter" value="{{ $poem->meter }}" placeholder="مثال: بحر البسيط / الطويل" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+                <input type="text" name="meter" value="{{ old('meter', $poem->meter) }}" placeholder="مثال: بحر البسيط / الطويل" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
             </div>
         </div>
 
@@ -52,21 +81,39 @@
 
         <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">أبيات القصيدة (صدر | عجز):</label>
-            <textarea name="verses" rows="10" required class="w-full text-xs rounded-xl border-slate-200 p-3 bg-slate-50 font-scholarly text-sm leading-loose">{{ $poem->verses }}</textarea>
+            <textarea name="verses" rows="10" required class="w-full text-xs rounded-xl border-slate-200 p-3 bg-slate-50 font-scholarly text-sm leading-loose">{{ old('verses', $poem->verses) }}</textarea>
         </div>
 
+        <!-- WYSIWYG Editor: وصف المناسبة والخلفية -->
         <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1">الوصف والمناسبة:</label>
-            <textarea name="description" rows="3" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">{{ $poem->description }}</textarea>
+            <div class="flex items-center justify-between mb-1.5">
+                <label class="block text-xs font-semibold text-slate-700">الوصف والمناسبة (محرر منسق):</label>
+                <button type="button" onclick="toggleRawHtmlMode()" id="toggle-html-btn" class="text-[11px] text-slate-500 hover:text-emerald-800 font-semibold flex items-center gap-1">
+                    <i class="fa-solid fa-code"></i>
+                    <span>تبديل لكود HTML المصدر</span>
+                </button>
+            </div>
+
+            <!-- Hidden input that carries formatted HTML content -->
+            <textarea name="description" id="poem-description" class="hidden">{{ old('description', $poem->description) }}</textarea>
+
+            <!-- Raw HTML textarea (toggled on demand) -->
+            <textarea id="raw-html-editor" rows="6" class="hidden w-full text-xs font-mono rounded-xl border-slate-200 p-3 bg-slate-900 text-slate-100" oninput="syncFromRawHtml(this.value)">{{ old('description', $poem->description) }}</textarea>
+
+            <!-- Quill Editor Container -->
+            <div id="quill-editor-wrapper">
+                <div id="quill-editor">{!! old('description', $poem->description) !!}</div>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-1">يمكنك تنسيق النص بحرية، وإضافة اقتباسات، وتلوين الخط، وإضافة روابط أو فواصل لتظهر بأناقة في صفحة القصيدة.</p>
         </div>
 
         <div class="flex items-center gap-6 pt-2">
             <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
-                <input type="checkbox" name="is_featured" value="1" {{ $poem->is_featured ? 'checked' : '' }} class="rounded text-emerald-800">
+                <input type="checkbox" name="is_featured" value="1" {{ old('is_featured', $poem->is_featured) ? 'checked' : '' }} class="rounded text-emerald-800">
                 <span>عرض في الصفحة الرئيسية</span>
             </label>
             <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
-                <input type="checkbox" name="is_active" value="1" {{ $poem->is_active ? 'checked' : '' }} class="rounded text-emerald-800">
+                <input type="checkbox" name="is_active" value="1" {{ old('is_active', $poem->is_active) ? 'checked' : '' }} class="rounded text-emerald-800">
                 <span>مفعلة ونشطة</span>
             </label>
         </div>
@@ -77,3 +124,62 @@
     </form>
 </div>
 @endsection
+
+@push('scripts')
+<!-- Quill WYSIWYG Editor JS -->
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+<script>
+    // 1. Initialize Quill Editor
+    var quill = new Quill('#quill-editor', {
+        theme: 'snow',
+        placeholder: 'اكتب نبذة عن مناسبة النظم وخلفيتها مع التنسيقات...',
+        modules: {
+            toolbar: [
+                [{ 'header': [2, 3, 4, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'align': [] }],
+                ['blockquote', 'link'],
+                ['clean']
+            ]
+        }
+    });
+
+    // 2. Form submission sync
+    var form = document.getElementById('poem-form');
+    var descInput = document.getElementById('poem-description');
+    var rawHtmlEditor = document.getElementById('raw-html-editor');
+    var isRawMode = false;
+    var quillWrapper = document.getElementById('quill-editor-wrapper');
+    var toggleBtn = document.getElementById('toggle-html-btn');
+
+    form.onsubmit = function() {
+        if (!isRawMode) {
+            descInput.value = quill.root.innerHTML;
+        } else {
+            descInput.value = rawHtmlEditor.value;
+        }
+    };
+
+    // 3. Toggle Raw HTML Mode
+    function toggleRawHtmlMode() {
+        isRawMode = !isRawMode;
+        if (isRawMode) {
+            rawHtmlEditor.value = quill.root.innerHTML;
+            quillWrapper.classList.add('hidden');
+            rawHtmlEditor.classList.remove('hidden');
+            toggleBtn.innerHTML = '<i class="fa-solid fa-pen-nib"></i> <span>العودة للمحرر المرئي</span>';
+        } else {
+            quill.root.innerHTML = rawHtmlEditor.value;
+            rawHtmlEditor.classList.add('hidden');
+            quillWrapper.classList.remove('hidden');
+            toggleBtn.innerHTML = '<i class="fa-solid fa-code"></i> <span>تبديل لكود HTML المصدر</span>';
+        }
+    }
+
+    function syncFromRawHtml(val) {
+        descInput.value = val;
+    }
+</script>
+@endpush

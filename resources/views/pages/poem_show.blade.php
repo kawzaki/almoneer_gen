@@ -146,8 +146,12 @@
                         <i class="fa-solid fa-scroll text-gold-600"></i>
                         <span>عن المناسبة وخلفية النظم:</span>
                     </div>
-                    <div class="text-xs sm:text-sm text-slate-700 leading-loose font-scholarly whitespace-pre-line">
-                        {{ $poem->description }}
+                    <div class="prose prose-sm max-w-none text-xs sm:text-sm text-slate-700 leading-loose font-scholarly text-right">
+                        @if(strip_tags($poem->description) === $poem->description)
+                            {!! nl2br(e($poem->description)) !!}
+                        @else
+                            {!! $poem->description !!}
+                        @endif
                     </div>
                 </div>
             @endif
