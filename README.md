@@ -205,3 +205,19 @@ python scratch/deploy_and_seed_remote.py
 4. رفع ملفات الـ PDF والتفريغات الصوتية عبر SFTP.
 5. تفريغ كاش القوالب والتطبيق (`php artisan view:clear && cache:clear`).
 6. فحص حالة الروابط الحية والتأكد من إرجاع كود `200 OK`.
+
+---
+
+## 🖋️ نظام الرموز التكريمية وخط أبو ذر (Religious Honorifics & Abo-Thar Font)
+
+تم دمج خط **Abo-Thar** كخط ويب فكتور (`public/fonts/abo-thar.woff2`) لاستبدال الأدعية والصلوات التكريمية آلياً عند نشر وتنسيق المحاضرات والمقالات عبر أداة **«المخمة»** (`TranscriptFormatter`):
+
+* **(ع) / عليه السلام** $\rightarrow$ رمز الحرف `A` في خط أبو ذر (`<span class="symbol-abothar" title="عليه السلام">A</span>`).
+* **(عه) / عليها السلام** $\rightarrow$ رمز الحرف `C` في خط أبو ذر (`<span class="symbol-abothar" title="عليها السلام">C</span>`).
+* **(عع) / عليهم السلام** $\rightarrow$ رمز الحرف `D` في خط أبو ذر (`<span class="symbol-abothar" title="عليهم السلام">D</span>`).
+* **(ره) / رحمه الله** $\rightarrow$ رمز الحرف `6` في خط أبو ذر (`<span class="symbol-abothar" title="رحمه الله">6</span>`).
+* **(قده) / قدس سره** $\rightarrow$ رمز الحرف `H` في خط أبو ذر (`<span class="symbol-abothar" title="قدس سره">H</span>`).
+* **(دام ظله) / دام ظله** $\rightarrow$ رمز الحرف `K` في خط أبو ذر (`<span class="symbol-abothar" title="دام ظله">K</span>`).
+* **(ص) / صلى الله عليه وآله وسلم** $\rightarrow$ رمز الصلاة النبوية التامة الفيكتور (`prophet-pbuhaf.svg`).
+
+للتفاصيل الفنية الكاملة وجداول الأنماط البديلة، راجع: **[docs/TRANSCRIPT_VACUM_AND_SYMBOLS.md](docs/TRANSCRIPT_VACUM_AND_SYMBOLS.md)**.
