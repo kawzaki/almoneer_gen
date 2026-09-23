@@ -93,6 +93,8 @@ class TranscriptFormatter
 
         // 5. الصلوات والأدعية (قواعد المخمة الأصلية)
         $replacements = [
+            '﵌'                         => '(ص)',
+            '&#xFD4C;'                  => '(ص)',
             'ﷺ'                         => '(ص)',
             '«صلى الله عليه وآله وسلم»' => '(ص)',
             '"صلى الله عليه وآله وسلم"' => '(ص)',
@@ -309,8 +311,8 @@ class TranscriptFormatter
             // 4. استبدال علامات التنصيص المقتبسة «...» بتنسيق بارز
             $formatted = preg_replace('/«([^»]+)»/u', '<span class="text-emerald-900 font-medium font-scholarly px-0.5">«$1»</span>', $formatted);
 
-            // 5. استبدال الصلوات والأدعية المختصرة (ص)، (ع)، (عع)، (عه) مع الصلاة النبوية التامة «صلى الله عليه وآله وسلم»
-            $formatted = preg_replace('/(?:(?:\(|«|\[)\s*ص\s*(?:\)|»|\])|ﷺ)/u', '<span class="prophet-symbol font-bold px-0.5 text-slate-900" title="صلى الله عليه وآله وسلم" style="font-family: \'Traditional Arabic\', \'Amiri\', serif !important; font-size: 1.05em !important; font-weight: bold !important; color: #0f172a !important;">«صلى الله عليه وآله وسلم»</span>', $formatted);
+            // 5. استبدال الصلوات والأدعية المختصرة (ص)، (ع)، (عع)، (عه) مع رمز الصلاة النبوية التامة ﵌
+            $formatted = preg_replace('/(?:(?:\(|«|\[)\s*ص\s*(?:\)|»|\])|ﷺ|﵌|&#xFD4C;)/u', '<span class="prophet-symbol font-bold px-0.5 text-slate-900" title="صلى الله عليه وآله وسلم" style="font-family: \'Traditional Arabic\', \'Amiri\', serif !important; font-size: 1.15em !important; font-weight: bold !important; color: #0f172a !important;">﵌</span>', $formatted);
             $formatted = preg_replace('/(?:\(|«)(ع)(?:\)|»)/u', '<span class="text-gold-600 font-bold text-xs px-0.5" title="عليه السلام">(ع)</span>', $formatted);
             $formatted = preg_replace('/(?:\(|«)(عع)(?:\)|»)/u', '<span class="text-gold-600 font-bold text-xs px-0.5" title="عليهم السلام">(عع)</span>', $formatted);
             $formatted = preg_replace('/(?:\(|«)(عه)(?:\)|»)/u', '<span class="text-gold-600 font-bold text-xs px-0.5" title="عليها السلام">(عه)</span>', $formatted);
@@ -380,8 +382,8 @@ class TranscriptFormatter
         // 4. استبدال علامات التنصيص المقتبسة «...»
         $cleaned = preg_replace('/«([^»]+)»/u', '<span class="text-emerald-900 font-medium font-scholarly px-0.5">«$1»</span>', $cleaned);
 
-        // 5. استبدال الصلوات والأدعية المختصرة (ص)، (ع)، (عع)، (عه) مع الصلاة النبوية التامة «صلى الله عليه وآله وسلم»
-        $cleaned = preg_replace('/(?:(?:\(|«|\[)\s*ص\s*(?:\)|»|\])|ﷺ)/u', '<span class="prophet-symbol font-bold px-0.5 text-slate-900" title="صلى الله عليه وآله وسلم" style="font-family: \'Traditional Arabic\', \'Amiri\', serif !important; font-size: 1.05em !important; font-weight: bold !important; color: #0f172a !important;">«صلى الله عليه وآله وسلم»</span>', $cleaned);
+        // 5. استبدال الصلوات والأدعية المختصرة (ص)، (ع)، (عع)، (عه) مع رمز الصلاة النبوية التامة ﵌
+        $cleaned = preg_replace('/(?:(?:\(|«|\[)\s*ص\s*(?:\)|»|\])|ﷺ|﵌|&#xFD4C;)/u', '<span class="prophet-symbol font-bold px-0.5 text-slate-900" title="صلى الله عليه وآله وسلم" style="font-family: \'Traditional Arabic\', \'Amiri\', serif !important; font-size: 1.15em !important; font-weight: bold !important; color: #0f172a !important;">﵌</span>', $cleaned);
         $cleaned = preg_replace('/(?:\(|«)(ع)(?:\)|»)/u', '<span class="text-gold-600 font-bold text-xs px-0.5" title="عليه السلام">(ع)</span>', $cleaned);
         $cleaned = preg_replace('/(?:\(|«)(عع)(?:\)|»)/u', '<span class="text-gold-600 font-bold text-xs px-0.5" title="عليهم السلام">(عع)</span>', $cleaned);
         $cleaned = preg_replace('/(?:\(|«)(عه)(?:\)|»)/u', '<span class="text-gold-600 font-bold text-xs px-0.5" title="عليها السلام">(عه)</span>', $cleaned);
