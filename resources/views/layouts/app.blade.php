@@ -115,6 +115,26 @@
             font-family: 'Amiri', serif;
         }
 
+        /* Abo-Thar Calligraphic Religious Honorifics Web Font */
+        @font-face {
+            font-family: 'AboThar';
+            src: url("{{ asset('fonts/abo-thar.woff2') }}") format('woff2'),
+                 url("{{ asset('fonts/abo-thar.woff') }}") format('woff'),
+                 url("{{ asset('fonts/abo-thar.ttf') }}") format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        .symbol-abothar {
+            font-family: 'AboThar', serif !important;
+            display: inline-block;
+            vertical-align: -0.1em;
+            line-height: 1;
+            font-size: 1.25em;
+            margin: 0 0.18em;
+            font-weight: normal !important;
+        }
+
         /* Authentic Islamic Geometric Pattern (Dynamic based on theme) */
         @if($isTurquoise)
         .islamic-pattern {

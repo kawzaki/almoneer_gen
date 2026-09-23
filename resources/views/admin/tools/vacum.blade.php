@@ -50,6 +50,16 @@
         width: auto !important;
         margin: 0 2px !important;
     }
+    .vacum-preview-box .symbol-abothar,
+    .symbol-abothar {
+        font-family: 'AboThar', serif !important;
+        display: inline-block !important;
+        vertical-align: -0.1em !important;
+        line-height: 1 !important;
+        font-size: 1.25em !important;
+        margin: 0 0.18em !important;
+        font-weight: normal !important;
+    }
     .vacum-preview-box p {
         line-height: 2.2 !important;
         text-align: justify;
@@ -233,9 +243,9 @@
             <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 space-y-1">
                 <strong class="text-emerald-900 block font-bold flex items-center gap-1">
                     <span class="w-2 h-2 rounded-full bg-emerald-700"></span>
-                    <span>الآيات والمراجع والصلوات:</span>
+                    <span>الآيات والصلوات والأدعية (Abo-Thar):</span>
                 </strong>
-                <span>الآيات بالخط العثماني باللون الأحمر (#BB1111) بين أقواس ﴿ ﴾، مراجع السور باللون الذهبي، ورمز الصلاة النبوية التامة ﵌ (صلى الله عليه وآله وسلم).</span>
+                <span>الآيات بالخط العثماني، رمز الصلاة النبوية ﵌، والتحويل التلقائي للأدعية التكريمية (عليه السلام، عليها السلام، عليهم السلام، رحمه الله، قدس سره، دام ظله) إلى رموز خط أبو ذر الخطية.</span>
             </div>
             <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 space-y-1">
                 <strong class="text-slate-800 block font-bold flex items-center gap-1">
