@@ -4,6 +4,14 @@
 
 @push('styles')
 <style>
+    @media (min-width: 640px) {
+        .couplet-first,
+        .couplet-second {
+            text-align: justify !important;
+            text-align-last: justify !important;
+        }
+    }
+
     @media print {
         nav, header, footer,
         .reading-controls-bar,
@@ -42,6 +50,7 @@
         .couplet-first, .couplet-second {
             width: 46% !important;
             text-align: justify !important;
+            text-align-last: justify !important;
         }
 
         .print-poem-footer {
@@ -158,12 +167,12 @@
         </div>
 
         <!-- Couplets Full List -->
-        <div class="space-y-4 py-6 max-w-2xl mx-auto text-base sm:text-xl font-scholarly leading-loose">
+        <div class="couplets-container space-y-4 py-6 max-w-[620px] mx-auto text-base sm:text-xl font-scholarly leading-loose">
             @foreach($poem->couplets as $index => $c)
             <div class="couplet-line flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 py-2 border-b border-dotted border-slate-100 hover:bg-slate-50/60 rounded-xl px-2 transition">
-                <span class="couplet-first text-slate-900 font-medium text-center sm:text-right w-full sm:w-[46%]">{{ $c['first'] }}</span>
+                <span class="couplet-first text-slate-900 font-medium text-center sm:text-justify w-full sm:w-[46%]">{{ $c['first'] }}</span>
                 <span class="text-gold-500 text-xs sm:text-sm shrink-0">✤</span>
-                <span class="couplet-second text-slate-800 text-center sm:text-left w-full sm:w-[46%]">{{ $c['second'] }}</span>
+                <span class="couplet-second text-slate-800 text-center sm:text-justify w-full sm:w-[46%]">{{ $c['second'] }}</span>
             </div>
             @endforeach
         </div>
