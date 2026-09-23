@@ -127,7 +127,8 @@ Route::prefix('admin')->middleware(['admin'])->name('admin.')->group(function ()
     Route::resource('wisdom', \App\Http\Controllers\Admin\WeeklyWisdomController::class);
     
     // 5. أدوات التحرير والإعدادات والرقابة
-    Route::get('/vacum', function() { return view('admin.tools.vacum'); })->name('tools.vacum');
+    Route::get('/vacum', [\App\Http\Controllers\Admin\ToolController::class, 'vacum'])->name('tools.vacum');
+    Route::post('/vacum/process', [\App\Http\Controllers\Admin\ToolController::class, 'processVacum'])->name('tools.vacum.process');
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
     Route::get('/audit-logs', [\App\Http\Controllers\Admin\AuditLogController::class, 'index'])->name('audit.index');
