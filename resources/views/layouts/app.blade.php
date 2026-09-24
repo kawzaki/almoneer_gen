@@ -701,7 +701,7 @@
     </footer>
 
     <!-- Persistent Detachable Floating Audio Player -->
-    <div id="global-audio-player" class="fixed bottom-14 lg:bottom-0 left-0 right-0 z-50 bg-emerald-950/95 text-white border-t border-gold-500/40 backdrop-blur-md shadow-2xl p-3 transform translate-y-[150%] transition-transform duration-300">
+    <div id="global-audio-player" class="fixed bottom-14 lg:bottom-0 left-0 right-0 z-50 bg-emerald-950/95 text-white border-t border-gold-500/40 backdrop-blur-md shadow-2xl p-3 transform translate-y-[200%] opacity-0 pointer-events-none transition-all duration-300">
         <div class="max-w-7xl mx-auto flex flex-col gap-2">
             <!-- Main Control Bar -->
             <div class="flex items-center justify-between gap-3">
@@ -841,7 +841,7 @@
             } catch (e) {}
 
             titleEl.innerText = currentGlobalTrack.title;
-            playerBar.classList.remove('translate-y-[150%]');
+            playerBar.classList.remove('translate-y-[200%]', 'translate-y-[150%]', 'opacity-0', 'pointer-events-none');
 
             if (type === 'soundcloud') {
                 audio.pause();
@@ -933,7 +933,7 @@
             audio.pause();
             audio.src = '';
             scFrameContainer.innerHTML = '';
-            playerBar.classList.add('translate-y-[150%]');
+            playerBar.classList.add('translate-y-[200%]', 'opacity-0', 'pointer-events-none');
             try {
                 sessionStorage.removeItem('almoneer_audio_player_state');
             } catch (e) {}
