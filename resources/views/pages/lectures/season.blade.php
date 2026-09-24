@@ -166,6 +166,13 @@
                     </p>
                     @endif
 
+                    @if(!empty($lec->recording_date))
+                    <div class="text-[11px] text-slate-500 flex items-center gap-1.5 pt-1">
+                        <i class="fa-regular fa-calendar-days text-slate-400"></i>
+                        <span>{{ $lec->recording_date }}</span>
+                    </div>
+                    @endif
+
                     @if(!empty($lec->tags_list))
                     <div class="flex flex-wrap gap-1 pt-1">
                         @foreach(array_slice($lec->tags_list, 0, 3) as $t)
@@ -239,6 +246,12 @@
                         @if($lec->lecture_number)
                         <span class="px-2 py-0.5 rounded-full bg-gold-500 text-emerald-950 font-bold text-[10px]">
                             الليلة {{ $lec->lecture_number }}
+                        </span>
+                        @endif
+                        @if(!empty($lec->recording_date))
+                        <span class="text-slate-500 text-[11px] flex items-center gap-1">
+                            <i class="fa-regular fa-calendar-days text-slate-400 text-[10px]"></i>
+                            <span>{{ $lec->recording_date }}</span>
                         </span>
                         @endif
                         <span class="text-slate-400 text-[11px]"><i class="fa-solid fa-eye ml-1"></i> {{ number_format($lec->views_count) }}</span>

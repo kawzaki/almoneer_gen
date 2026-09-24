@@ -20,6 +20,7 @@ class MediaItem extends Model
         'audio_file',
         'thumbnail',
         'duration',
+        'recording_date',
         'description',
         'tags',
         'transcript',

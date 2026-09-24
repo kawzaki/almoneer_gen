@@ -101,13 +101,20 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">
                     رابط الفيديو (يوتيوب):
-                    <span class="text-slate-400 font-normal text-[11px]">(اختياري - في حال عدم توفر الفيديو بعد)</span>
+                    <span class="text-slate-400 font-normal text-[11px]">(اختياري)</span>
                 </label>
                 <input type="text" name="media_url" value="{{ $item->media_url }}" placeholder="https://www.youtube.com/watch?v=..." class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50" dir="ltr">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                    <span>تاريخ الإلقاء / التسجيل:</span>
+                    <span class="text-slate-400 font-normal text-[10px]">(اختياري)</span>
+                </label>
+                <input type="text" name="recording_date" value="{{ old('recording_date', $item->recording_date) }}" placeholder="مثال: 15 رجب 1440هـ أو 2019/03/22" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
             </div>
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">المدة (مثال: 45:10):</label>

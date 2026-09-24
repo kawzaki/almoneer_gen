@@ -94,6 +94,7 @@ class MediaController extends Controller
             'audio_file'     => $audioPath,
             'thumbnail'      => $request->thumbnail,
             'duration'       => $request->duration,
+            'recording_date' => $request->recording_date,
             'season_year'    => $request->season_year,
             'hijri_year'     => $year,
             'season'         => $season,
@@ -209,6 +210,7 @@ class MediaController extends Controller
         $updateData['season']         = $season;
         $updateData['season_slug']    = $seasonSlug;
         $updateData['lecture_number'] = $num;
+        $updateData['recording_date'] = $request->recording_date;
 
         $medium->update($updateData);
 

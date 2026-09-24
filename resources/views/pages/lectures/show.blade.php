@@ -8,6 +8,17 @@
         <!-- Top Section (No Print) -->
         <div class="no-print space-y-8">
 
+        @php
+            $enteredSeason = trim($video->season_year ?? '');
+            if (!empty($enteredSeason) && $enteredSeason !== 'الموسم العام' && $enteredSeason !== 'محاضرات عامة') {
+                $seasonBadgeText = (str_starts_with($enteredSeason, 'موسم') || str_starts_with($enteredSeason, 'شهر') || str_starts_with($enteredSeason, 'ليالي'))
+                    ? $enteredSeason
+                    : 'موسم ' . $enteredSeason;
+            } else {
+                $seasonBadgeText = 'موسم ' . $resolvedSeasonName . ' ' . $resolvedYear . ' هـ';
+            }
+        @endphp
+
         <!-- Seasonal Breadcrumbs -->
         <nav class="flex flex-wrap items-center gap-2 text-xs text-slate-500">
             <a href="{{ route('home') }}" class="hover:text-emerald-800 transition">الرئيسية</a>
@@ -18,7 +29,7 @@
                 class="hover:text-emerald-800 transition">{{ $resolvedYear }} هـ</a>
             <span>/</span>
             <a href="{{ route('lectures.season', ['year' => $resolvedYear, 'season' => $resolvedSeasonSlug]) }}"
-                class="hover:text-emerald-800 transition">موسم {{ $resolvedSeasonName }}</a>
+                class="hover:text-emerald-800 transition">{{ $seasonBadgeText }}</a>
             <span>/</span>
             <span class="text-emerald-950 font-bold truncate max-w-xs sm:max-w-md">{{ $video->title }}</span>
         </nav>
@@ -142,14 +153,22 @@
             <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-100 text-xs">
                 <div class="flex flex-wrap items-center gap-2">
                     <a href="{{ route('lectures.season', ['year' => $resolvedYear, 'season' => $resolvedSeasonSlug]) }}"
-                        class="px-3 py-1 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-900 font-bold transition flex items-center gap-1.5">
+                        class="px-3 py-1 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-900 font-bold transition flex items-center gap-1.5"
+                        title="عرض محاضرات هذا الموسم">
                         <i class="fa-solid fa-calendar-day text-gold-500"></i>
-                        <span>موسم {{ $resolvedSeasonName }} {{ $resolvedYear }} هـ</span>
+                        <span>{{ $seasonBadgeText }}</span>
                     </a>
 
                     @if($video->lecture_number)
                         <span class="px-3 py-1 rounded-full bg-gold-500 text-emerald-950 font-bold">
                             الليلة {{ $video->lecture_number }}
+                        </span>
+                    @endif
+
+                    @if(!empty($video->recording_date))
+                        <span class="px-3.5 py-1 rounded-full bg-slate-100 text-slate-700 font-medium flex items-center gap-1.5 border border-slate-200 shadow-2xs" title="تاريخ الإلقاء / التسجيل">
+                            <i class="fa-regular fa-calendar-days text-slate-500 text-[11px]"></i>
+                            <span>{{ $video->recording_date }}</span>
                         </span>
                     @endif
 

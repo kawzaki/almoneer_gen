@@ -110,8 +110,8 @@
                         <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/80 text-white text-[11px] font-mono">
                             {{ $lec->duration ?? '50 د' }}
                         </span>
-                        <span class="absolute top-2 right-2 px-2.5 py-1 rounded-full bg-emerald-950/80 text-gold-300 text-[11px] font-bold">
-                            {{ $lec->season }}
+                        <span class="absolute top-2 right-2 px-2.5 py-1 rounded-full bg-emerald-950/80 text-gold-300 text-[11px] font-bold shadow">
+                            {{ (!empty($lec->season_year) && $lec->season_year !== 'الموسم العام') ? $lec->season_year : $lec->season }}
                         </span>
                     </div>
 
@@ -121,6 +121,13 @@
                                 {{ $lec->title }}
                             </a>
                         </h3>
+
+                        @if(!empty($lec->recording_date))
+                        <div class="text-[11px] text-slate-500 flex items-center gap-1.5 pt-1">
+                            <i class="fa-regular fa-calendar-days text-slate-400"></i>
+                            <span>{{ $lec->recording_date }}</span>
+                        </div>
+                        @endif
                     </div>
                 </div>
 
@@ -146,13 +153,19 @@
                              alt="{{ $lec->title }}" class="w-full h-full object-cover">
                     </div>
                     <div class="space-y-1.5 flex-1 min-w-0">
-                        <div class="flex items-center gap-2 text-xs">
+                        <div class="flex flex-wrap items-center gap-2 text-xs">
                             @if($lec->lecture_number)
                             <span class="px-2 py-0.5 rounded-full bg-gold-500/20 text-gold-600 font-bold text-[10px]">
                                 الليلة {{ $lec->lecture_number }}
                             </span>
                             @endif
-                            <span class="text-emerald-800 font-bold text-[11px]">{{ $lec->season }}</span>
+                            <span class="text-emerald-800 font-bold text-[11px]">{{ (!empty($lec->season_year) && $lec->season_year !== 'الموسم العام') ? $lec->season_year : $lec->season }}</span>
+                            @if(!empty($lec->recording_date))
+                            <span class="text-slate-400 text-[11px] flex items-center gap-1">
+                                <i class="fa-regular fa-calendar-days text-[10px]"></i>
+                                <span>{{ $lec->recording_date }}</span>
+                            </span>
+                            @endif
                         </div>
                         <h3 class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-emerald-800 transition line-clamp-1">
                             <a href="{{ route('lectures.show', ['year' => $year, 'season' => $lec->season_slug ?? 'general', 'slug' => $lec->slug]) }}">
