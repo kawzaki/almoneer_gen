@@ -12,7 +12,12 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::check()) {
-            return redirect()->route('login');
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'انتهت الجلسة، يرجى تسجيل الدخول مجدداً.'], 401);
+            }
+
+            return redirect()->guest(route('login'))
+                ->with('status', 'انتهت جلستك، يرجى تسجيل الدخول للمتابعة إلى الصفحة المطلوبة.');
         }
 
         return $next($request);

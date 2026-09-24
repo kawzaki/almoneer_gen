@@ -59,6 +59,13 @@
             <p class="text-xs text-slate-500 font-medium">شبكة سماحة العلامة السيد منير الخباز (الموقع الرسمي)</p>
         </div>
 
+        @if(session('status'))
+        <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2">
+            <i class="fa-solid fa-clock-rotate-left text-amber-600 text-sm"></i>
+            <span>{{ session('status') }}</span>
+        </div>
+        @endif
+
         @if($errors->any())
         <div class="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
             <i class="fa-solid fa-circle-exclamation text-red-500 text-sm"></i>
