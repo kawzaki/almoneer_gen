@@ -9,7 +9,7 @@
         <p class="text-xs text-slate-500 mt-1">تحديث هوية الموقع، روابط التواصل، والتحكم في إشارة البث المباشر.</p>
     </div>
 
-    <form action="{{ route('admin.settings.update') }}" method="POST" class="space-y-6">
+    <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
 
         <!-- 1. General Info -->
@@ -51,7 +51,77 @@
             </div>
         </div>
 
-        <!-- 2. Live Stream Switcher -->
+        <!-- 2. Homepage Hero Portrait Card & Identity -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-5">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 class="font-bold text-sm text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-id-badge text-gold-500"></i>
+                    <span>بطاقة التعريف والصورة الشخصية (الصفحة الرئيسية)</span>
+                </h3>
+                <span class="text-xs text-slate-400">تظهر في واجهة الصفحة الأولى بجانب الخبر الرئيسي</span>
+            </div>
+
+            <!-- Photo Upload & Preview -->
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row items-center gap-6">
+                <!-- Current / Preview Thumbnail -->
+                <div class="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full p-1 bg-gradient-to-tr from-gold-400 via-gold-500 to-emerald-800 shadow-lg overflow-hidden border-2 border-gold-400 shrink-0">
+                    <img id="hero-photo-preview" 
+                         src="{{ !empty($settings['site.hero_photo']) ? asset($settings['site.hero_photo']) : asset('images/sayyid-muneer-portrait.png') }}" 
+                         alt="معاينة الصورة" 
+                         class="w-full h-full object-cover rounded-full bg-emerald-950">
+                </div>
+
+                <div class="space-y-3 flex-1 text-center sm:text-right">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-800 mb-1">
+                            <i class="fa-solid fa-camera text-emerald-700 ml-1"></i>
+                            تغيير الصورة الشخصية لسماحة السيد:
+                        </label>
+                        <p class="text-[11px] text-slate-500 leading-relaxed">
+                            اختر صورة واضحة (مربعة أو دائرية، بصيغة JPG أو PNG أو WebP). ستظهر محاطة بالإطار الدائري الذهبي المتوهج في الصفحة الأولى.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3">
+                        <label class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold transition shadow-xs">
+                            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                            <span>رفع صورة جديدة...</span>
+                            <input type="file" name="site_hero_photo_file" accept="image/*" class="hidden" onchange="previewHeroPhoto(event)">
+                        </label>
+
+                        @if(!empty($settings['site.hero_photo']))
+                        <label class="inline-flex items-center gap-1.5 text-xs text-red-600 hover:text-red-700 font-semibold cursor-pointer">
+                            <input type="checkbox" name="remove_hero_photo" value="1" class="rounded text-red-600 border-slate-300">
+                            <span>استعادة الصورة الافتراضية الأصلية</span>
+                        </label>
+                        @endif
+                    </div>
+                    <div id="hero-photo-filename" class="text-[11px] text-emerald-800 font-semibold hidden"></div>
+                </div>
+            </div>
+
+            <!-- Texts in Hero Card -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">الاسم في البطاقة التعريفية:</label>
+                    <input type="text" name="site.hero_name" value="{{ $settings['site.hero_name'] ?? 'سماحة العلامة السيد منير الخباز' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">الصفة / اللقب العلمي:</label>
+                    <input type="text" name="site.hero_title" value="{{ $settings['site.hero_title'] ?? 'أستاذ البحث الخارج في الحوزة العلمية' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">نص زر السيرة الذاتية:</label>
+                    <input type="text" name="site.hero_btn_text" value="{{ $settings['site.hero_btn_text'] ?? 'استعراض السيرة الذاتية المفصلة' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">رابط زر السيرة الذاتية:</label>
+                    <input type="text" name="site.hero_btn_url" value="{{ $settings['site.hero_btn_url'] ?? route('bio') }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50" dir="ltr">
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Live Stream Switcher -->
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
             <h3 class="font-bold text-sm text-slate-800 pb-3 border-b border-slate-100 flex items-center gap-2">
                 <i class="fa-solid fa-tower-broadcast text-red-600"></i>
@@ -78,7 +148,7 @@
             </div>
         </div>
 
-        <!-- 3. Social Media Platforms -->
+        <!-- 4. Social Media Platforms -->
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
             <h3 class="font-bold text-sm text-slate-800 pb-3 border-b border-slate-100 flex items-center gap-2">
                 <i class="fa-solid fa-share-nodes text-gold-500"></i>
@@ -117,7 +187,7 @@
             </div>
         </div>
 
-        <!-- 4. Footer Content Settings -->
+        <!-- 5. Footer Content Settings -->
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                 <h3 class="font-bold text-sm text-slate-800 flex items-center gap-2">
@@ -178,4 +248,26 @@
         </div>
     </form>
 </div>
+
+@push('scripts')
+<script>
+    function previewHeroPhoto(event) {
+        const input = event.target;
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('hero-photo-preview');
+                if (img) img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            const nameEl = document.getElementById('hero-photo-filename');
+            if (nameEl) {
+                nameEl.textContent = 'الملف المختار: ' + file.name;
+                nameEl.classList.remove('hidden');
+            }
+        }
+    }
+</script>
+@endpush
 @endsection
