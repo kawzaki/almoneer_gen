@@ -226,7 +226,7 @@
     function openEditCategoryModal(id, name, order, isActive) {
         var modal = document.getElementById('edit-category-modal');
         var form = document.getElementById('edit-category-form');
-        form.action = '/admin/categories/' + id;
+        form.action = "{{ route('admin.categories.index') }}/" + id;
         document.getElementById('edit-cat-name').value = name;
         document.getElementById('edit-cat-order').value = order;
         document.getElementById('edit-cat-active').checked = isActive;
