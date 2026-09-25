@@ -98,7 +98,7 @@
             line-height: 2.2 !important;
         }
         .quran-verse {
-            color: #065F46;
+            color: #09B182;
             font-size: 1.05em;
             font-weight: 400;
             display: inline;

@@ -339,7 +339,7 @@ class TranscriptFormatter
             // 2. استبدال الآيات القرآنية {الآية} أو ﴿الآية﴾ بالخط العثماني واللون الأخضر المعتمد
             $formatted = preg_replace_callback('/(?:\{|﴿)([^}﴾]+)(?:\}|﴾)/u', function ($matches) {
                 $verse = html_entity_decode(trim($matches[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-                return '<span class="quran-verse font-quran text-emerald-800 font-normal" style="color: #065F46; font-family: \'Traditional Arabic\', \'Amiri\', serif;">﴿' . $verse . '﴾</span>';
+                return '<span class="quran-verse font-quran font-normal" style="color: #09B182; font-family: \'Traditional Arabic\', \'Amiri\', serif;">﴿' . $verse . '﴾</span>';
             }, $formatted);
 
             // 3. استبدال مراجع السور والآيات [المؤمنون : 115] أو [البقرة: 2]
@@ -414,7 +414,7 @@ class TranscriptFormatter
         // 2. استبدال الآيات القرآنية {الآية} أو ﴿الآية﴾ بالخط العثماني واللون الأخضر المعتمد
         $cleaned = preg_replace_callback('/(?:\{|﴿)([^}﴾]+)(?:\}|﴾)/u', function ($matches) {
             $verse = html_entity_decode(trim($matches[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-            return '<span class="quran-verse font-quran text-emerald-800 font-normal" style="color: #065F46; font-family: \'Traditional Arabic\', \'Amiri\', serif;">﴿' . $verse . '﴾</span>';
+            return '<span class="quran-verse font-quran font-normal" style="color: #09B182; font-family: \'Traditional Arabic\', \'Amiri\', serif;">﴿' . $verse . '﴾</span>';
         }, $cleaned);
 
         // 3. استبدال مراجع السور والآيات [المؤمنون : 115] أو [البقرة: 2]
