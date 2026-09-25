@@ -61,10 +61,11 @@
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1.5">النوع:</label>
                 <select name="type" required class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 focus:bg-white transition">
-                    <option value="news" {{ old('type') === 'news' ? 'selected' : '' }}>خبر عام</option>
+                    <option value="news" {{ old('type', 'news') === 'news' ? 'selected' : '' }}>خبر عام</option>
                     <option value="activity" {{ old('type') === 'activity' ? 'selected' : '' }}>نشاط / جولة تبليغية</option>
-                    <option value="bio" {{ old('type') === 'bio' ? 'selected' : '' }}>سيرة ذاتية</option>
+                    <option value="statement" {{ old('type') === 'statement' ? 'selected' : '' }}>بيان رسمي</option>
                     <option value="article" {{ old('type') === 'article' ? 'selected' : '' }}>مقال فكري</option>
+                    <option value="bio" {{ old('type') === 'bio' ? 'selected' : '' }}>سيرة ذاتية</option>
                 </select>
             </div>
             <div>

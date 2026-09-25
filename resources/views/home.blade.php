@@ -352,7 +352,7 @@
                     class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between">
                     <div class="p-6 space-y-3">
                         <span class="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full">
-                            {{ $news->type === 'activity' ? 'نشاط وجولة' : 'خبر عام' }}
+                            {{ $news->type_name }}
                         </span>
                         <h3 class="font-bold text-base text-slate-800 leading-snug hover:text-emerald-800 transition">
                             <a href="{{ route('news.show', $news->slug) }}">{{ $news->title }}</a>

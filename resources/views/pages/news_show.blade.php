@@ -21,7 +21,7 @@
         <!-- Meta Bar -->
         <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-slate-100 text-xs text-slate-500">
             <span class="px-3.5 py-1 rounded-full bg-emerald-50 text-emerald-800 font-bold border border-emerald-200">
-                {{ $article->type === 'activity' ? 'نشاط وتبليغ' : ($article->type === 'article' ? 'مقال فكري' : 'بيان رسمي') }}
+                {{ $article->type_name }}
             </span>
             <div class="flex items-center gap-4">
                 <span class="flex items-center gap-1.5">

@@ -108,7 +108,7 @@
                          alt="{{ $article->title }}" 
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     <span class="absolute top-3 right-3 text-[11px] font-bold text-white bg-emerald-950/80 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
-                        {{ $article->type === 'activity' ? 'نشاط وتبليغ' : ($article->type === 'article' ? 'مقال فكري' : 'بيان رسمي') }}
+                        {{ $article->type_name }}
                     </span>
                 </div>
                 @endif
@@ -116,7 +116,7 @@
                 <div class="p-6 space-y-3">
                     @if(!$article->image)
                     <span class="inline-block text-[11px] font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                        {{ $article->type === 'activity' ? 'نشاط وتبليغ' : ($article->type === 'article' ? 'مقال فكري' : 'بيان رسمي') }}
+                        {{ $article->type_name }}
                     </span>
                     @endif
 

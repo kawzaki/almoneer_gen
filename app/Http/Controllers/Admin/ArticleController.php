@@ -30,7 +30,7 @@ class ArticleController extends Controller
         $request->validate([
             'title'        => 'required|string|max:255',
             'content'      => 'required',
-            'type'         => 'required|in:news,activity,bio,article',
+            'type'         => 'required|in:news,activity,bio,article,statement',
             'image_file'   => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:10240',
             'published_at' => 'nullable|date',
         ]);
@@ -94,6 +94,7 @@ class ArticleController extends Controller
         $request->validate([
             'title'        => 'required|string|max:255',
             'content'      => 'required',
+            'type'         => 'required|in:news,activity,bio,article,statement',
             'image_file'   => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:10240',
             'published_at' => 'nullable|date',
         ]);

@@ -38,7 +38,7 @@
                     @forelse($articles as $art)
                     <tr class="hover:bg-slate-50 transition">
                         <td class="p-3.5 sm:p-4 font-bold text-slate-800 min-w-[200px] max-w-xs truncate">{{ $art->title }}</td>
-                        <td class="p-3.5 sm:p-4 whitespace-nowrap"><span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 font-bold">{{ $art->type }}</span></td>
+                        <td class="p-3.5 sm:p-4 whitespace-nowrap"><span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 font-bold">{{ $art->type_name }}</span></td>
                         <td class="p-3.5 sm:p-4 text-slate-500 whitespace-nowrap">{{ $art->category->name ?? '-' }}</td>
                         <td class="p-3.5 sm:p-4 text-slate-500 whitespace-nowrap">{{ $art->views_count ?? 0 }}</td>
                         <td class="p-3.5 sm:p-4 text-slate-500 font-medium whitespace-nowrap">

@@ -59,4 +59,20 @@ class Article extends Model
     {
         return $query->where('tags', 'like', '%' . $tag . '%');
     }
+
+    public static function typeLabels(): array
+    {
+        return [
+            'news'      => 'خبر عام',
+            'activity'  => 'نشاط وتبليغ',
+            'statement' => 'بيان رسمي',
+            'article'   => 'مقال فكري',
+            'bio'       => 'سيرة ذاتية',
+        ];
+    }
+
+    public function getTypeNameAttribute(): string
+    {
+        return self::typeLabels()[$this->type] ?? ($this->type ?: 'خبر عام');
+    }
 }
