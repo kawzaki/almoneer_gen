@@ -227,23 +227,23 @@
     <!-- 4. Books & Poetry Dual Showcase -->
     <section class="bg-sand-100 border-y border-slate-200 py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
 
                 <!-- Books Showcase (7 Cols) -->
-                <div class="lg:col-span-7 space-y-6">
-                    <div class="flex items-center justify-between">
+                <div class="lg:col-span-7 flex flex-col justify-between">
+                    <div class="flex items-end justify-between min-h-[58px] pb-2">
                         <div>
-                            <span class="text-xs font-bold text-gold-600 uppercase tracking-wider">مكتبة المؤلفات</span>
-                            <h2 class="text-2xl font-bold font-scholarly text-slate-900">كتب وإصدارات سماحة العلامة</h2>
+                            <span class="text-xs font-bold text-gold-600 uppercase tracking-wider block">مكتبة المؤلفات</span>
+                            <h2 class="text-2xl font-bold font-scholarly text-slate-900 leading-tight">كتب وإصدارات سماحة العلامة</h2>
                         </div>
                         <a href="{{ route('books.index') }}" class="text-xs font-bold text-emerald-800 hover:underline">عرض
                             كل الكتب ←</a>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1">
                         @forelse($featuredBooks as $book)
                             <div
-                                class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex gap-4 hover:shadow-md transition">
+                                class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex gap-4 hover:shadow-md transition h-full">
                                 <!-- Book Icon / Cover placeholder -->
                                 @if($book->cover_image)
                                     <a href="{{ route('books.show', $book->slug) }}" class="flex-shrink-0">
@@ -257,12 +257,12 @@
                                         <i class="fa-solid fa-book"></i>
                                     </div>
                                 @endif
-                                <div class="flex flex-col justify-between min-w-0">
+                                <div class="flex flex-col justify-between min-w-0 flex-1">
                                     <div>
                                         <h4 class="font-bold text-xs sm:text-sm text-slate-800 truncate"
                                             title="{{ $book->title }}">{{ $book->title }}</h4>
                                         <p class="text-[11px] text-slate-400 mt-0.5">{{ $book->publisher ?? 'دار النشر' }}
-                                            ({{ $book->publication_year ?? '2024' }})</p>
+                                             ({{ $book->publication_year ?? '2024' }})</p>
                                         <p class="text-xs text-slate-500 line-clamp-2 mt-1 font-light leading-relaxed">
                                             {{ strip_tags($book->summary) }}
                                         </p>
@@ -280,17 +280,17 @@
                 </div>
 
                 <!-- Poetry Diwan Showcase (5 Cols) -->
-                <div class="lg:col-span-5 space-y-6">
-                    <div class="flex items-center justify-between">
+                <div class="lg:col-span-5 flex flex-col justify-between">
+                    <div class="flex items-end justify-between min-h-[58px] pb-2">
                         <div>
-                            <h2 class="text-2xl font-bold font-scholarly text-slate-900">ديوان الشعر</h2>
+                            <h2 class="text-2xl font-bold font-scholarly text-slate-900 leading-tight">ديوان الشعر</h2>
                         </div>
                         <a href="{{ route('poems.index') }}" class="text-xs font-bold text-emerald-800 hover:underline">عرض
                             الديوان ←</a>
                     </div>
 
                     @if($featuredPoem)
-                        <div class="bg-white rounded-2xl p-6 border border-gold-500/30 shadow-md space-y-4">
+                        <div class="bg-white rounded-2xl p-6 border border-gold-500/30 shadow-md flex-1 flex flex-col justify-between">
                             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                                 @if(!empty($featuredPoem->occasion))
                                     <span
@@ -303,22 +303,24 @@
                                 @endif
                             </div>
 
-                            <h3 class="text-lg font-bold font-scholarly text-emerald-950 text-center">
-                                <a href="{{ route('poems.show', $featuredPoem->slug) }}">{{ $featuredPoem->title }}</a>
-                            </h3>
+                            <div class="my-auto py-2">
+                                <h3 class="text-lg font-bold font-scholarly text-emerald-950 text-center mb-3">
+                                    <a href="{{ route('poems.show', $featuredPoem->slug) }}">{{ $featuredPoem->title }}</a>
+                                </h3>
 
-                            <!-- Couplets formatting -->
-                            <div class="space-y-2 py-2 text-sm font-scholarly leading-loose">
-                                @foreach(array_slice($featuredPoem->couplets, 0, 3) as $c)
-                                    <div class="couplet-line">
-                                        <span class="text-slate-800">{{ $c['first'] }}</span>
-                                        <span class="text-gold-500 text-xs hidden sm:inline">✤</span>
-                                        <span class="text-slate-700">{{ $c['second'] }}</span>
-                                    </div>
-                                @endforeach
+                                <!-- Couplets formatting -->
+                                <div class="space-y-2 text-sm font-scholarly leading-loose">
+                                    @foreach(array_slice($featuredPoem->couplets, 0, 3) as $c)
+                                        <div class="couplet-line">
+                                            <span class="text-slate-800">{{ $c['first'] }}</span>
+                                            <span class="text-gold-500 text-xs hidden sm:inline">✤</span>
+                                            <span class="text-slate-700">{{ $c['second'] }}</span>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
 
-                            <div class="pt-2 text-center">
+                            <div class="pt-3 border-t border-slate-100 text-center">
                                 <a href="{{ route('poems.show', $featuredPoem->slug) }}"
                                     class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 hover:text-emerald-950">
                                     <span>قراءة القصيدة كاملة في الديوان</span>
