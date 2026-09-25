@@ -70,6 +70,16 @@
             margin: 0 0.18em;
             font-weight: normal !important;
         }
+
+        /* Universal WYSIWYG Quill Editor Drag-to-Resize */
+        .ql-container.ql-snow {
+            resize: vertical !important;
+            overflow-y: auto !important;
+            min-height: 260px;
+        }
+        .ql-editor {
+            min-height: 100% !important;
+        }
     </style>
     @stack('styles')
 </head>

@@ -10,7 +10,7 @@
         direction: rtl !important;
         text-align: right !important;
         font-family: 'IBM Plex Sans Arabic', sans-serif !important;
-        min-height: 320px !important;
+        min-height: 100% !important;
         font-size: 0.925rem !important;
         line-height: 1.85 !important;
     }
@@ -27,6 +27,10 @@
         border-bottom-right-radius: 0.75rem;
         border-color: #e2e8f0;
         background-color: #ffffff;
+        resize: vertical !important;
+        overflow-y: auto !important;
+        min-height: 280px;
+        height: 350px;
     }
 </style>
 @endpush
