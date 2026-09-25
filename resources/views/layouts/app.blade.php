@@ -98,11 +98,11 @@
             line-height: 2.2 !important;
         }
         .quran-verse {
-            color: #04242a;
+            color: #065F46;
             font-size: 1.05em;
             font-weight: 400;
             display: inline;
-            padding: 0 3px;
+            padding: 0 1px;
         }
         .quran-ref {
             font-family: 'IBM Plex Sans Arabic', sans-serif;

@@ -377,7 +377,7 @@
                         #transcript-body .quran-verse {
                             font-size: calc(var(--transcript-font-size) * 1.05) !important;
                             line-height: inherit !important;
-                            color: #BB1111 !important;
+                            color: #065F46 !important;
                         }
 
                         #transcript-body .quran-ref {
@@ -522,7 +522,7 @@
                             }
 
                             #transcript-body .quran-verse {
-                                color: #BB1111 !important;
+                                color: #065F46 !important;
                                 font-family: 'Amiri Quran', 'Traditional Arabic', serif !important;
                                 font-size: 14.5pt !important;
                                 line-height: inherit !important;

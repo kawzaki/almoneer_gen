@@ -10,7 +10,7 @@
     }
     .vacum-preview-box .quran-verse {
         font-family: 'Traditional Arabic', 'Amiri', serif !important;
-        color: #BB1111 !important;
+        color: #065F46 !important;
         font-size: 1.15em;
     }
     .vacum-preview-box .lecture-heading {

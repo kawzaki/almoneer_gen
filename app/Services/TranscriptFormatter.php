@@ -22,9 +22,11 @@ class TranscriptFormatter
         // تطبيق قواعد التنظيف اللغوي الأساسية
         $text = self::cleanInlineText($text);
 
-        // ضبط الأقواس للآيات القرآنية
+        // ضبط الأقواس للآيات القرآنية وإزالة الفراغات الملاصقة
         $text = str_replace('﴿', '{', $text);
         $text = str_replace('﴾', '}', $text);
+        $text = preg_replace('/\{\s+/u', '{', $text);
+        $text = preg_replace('/\s+\}/u', '}', $text);
 
         // إزالة الفراغات والمسافات الفاسدة
         $text = preg_replace('/[\t]+/u', ' ', $text);
@@ -68,6 +70,10 @@ class TranscriptFormatter
         $text = str_replace('))', '»', $text);
         $text = preg_replace('/«\s*/u', ' «', $text);
         $text = preg_replace('/\s*»/u', '» ', $text);
+
+        // إزالة الفراغات الملاصقة لبداية ونهاية الآيات القرآنية
+        $text = preg_replace('/([\{﴿])\s+/u', '$1', $text);
+        $text = preg_replace('/\s+([\}﴾])/u', '$1', $text);
 
         // علامات الاقتباس
         $text = preg_replace('/"([^"]+?)"/u', ' ”$1“ ', $text);
@@ -330,10 +336,10 @@ class TranscriptFormatter
                 return '<span class="text-amber-800 font-bold font-scholarly inline-block my-2" style="color: #8B4513 !important; font-weight: bold !important;">' . e(trim($matches[1])) . '</span>';
             }, $formatted);
 
-            // 2. استبدال الآيات القرآنية {الآية} أو ﴿الآية﴾ بالخط العثماني واللون الأحمر المعتمد
+            // 2. استبدال الآيات القرآنية {الآية} أو ﴿الآية﴾ بالخط العثماني واللون الأخضر المعتمد
             $formatted = preg_replace_callback('/(?:\{|﴿)([^}﴾]+)(?:\}|﴾)/u', function ($matches) {
                 $verse = html_entity_decode(trim($matches[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-                return '<span class="quran-verse font-quran text-red-900 font-normal" style="color: #BB1111; font-family: \'Traditional Arabic\', \'Amiri\', serif;">﴿ ' . $verse . ' ﴾</span>';
+                return '<span class="quran-verse font-quran text-emerald-800 font-normal" style="color: #065F46; font-family: \'Traditional Arabic\', \'Amiri\', serif;">﴿' . $verse . '﴾</span>';
             }, $formatted);
 
             // 3. استبدال مراجع السور والآيات [المؤمنون : 115] أو [البقرة: 2]
@@ -405,10 +411,10 @@ class TranscriptFormatter
             return '<span class="text-amber-800 font-bold font-scholarly inline-block my-2" style="color: #8B4513 !important; font-weight: bold !important;">' . e(trim($matches[1])) . '</span>';
         }, $cleaned);
 
-        // 2. استبدال الآيات القرآنية {الآية} أو ﴿الآية﴾ بالخط العثماني
+        // 2. استبدال الآيات القرآنية {الآية} أو ﴿الآية﴾ بالخط العثماني واللون الأخضر المعتمد
         $cleaned = preg_replace_callback('/(?:\{|﴿)([^}﴾]+)(?:\}|﴾)/u', function ($matches) {
             $verse = html_entity_decode(trim($matches[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-            return '<span class="quran-verse font-quran text-red-900 font-normal" style="color: #BB1111; font-family: \'Traditional Arabic\', \'Amiri\', serif;">﴿ ' . $verse . ' ﴾</span>';
+            return '<span class="quran-verse font-quran text-emerald-800 font-normal" style="color: #065F46; font-family: \'Traditional Arabic\', \'Amiri\', serif;">﴿' . $verse . '﴾</span>';
         }, $cleaned);
 
         // 3. استبدال مراجع السور والآيات [المؤمنون : 115] أو [البقرة: 2]
