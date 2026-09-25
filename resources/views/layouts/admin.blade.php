@@ -14,6 +14,9 @@
     <!-- FontAwesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
+    <!-- Flatpickr Datepicker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -321,6 +324,35 @@
                     closeSidebar();
                 }
             });
+        });
+    </script>
+
+    <!-- Flatpickr JS & Arabic Localization -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof flatpickr !== 'undefined') {
+                flatpickr(".admin-datepicker", {
+                    dateFormat: "Y-m-d",
+                    altInput: true,
+                    altFormat: "d / m / Y",
+                    locale: "ar",
+                    allowInput: true,
+                    onReady: function(selectedDates, dateStr, instance) {
+                        if (instance.altInput) {
+                            instance.altInput.classList.add(
+                                'w-full', 'text-xs', 'rounded-xl', 'border', 'border-slate-200',
+                                'p-2.5', 'bg-slate-50', 'text-slate-700', 'font-semibold',
+                                'focus:bg-white', 'focus:border-emerald-800', 'focus:ring-1',
+                                'focus:ring-emerald-800/20', 'transition', 'text-right'
+                            );
+                            instance.altInput.style.direction = "rtl";
+                            instance.altInput.placeholder = "يوم / شهر / سنة (DD / MM / YYYY)";
+                        }
+                    }
+                });
+            }
         });
     </script>
 

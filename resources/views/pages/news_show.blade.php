@@ -26,7 +26,11 @@
             <div class="flex items-center gap-4">
                 <span class="flex items-center gap-1.5">
                     <i class="fa-regular fa-calendar text-emerald-700"></i>
-                    <span>{{ $article->published_at ? $article->published_at->format('Y-m-d') : '' }}</span>
+                    @if($article->published_at)
+                        <span class="inline-flex items-center gap-0.5" dir="rtl">
+                            <span>{{ $article->published_at->format('d') }}</span>/<span>{{ $article->published_at->format('m') }}</span>/<span>{{ $article->published_at->format('Y') }}</span>
+                        </span>
+                    @endif
                 </span>
                 <span class="flex items-center gap-1.5">
                     <i class="fa-solid fa-eye text-emerald-700"></i>
@@ -108,7 +112,13 @@
                 @endif
                 <div class="space-y-1 overflow-hidden">
                     <h4 class="font-bold text-xs sm:text-sm text-slate-800 group-hover:text-emerald-800 transition truncate">{{ $recent->title }}</h4>
-                    <p class="text-[11px] text-slate-400">{{ $recent->published_at ? $recent->published_at->format('Y-m-d') : '' }}</p>
+                    @if($recent->published_at)
+                        <p class="text-[11px] text-slate-400">
+                            <span class="inline-flex items-center gap-0.5" dir="rtl">
+                                <span>{{ $recent->published_at->format('d') }}</span>/<span>{{ $recent->published_at->format('m') }}</span>/<span>{{ $recent->published_at->format('Y') }}</span>
+                            </span>
+                        </p>
+                    @endif
                 </div>
             </a>
             @endforeach

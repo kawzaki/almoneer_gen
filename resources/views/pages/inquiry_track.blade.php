@@ -47,7 +47,14 @@
             <div class="p-5 rounded-2xl bg-sand-50 border-r-4 border-emerald-800 space-y-2">
                 <h4 class="font-bold text-xs text-emerald-950">نص الإجابة المعتمدة:</h4>
                 <p class="text-sm text-slate-700 leading-relaxed font-light">{!! nl2br(e($inquiry->answer)) !!}</p>
-                <p class="text-[10px] text-slate-400 pt-2">تاريخ الإجابة: {{ $inquiry->answered_at ? $inquiry->answered_at->format('Y-m-d') : '' }}</p>
+                <p class="text-[10px] text-slate-400 pt-2 flex items-center gap-1">
+                    <span>تاريخ الإجابة:</span>
+                    @if($inquiry->answered_at)
+                        <span class="inline-flex items-center gap-0.5" dir="rtl">
+                            <span>{{ $inquiry->answered_at->format('d') }}</span>/<span>{{ $inquiry->answered_at->format('m') }}</span>/<span>{{ $inquiry->answered_at->format('Y') }}</span>
+                        </span>
+                    @endif
+                </p>
             </div>
             @else
             <div class="p-4 rounded-xl bg-slate-50 text-slate-500 text-xs text-center">

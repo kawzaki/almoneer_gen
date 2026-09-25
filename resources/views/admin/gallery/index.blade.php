@@ -87,7 +87,15 @@
                             <span class="text-slate-400 text-[11px]">ألبوم رئيسي</span>
                         @endif
                     </td>
-                    <td class="p-4 text-slate-500 whitespace-nowrap">{{ $album->event_date ? $album->event_date->format('Y-m-d') : '-' }}</td>
+                    <td class="p-4 text-slate-500 whitespace-nowrap">
+                        @if($album->event_date)
+                            <span class="inline-flex items-center gap-0.5" dir="rtl">
+                                <span>{{ $album->event_date->format('d') }}</span>/<span>{{ $album->event_date->format('m') }}</span>/<span>{{ $album->event_date->format('Y') }}</span>
+                            </span>
+                        @else
+                            -
+                        @endif
+                    </td>
                     <td class="p-4 whitespace-nowrap">
                         <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 font-bold text-[11px]">
                             <i class="fa-regular fa-image text-slate-400 text-[10px]"></i>

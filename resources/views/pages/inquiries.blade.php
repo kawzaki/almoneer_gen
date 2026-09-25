@@ -50,7 +50,11 @@
                                 class="flex items-center justify-between text-xs text-slate-400 pb-2 border-b border-slate-100">
                                 <span
                                     class="px-2.5 py-0.5 rounded bg-gold-50 text-gold-700 font-semibold">{{ $inq->category->name ?? 'مسألة عامة' }}</span>
-                                <span>{{ $inq->answered_at ? $inq->answered_at->format('Y-m-d') : '' }}</span>
+                                @if($inq->answered_at)
+                                    <span class="inline-flex items-center gap-0.5" dir="rtl">
+                                        <span>{{ $inq->answered_at->format('d') }}</span>/<span>{{ $inq->answered_at->format('m') }}</span>/<span>{{ $inq->answered_at->format('Y') }}</span>
+                                    </span>
+                                @endif
                             </div>
 
                             <div>

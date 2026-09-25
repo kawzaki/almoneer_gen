@@ -116,8 +116,14 @@
                 <!-- تاريخ المناسبة -->
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1.5">تاريخ المناسبة</label>
-                    <input type="date" name="event_date" value="{{ old('event_date', $album->event_date ? $album->event_date->format('Y-m-d') : '') }}"
-                        class="w-full text-xs rounded-xl border-slate-200 p-3 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 transition">
+                    <div class="relative">
+                        <input type="text" name="event_date" id="event_date" value="{{ old('event_date', $album->event_date ? $album->event_date->format('Y-m-d') : '') }}"
+                            class="admin-datepicker w-full text-xs rounded-xl border-slate-200 p-3 pr-9 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 transition font-semibold"
+                            placeholder="يوم / شهر / سنة (DD / MM / YYYY)">
+                        <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-xs">
+                            <i class="fa-regular fa-calendar"></i>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- خيار صورة الغلاف المرئي بالكامل (بدون إدخال مسارات) -->

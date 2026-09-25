@@ -144,7 +144,11 @@
             <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
                 <span class="flex items-center gap-1.5">
                     <i class="fa-regular fa-calendar"></i>
-                    <span>{{ $article->published_at ? $article->published_at->format('Y-m-d') : '' }}</span>
+                    @if($article->published_at)
+                        <span class="inline-flex items-center gap-0.5" dir="rtl">
+                            <span>{{ $article->published_at->format('d') }}</span>/<span>{{ $article->published_at->format('m') }}</span>/<span>{{ $article->published_at->format('Y') }}</span>
+                        </span>
+                    @endif
                 </span>
                 <a href="{{ route('news.show', $article->slug) }}" class="font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1">
                     <span>قراءة الخبر</span>

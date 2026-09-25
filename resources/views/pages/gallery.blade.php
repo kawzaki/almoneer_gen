@@ -48,7 +48,9 @@
                     @if($album->event_date)
                         <span class="text-xs text-slate-400 flex items-center gap-1.5">
                             <i class="fa-regular fa-calendar text-gold-600"></i>
-                            <span>{{ $album->event_date->format('Y-m-d') }}</span>
+                            <span class="inline-flex items-center gap-0.5" dir="rtl">
+                                <span>{{ $album->event_date->format('d') }}</span>/<span>{{ $album->event_date->format('m') }}</span>/<span>{{ $album->event_date->format('Y') }}</span>
+                            </span>
                         </span>
                     @endif
 

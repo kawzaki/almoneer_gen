@@ -82,7 +82,13 @@
             @endif
 
             <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-bold">
-                {{ $album->event_date ? $album->event_date->format('Y-m-d') : 'توثيق مصور' }}
+                @if($album->event_date)
+                    <span class="inline-flex items-center gap-0.5" dir="rtl">
+                        <span>{{ $album->event_date->format('d') }}</span>/<span>{{ $album->event_date->format('m') }}</span>/<span>{{ $album->event_date->format('Y') }}</span>
+                    </span>
+                @else
+                    توثيق مصور
+                @endif
             </span>
 
             <span class="px-3 py-1 rounded-full bg-gold-50 text-gold-800 text-xs font-bold font-mono">

@@ -97,9 +97,15 @@
                     </label>
                     <span class="text-[10px] text-slate-400">يدعم الأخبار السابقة</span>
                 </div>
-                <input type="date" name="published_at" 
-                       value="{{ old('published_at', $article->published_at ? $article->published_at->format('Y-m-d') : ($article->created_at ? $article->created_at->format('Y-m-d') : date('Y-m-d'))) }}" 
-                       class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 focus:bg-white focus:border-emerald-800 focus:ring-1 focus:ring-emerald-800/20 transition text-slate-700 font-medium dir-ltr">
+                <div class="relative">
+                    <input type="text" name="published_at" id="published_at"
+                           value="{{ old('published_at', $article->published_at ? $article->published_at->format('Y-m-d') : ($article->created_at ? $article->created_at->format('Y-m-d') : date('Y-m-d'))) }}" 
+                           class="admin-datepicker w-full text-xs rounded-xl border-slate-200 p-2.5 pr-9 bg-slate-50 focus:bg-white focus:border-emerald-800 focus:ring-1 focus:ring-emerald-800/20 transition text-slate-700 font-semibold"
+                           placeholder="يوم / شهر / سنة (DD / MM / YYYY)">
+                    <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-xs">
+                        <i class="fa-regular fa-calendar"></i>
+                    </div>
+                </div>
             </div>
         </div>
 

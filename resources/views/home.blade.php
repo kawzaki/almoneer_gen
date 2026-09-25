@@ -361,10 +361,14 @@
                             {{ $news->summary }}
                         </p>
                     </div>
-                    <div
-                        class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-                        <span><i class="fa-regular fa-calendar"></i>
-                            {{ $news->published_at ? $news->published_at->format('Y-m-d') : '' }}</span>
+                    <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                        <span class="flex items-center gap-1.5"><i class="fa-regular fa-calendar"></i>
+                            @if($news->published_at)
+                                <span class="inline-flex items-center gap-0.5" dir="rtl">
+                                    <span>{{ $news->published_at->format('d') }}</span>/<span>{{ $news->published_at->format('m') }}</span>/<span>{{ $news->published_at->format('Y') }}</span>
+                                </span>
+                            @endif
+                        </span>
                         <a href="{{ route('news.show', $news->slug) }}"
                             class="font-semibold text-emerald-800 hover:text-emerald-950">التفاصيل ←</a>
                     </div>

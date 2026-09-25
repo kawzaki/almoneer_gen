@@ -41,7 +41,16 @@
                         <td class="p-3.5 sm:p-4 whitespace-nowrap"><span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 font-bold">{{ $art->type }}</span></td>
                         <td class="p-3.5 sm:p-4 text-slate-500 whitespace-nowrap">{{ $art->category->name ?? '-' }}</td>
                         <td class="p-3.5 sm:p-4 text-slate-500 whitespace-nowrap">{{ $art->views_count ?? 0 }}</td>
-                        <td class="p-3.5 sm:p-4 text-slate-500 font-medium whitespace-nowrap">{{ $art->published_at ? $art->published_at->format('Y-m-d') : ($art->created_at ? $art->created_at->format('Y-m-d') : '') }}</td>
+                        <td class="p-3.5 sm:p-4 text-slate-500 font-medium whitespace-nowrap">
+                            @php $artDate = $art->published_at ?? $art->created_at; @endphp
+                            @if($artDate)
+                                <span class="inline-flex items-center gap-0.5" dir="rtl">
+                                    <span>{{ $artDate->format('d') }}</span>/<span>{{ $artDate->format('m') }}</span>/<span>{{ $artDate->format('Y') }}</span>
+                                </span>
+                            @else
+                                -
+                            @endif
+                        </td>
                         <td class="p-3.5 sm:p-4 text-center whitespace-nowrap">
                             <div class="inline-flex items-center gap-2">
                                 <a href="{{ route('admin.articles.edit', $art->id) }}" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg" title="تعديل"><i class="fa-solid fa-pen"></i></a>
