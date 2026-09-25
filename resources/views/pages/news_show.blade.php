@@ -56,7 +56,7 @@
         <!-- Summary Quote -->
         @if($article->summary)
         <div class="p-5 rounded-2xl bg-sand-50 border-r-4 border-gold-500 text-slate-700 text-sm sm:text-base leading-relaxed font-light shadow-xs">
-            {{ $article->summary }}
+            {{ strip_tags($article->summary) }}
         </div>
         @endif
 

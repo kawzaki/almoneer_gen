@@ -125,7 +125,7 @@
                     </h3>
 
                     <p class="text-xs text-slate-500 font-light leading-relaxed line-clamp-3">
-                        {{ $article->summary }}
+                        {{ strip_tags($article->summary) }}
                     </p>
 
                     <!-- Article Tag Badges -->

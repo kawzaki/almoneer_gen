@@ -89,7 +89,7 @@
                                 </div>
                             </div>
                             @if($book->summary)
-                            <p class="text-xs text-slate-500 line-clamp-2 font-light leading-relaxed">{{ $book->summary }}</p>
+                            <p class="text-xs text-slate-500 line-clamp-2 font-light leading-relaxed">{{ strip_tags($book->summary) }}</p>
                             @endif
                         </div>
                         <div class="pt-3 border-t border-slate-100 mt-3 text-[11px] text-gold-600 font-semibold flex items-center justify-between">
@@ -173,7 +173,7 @@
                             <span class="text-[10px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full font-bold">خبر</span>
                             <h4 class="font-scholarly font-bold text-slate-800 group-hover:text-emerald-800 text-sm leading-snug line-clamp-2">{{ $item->title }}</h4>
                             @if($item->summary)
-                            <p class="text-xs text-slate-500 line-clamp-2">{{ $item->summary }}</p>
+                            <p class="text-xs text-slate-500 line-clamp-2">{{ strip_tags($item->summary) }}</p>
                             @endif
                         </div>
                         <div class="pt-3 border-t border-slate-100 mt-3 text-[11px] text-gold-600 font-semibold flex items-center justify-between">

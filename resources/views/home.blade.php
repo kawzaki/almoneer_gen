@@ -29,7 +29,7 @@
 
                     <p class="text-sm md:text-base text-slate-200 leading-relaxed max-w-2xl font-light">
                         @if($featuredArticle && $featuredArticle->summary)
-                            {{ $featuredArticle->summary }}
+                            {{ strip_tags($featuredArticle->summary) }}
                         @else
                             المنصة العامة والفكرية المخصصة للمحاضرات العامة، مؤلفات الفكر الإسلامي، ديوان الشعر، الفتاوى
                             والاستفسارات، والأنشطة التبليغية في العالم.
@@ -264,7 +264,7 @@
                                         <p class="text-[11px] text-slate-400 mt-0.5">{{ $book->publisher ?? 'دار النشر' }}
                                             ({{ $book->publication_year ?? '2024' }})</p>
                                         <p class="text-xs text-slate-500 line-clamp-2 mt-1 font-light leading-relaxed">
-                                            {{ $book->summary }}
+                                            {{ strip_tags($book->summary) }}
                                         </p>
                                     </div>
                                     <div class="flex items-center gap-2 pt-2">
@@ -357,7 +357,7 @@
                             <a href="{{ route('news.show', $news->slug) }}">{{ $news->title }}</a>
                         </h3>
                         <p class="text-xs text-slate-500 font-light leading-relaxed line-clamp-3">
-                            {{ $news->summary }}
+                            {{ strip_tags($news->summary) }}
                         </p>
                     </div>
                     <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
