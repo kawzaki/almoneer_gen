@@ -32,20 +32,22 @@ class InquiryController extends Controller
     public function update(Request $request, Inquiry $inquiry)
     {
         $request->validate([
+            'question' => 'required|string',
             'answer' => 'nullable|string',
             'status' => 'required|in:new,in_review,answered',
         ]);
 
         $inquiry->update([
+            'question'     => $request->question,
             'category_id'  => $request->category_id,
             'answer'       => $request->answer,
             'status'       => $request->status,
             'is_published' => $request->boolean('is_published'),
             'answered_by'  => Auth::id(),
-            'answered_at'  => $request->filled('answer') ? now() : null,
+            'answered_at'  => $request->filled('answer') ? ($inquiry->answered_at ?? now()) : null,
         ]);
 
-        return redirect()->route('admin.inquiries.index')->with('success', 'تم حفظ الرد وتحديث حالة الاستفسار بنجاح!');
+        return redirect()->route('admin.inquiries.index')->with('success', 'تم حفظ التعديلات والرد بنجاح!');
     }
 
     public function destroy(Inquiry $inquiry)
