@@ -13,7 +13,7 @@
     <!-- Track Form -->
     <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
         <form action="{{ route('inquiries.track') }}" method="GET" class="flex gap-2">
-            <input type="text" name="code" value="{{ $code }}" required placeholder="مثال: INQ-1447-001" class="flex-grow text-xs rounded-xl border-slate-200 p-3 bg-slate-50 uppercase text-center font-mono">
+            <input type="text" name="code" value="{{ $code }}" required placeholder="مثال: INQ-2026-6J1KQ2" class="flex-grow text-xs rounded-xl border-slate-200 p-3 bg-slate-50 uppercase text-center font-mono" dir="ltr" style="font-family: monospace, sans-serif !important; font-variant-numeric: tabular-nums lining-nums !important; unicode-bidi: isolate;">
             <button type="submit" class="px-5 py-3 bg-emerald-800 hover:bg-emerald-900 text-gold-300 font-bold text-xs rounded-xl shadow transition">
                 استعلام
             </button>
@@ -24,7 +24,7 @@
         @if($inquiry)
         <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-md space-y-6">
             <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-                <span class="text-xs text-slate-400 font-mono">{{ $inquiry->tracking_code }}</span>
+                <span dir="ltr" class="text-xs text-slate-500 font-mono font-bold select-all" style="font-family: monospace, sans-serif !important; font-variant-numeric: tabular-nums lining-nums !important; unicode-bidi: isolate;">{{ $inquiry->tracking_code }}</span>
                 @if($inquiry->status === 'answered')
                 <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center gap-1.5">
                     <i class="fa-solid fa-circle-check"></i>
@@ -44,10 +44,26 @@
             </div>
 
             @if($inquiry->answer)
-            <div class="p-5 rounded-2xl bg-sand-50 border-r-4 border-emerald-800 space-y-2">
-                <h4 class="font-bold text-xs text-emerald-950">نص الإجابة المعتمدة:</h4>
-                <p class="text-sm text-slate-700 leading-relaxed font-light">{!! nl2br(e($inquiry->answer)) !!}</p>
-                <p class="text-[10px] text-slate-400 pt-2 flex items-center gap-1">
+            <div class="p-5 rounded-2xl bg-sand-50 border-r-4 border-emerald-800 space-y-3">
+                <div class="flex items-center justify-between pb-2 border-b border-amber-200/50">
+                    <h4 class="font-bold text-xs text-emerald-950 flex items-center gap-1.5">
+                        <i class="fa-solid fa-stamp text-gold-600"></i>
+                        <span>نص الإجابة المعتمدة:</span>
+                    </h4>
+                    @if($inquiry->responder_title)
+                    <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-white border border-emerald-200 text-emerald-900 font-bold">
+                        صادر عن: {{ $inquiry->responder_title }}
+                    </span>
+                    @endif
+                </div>
+                <div class="text-sm text-slate-700 leading-relaxed font-light prose prose-sm max-w-none">
+                    @if(strip_tags($inquiry->answer) === $inquiry->answer)
+                        {!! nl2br(e($inquiry->answer)) !!}
+                    @else
+                        {!! $inquiry->answer !!}
+                    @endif
+                </div>
+                <p class="text-[10px] text-slate-400 pt-2 flex items-center gap-1 border-t border-amber-100">
                     <span>تاريخ الإجابة:</span>
                     @if($inquiry->answered_at)
                         <span class="inline-flex items-center gap-0.5" dir="rtl">
@@ -64,7 +80,7 @@
         </div>
         @else
         <div class="p-6 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-center text-xs">
-            لم يتم العثور على أي استفسار مسجل برقم التتبع المدخل ({{ $code }}). يرجى التأكد من الرمز.
+            لم يتم العثور على أي استفسار مسجل برقم التتبع المدخل (<span dir="ltr" class="font-mono font-bold">{{ $code }}</span>). يرجى التأكد من صحة الرمز.
         </div>
         @endif
     @endif

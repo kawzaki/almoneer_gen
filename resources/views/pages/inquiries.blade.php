@@ -66,9 +66,22 @@
 
                             @if($inq->answer)
                                 <div
-                                    class="p-4 rounded-xl bg-sand-50 border-r-4 border-emerald-800 text-xs sm:text-sm text-slate-700 leading-relaxed space-y-1">
-                                    <span class="font-bold text-emerald-950 block">الجواب:</span>
-                                    <p class="font-light">{!! nl2br(e($inq->answer)) !!}</p>
+                                    class="p-4 rounded-xl bg-sand-50 border-r-4 border-emerald-800 text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2">
+                                    <div class="flex items-center justify-between pb-1 border-b border-amber-200/50">
+                                        <span class="font-bold text-emerald-950 block">الجواب:</span>
+                                        @if($inq->responder_title)
+                                            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-white border border-emerald-200 text-emerald-900 font-semibold">
+                                                صادر عن: {{ $inq->responder_title }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <div class="font-light prose prose-sm max-w-none text-slate-700 leading-relaxed">
+                                        @if(strip_tags($inq->answer) === $inq->answer)
+                                            {!! nl2br(e($inq->answer)) !!}
+                                        @else
+                                            {!! $inq->answer !!}
+                                        @endif
+                                    </div>
                                 </div>
                             @endif
                         </div>

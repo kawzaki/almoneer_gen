@@ -20,10 +20,11 @@ class InquiryController extends Controller
         }
 
         if ($request->filled('search')) {
-            $search = $request->search;
+            $search = Inquiry::normalizeDigits(trim($request->search));
             $query->where(function ($q) use ($search) {
                 $q->where('question', 'like', "%{$search}%")
-                  ->orWhere('answer', 'like', "%{$search}%");
+                  ->orWhere('answer', 'like', "%{$search}%")
+                  ->orWhere('tracking_code', 'like', "%{$search}%");
             });
         }
 
@@ -59,11 +60,12 @@ class InquiryController extends Controller
 
     public function track(Request $request)
     {
-        $code = $request->get('code');
+        $rawCode = $request->get('code');
+        $code = Inquiry::normalizeDigits(trim($rawCode));
         $inquiry = null;
 
         if (!empty($code)) {
-            $inquiry = Inquiry::where('tracking_code', trim($code))->first();
+            $inquiry = Inquiry::where('tracking_code', $code)->first();
         }
 
         return view('pages.inquiry_track', compact('inquiry', 'code'));

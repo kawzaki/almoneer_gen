@@ -22,12 +22,25 @@ class Inquiry extends Model
         'status',
         'is_published',
         'answered_at',
+        'responder_title',
     ];
 
     protected $casts = [
         'is_published' => 'boolean',
         'answered_at'  => 'datetime',
     ];
+
+    /**
+     * Convert Eastern Arabic (Indic) numbers to standard ASCII digits
+     * e.g., 'INQ-٢٠٢٦-٦J١KQ٢' => 'INQ-2026-6J1KQ2'
+     */
+    public static function normalizeDigits(?string $text): ?string
+    {
+        if ($text === null) return null;
+        $eastern = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩', '۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        $standard = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        return str_replace($eastern, $standard, $text);
+    }
 
     public function category()
     {

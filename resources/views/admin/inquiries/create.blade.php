@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'مراجعة والرد على الاستفسار')
+@section('title', 'إضافة استفسار وجواب جديد')
 
 @push('styles')
 <!-- Quill WYSIWYG Editor CSS -->
@@ -30,7 +30,7 @@
         resize: vertical !important;
         overflow-y: auto !important;
         min-height: 220px;
-        height: 320px;
+        height: 300px;
     }
 </style>
 @endpush
@@ -38,46 +38,64 @@
 @section('content')
 <div class="max-w-4xl mx-auto space-y-6">
     <div class="flex items-center justify-between">
-        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-            <span>مراجعة الاستفسار</span>
-            <span dir="ltr" class="font-mono text-sm font-bold bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200 select-all" style="font-family: monospace, sans-serif !important; font-variant-numeric: tabular-nums lining-nums !important; unicode-bidi: isolate;">({{ $inquiry->tracking_code }})</span>
-        </h2>
+        <div>
+            <h2 class="text-xl font-bold text-slate-800">إضافة استفسار وجواب جديد</h2>
+            <p class="text-xs text-slate-500 mt-0.5">تسجيل سؤال وجواب واردين عبر البريد الإلكتروني أو مصادر خارجية لإدراجهما في الأرشيف.</p>
+        </div>
         <a href="{{ route('admin.inquiries.index') }}" class="text-xs text-slate-500 hover:text-slate-800 font-semibold">← العودة للاستفسارات</a>
     </div>
 
-    <!-- Inquiry Metadata Box -->
-    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200">
-        <div class="flex flex-wrap items-center justify-between gap-4 text-xs text-slate-500">
-            <span><strong>السائل:</strong> {{ $inquiry->name }}</span>
-            <span><strong>البريد:</strong> {{ $inquiry->email }}</span>
-            <span><strong>الدولة:</strong> {{ $inquiry->country ?? 'غير محدد' }}</span>
-            <span><strong>تاريخ الإرسال:</strong> {{ $inquiry->created_at ? $inquiry->created_at->format('Y-m-d H:i') : '' }}</span>
-        </div>
-    </div>
+    <form id="inquiry-form" action="{{ route('admin.inquiries.store') }}" method="POST" class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-5">
+        @csrf
 
-    <!-- Edit & Answer Form -->
-    <form id="inquiry-edit-form" action="{{ route('admin.inquiries.update', $inquiry->id) }}" method="POST" class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-5">
-        @csrf @method('PUT')
-        
-        <!-- Editable Question -->
+        <!-- Inquirer Info -->
+        <div class="p-4 rounded-xl bg-slate-50/80 border border-slate-200 space-y-3">
+            <h4 class="font-bold text-xs text-slate-700 flex items-center gap-1.5">
+                <i class="fa-solid fa-user-tag text-emerald-800"></i>
+                <span>بيانات السائل:</span>
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">اسم السائل / اللقب: <span class="text-red-500">*</span></label>
+                    <input type="text" name="name" required value="{{ old('name') }}" placeholder="مثال: أبو محمد / وارد عبر البريد" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-white focus:border-emerald-800 transition">
+                    @error('name')
+                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">البريد الإلكتروني (اختياري):</label>
+                    <input type="email" name="email" value="{{ old('email') }}" placeholder="user@example.com" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-white focus:border-emerald-800 transition" dir="ltr">
+                    @error('email')
+                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">الدولة أو المدينة (اختياري):</label>
+                    <input type="text" name="country" value="{{ old('country') }}" placeholder="مثال: القطيف / الكويت / لندن" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-white focus:border-emerald-800 transition">
+                </div>
+            </div>
+        </div>
+
+        <!-- Question -->
         <div class="space-y-1.5">
             <div class="flex items-center justify-between">
-                <label for="question" class="block text-xs font-bold text-slate-700">نص السؤال:</label>
-                <span class="text-[11px] text-slate-400">يمكنك تعديل نص السؤال لتصحيح الأخطاء اللغوية أو الإملائية</span>
+                <label for="question" class="block text-xs font-bold text-slate-700">نص السؤال أو المسألة: <span class="text-red-500">*</span></label>
+                <span class="text-[11px] text-slate-400">يمكن تصحيح الأخطاء الإملائية وتنسيق السؤال</span>
             </div>
-            <textarea id="question" name="question" rows="4" required class="w-full text-xs sm:text-sm font-semibold text-slate-900 rounded-xl border-slate-200 p-3.5 bg-slate-50 focus:bg-white focus:border-emerald-600 transition leading-relaxed">{{ old('question', $inquiry->question) }}</textarea>
+            <textarea id="question" name="question" rows="4" required class="w-full text-xs sm:text-sm font-semibold text-slate-900 rounded-xl border-slate-200 p-3.5 bg-slate-50 focus:bg-white focus:border-emerald-600 transition leading-relaxed" placeholder="اكتب نص السؤال هنا...">{{ old('question') }}</textarea>
             @error('question')
                 <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
             @enderror
         </div>
 
+        <!-- Meta: Status, Category, Responder -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-slate-100">
             <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">حالة الاستفسار:</label>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">حالة الاستفسار: <span class="text-red-500">*</span></label>
                 <select name="status" required class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
-                    <option value="new" {{ old('status', $inquiry->status) === 'new' ? 'selected' : '' }}>جديد</option>
-                    <option value="in_review" {{ old('status', $inquiry->status) === 'in_review' ? 'selected' : '' }}>قيد المراجعة لدى اللجنة</option>
-                    <option value="answered" {{ old('status', $inquiry->status) === 'answered' ? 'selected' : '' }}>تمت الإجابة والاعتماد</option>
+                    <option value="answered" {{ old('status', 'answered') === 'answered' ? 'selected' : '' }}>تمت الإجابة والاعتماد</option>
+                    <option value="in_review" {{ old('status') === 'in_review' ? 'selected' : '' }}>قيد المراجعة لدى اللجنة</option>
+                    <option value="new" {{ old('status') === 'new' ? 'selected' : '' }}>جديد</option>
                 </select>
                 @error('status')
                     <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
@@ -89,7 +107,7 @@
                 <select name="category_id" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
                     <option value="">بدون تصنيف</option>
                     @foreach($categories as $cat)
-                    <option value="{{ $cat->id }}" {{ old('category_id', $inquiry->category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                    <option value="{{ $cat->id }}" {{ old('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
                     @endforeach
                 </select>
                 @error('category_id')
@@ -100,9 +118,9 @@
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">مصدر الجواب (صادر عن):</label>
                 <select name="responder_title" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 font-semibold text-emerald-950">
-                    <option value="إدارة الموقع" {{ old('responder_title', $inquiry->responder_title ?? 'إدارة الموقع') === 'إدارة الموقع' ? 'selected' : '' }}>إدارة الموقع</option>
-                    <option value="السيد منير الخباز" {{ old('responder_title', $inquiry->responder_title) === 'السيد منير الخباز' ? 'selected' : '' }}>السيد منير الخباز</option>
-                    <option value="لجنة المسائل الشرعية" {{ old('responder_title', $inquiry->responder_title) === 'لجنة المسائل الشرعية' ? 'selected' : '' }}>لجنة المسائل الشرعية</option>
+                    <option value="إدارة الموقع" {{ old('responder_title', 'إدارة الموقع') === 'إدارة الموقع' ? 'selected' : '' }}>إدارة الموقع</option>
+                    <option value="السيد منير الخباز" {{ old('responder_title') === 'السيد منير الخباز' ? 'selected' : '' }}>السيد منير الخباز</option>
+                    <option value="لجنة المسائل الشرعية" {{ old('responder_title') === 'لجنة المسائل الشرعية' ? 'selected' : '' }}>لجنة المسائل الشرعية</option>
                 </select>
                 @error('responder_title')
                     <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
@@ -124,29 +142,37 @@
             </div>
 
             <!-- Hidden input that carries formatted HTML content -->
-            <textarea name="answer" id="inquiry-answer" class="hidden">{{ old('answer', $inquiry->answer) }}</textarea>
+            <textarea name="answer" id="inquiry-answer" class="hidden">{{ old('answer') }}</textarea>
 
             <!-- Raw HTML textarea (toggled on demand) -->
-            <textarea id="raw-html-editor" rows="10" class="hidden w-full text-xs font-mono rounded-xl border-slate-200 p-3 bg-slate-900 text-slate-100" oninput="syncFromRawHtml(this.value)">{{ old('answer', $inquiry->answer) }}</textarea>
+            <textarea id="raw-html-editor" rows="10" class="hidden w-full text-xs font-mono rounded-xl border-slate-200 p-3 bg-slate-900 text-slate-100" oninput="syncFromRawHtml(this.value)">{{ old('answer') }}</textarea>
 
             <!-- Quill Editor Container -->
             <div id="quill-editor-wrapper">
-                <div id="quill-editor">{!! old('answer', $inquiry->answer) !!}</div>
+                <div id="quill-editor">{!! old('answer') !!}</div>
             </div>
             @error('answer')
                 <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
             @enderror
         </div>
 
+        <!-- Publish Option -->
         <div class="flex items-center gap-6 pt-2">
             <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
-                <input type="checkbox" name="is_published" value="1" {{ old('is_published', $inquiry->is_published) ? 'checked' : '' }} class="rounded text-emerald-800">
+                <input type="checkbox" name="is_published" value="1" {{ old('is_published', true) ? 'checked' : '' }} class="rounded text-emerald-800">
                 <span>نشر هذا السؤال والجواب في بنك الفتاوى والاستفسارات العام</span>
             </label>
         </div>
 
-        <div class="pt-4 border-t border-slate-100 flex justify-end gap-2">
-            <button type="submit" class="px-6 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl shadow">حفظ واعتماد التعديلات</button>
+        <!-- Actions -->
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+            <a href="{{ route('admin.inquiries.index') }}" class="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition">
+                إلغاء
+            </a>
+            <button type="submit" class="px-6 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>حفظ واعتماد السؤال والجواب</span>
+            </button>
         </div>
     </form>
 </div>
@@ -174,7 +200,7 @@
     });
 
     // 2. Sync Quill content to hidden textarea on submit
-    var form = document.getElementById('inquiry-edit-form');
+    var form = document.getElementById('inquiry-form');
     var answerInput = document.getElementById('inquiry-answer');
     var rawHtmlEditor = document.getElementById('raw-html-editor');
 
