@@ -283,8 +283,7 @@
                 <div class="lg:col-span-5 space-y-6">
                     <div class="flex items-center justify-between">
                         <div>
-                            <span class="text-xs font-bold text-gold-600 uppercase tracking-wider">ديوان الشعر</span>
-                            <h2 class="text-2xl font-bold font-scholarly text-slate-900">قصائد ولائية ووجدانية</h2>
+                            <h2 class="text-2xl font-bold font-scholarly text-slate-900">ديوان الشعر</h2>
                         </div>
                         <a href="{{ route('poems.index') }}" class="text-xs font-bold text-emerald-800 hover:underline">عرض
                             الديوان ←</a>
