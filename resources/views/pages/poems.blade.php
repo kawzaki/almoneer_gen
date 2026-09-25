@@ -35,10 +35,10 @@
                 <!-- Couplets Preview (First 2 couplets) -->
                 <div class="space-y-3 text-sm sm:text-base font-scholarly leading-loose bg-sand-50 p-4 rounded-2xl border border-dashed border-gold-500/30">
                     @foreach(array_slice($poem->couplets, 0, 2) as $c)
-                    <div class="couplet-line text-center sm:text-right">
-                        <span class="text-slate-900 font-medium">{{ $c['first'] }}</span>
-                        <span class="text-gold-500 text-xs hidden sm:inline">✤</span>
-                        <span class="text-slate-700">{{ $c['second'] }}</span>
+                    <div class="couplet-line flex items-center justify-between py-2 border-b border-dotted border-slate-200">
+                        <span class="couplet-first text-slate-900 font-medium">{{ $c['first'] }}</span>
+                        <span class="couplet-center-icon text-gold-500 text-xs">✤</span>
+                        <span class="couplet-second text-slate-700">{{ $c['second'] }}</span>
                     </div>
                     @endforeach
                 </div>

@@ -309,12 +309,12 @@
                                 </h3>
 
                                 <!-- Couplets formatting -->
-                                <div class="space-y-2 text-sm font-scholarly leading-loose">
+                                <div class="space-y-2 text-sm sm:text-base font-scholarly leading-loose">
                                     @foreach(array_slice($featuredPoem->couplets, 0, 3) as $c)
-                                        <div class="couplet-line">
-                                            <span class="text-slate-800">{{ $c['first'] }}</span>
-                                            <span class="text-gold-500 text-xs hidden sm:inline">✤</span>
-                                            <span class="text-slate-700">{{ $c['second'] }}</span>
+                                        <div class="couplet-line flex items-center justify-between py-2 border-b border-dotted border-slate-200">
+                                            <span class="couplet-first text-slate-800 font-medium">{{ $c['first'] }}</span>
+                                            <span class="couplet-center-icon text-gold-500 text-xs">✤</span>
+                                            <span class="couplet-second text-slate-700">{{ $c['second'] }}</span>
                                         </div>
                                     @endforeach
                                 </div>
