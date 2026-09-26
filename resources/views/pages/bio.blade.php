@@ -17,16 +17,16 @@
         
         <div class="flex flex-col sm:flex-row items-center gap-6 pb-8 border-b border-slate-100 text-center sm:text-right">
             <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl p-1 bg-gradient-to-tr from-gold-400 to-emerald-800 shadow-xl overflow-hidden flex-shrink-0 border border-gold-500/40">
-                <img src="{{ !empty($siteSettings['site.hero_photo']) ? asset($siteSettings['site.hero_photo']) : asset('images/sayyid-muneer-portrait.jpg') }}" alt="{{ $siteSettings['site.hero_name'] ?? 'سماحة السيد منير الخباز' }}" class="w-full h-full object-cover object-top">
+                <img src="{{ !empty($bioArticle->image) ? asset($bioArticle->image) : (!empty($siteSettings['site.hero_photo']) ? asset($siteSettings['site.hero_photo']) : asset('images/sayyid-muneer-portrait.jpg')) }}" alt="{{ $bioArticle->title ?? $siteSettings['site.hero_name'] ?? 'سماحة السيد منير الخباز' }}" class="w-full h-full object-cover object-top">
             </div>
             <div class="space-y-1">
                 <span class="px-3 py-0.5 rounded-full bg-gold-50 text-gold-700 text-xs font-bold border border-gold-200">
                     السيرة الذاتية والعلمية
                 </span>
                 <h1 class="text-2xl sm:text-3xl font-bold font-scholarly text-slate-900">
-                    سماحة السيد منير بن السيد عدنان الخباز (دام عزه)
+                    {{ $bioArticle->title ?? 'سماحة السيد منير بن السيد عدنان الخباز (دام عزه)' }}
                 </h1>
-                <p class="text-xs text-slate-500">أستاذ البحث الخارج في الحوزة العلمية والمفكر الإسلامي</p>
+                <p class="text-xs text-slate-500">{{ !empty($bioArticle->summary) ? $bioArticle->summary : 'أستاذ البحث الخارج في الحوزة العلمية والمفكر الإسلامي' }}</p>
             </div>
         </div>
 
