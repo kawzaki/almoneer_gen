@@ -132,19 +132,19 @@
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">حالة البث:</label>
                     <select name="livestream.is_live" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 font-bold">
-                        <option value="0" {{ ($settings['livestream.is_live'] ?? '0') === '0' ? 'selected' : '' }}>🔴 البث غير مفعل حالياً (متوقف)</option>
-                        <option value="1" {{ ($settings['livestream.is_live'] ?? '0') === '1' ? 'selected' : '' }}>🟢 البث مباشر الآن (يظهر في الهيدر والصفحة الرئيسية)</option>
+                        <option value="0" {{ ($settings['livestream.is_live'] ?? $settings['livestream_is_live'] ?? '0') === '0' ? 'selected' : '' }}>🔴 البث غير مفعل حالياً (متوقف)</option>
+                        <option value="1" {{ ($settings['livestream.is_live'] ?? $settings['livestream_is_live'] ?? '0') === '1' ? 'selected' : '' }}>🟢 البث مباشر الآن (يظهر في الهيدر وكافة صفحات الموقع)</option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">عنوان المحاضرة المبثوثة:</label>
-                    <input type="text" name="livestream.title" value="{{ $settings['livestream.title'] ?? 'البث المباشر لمحاضرات سماحة السيد' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+                    <input type="text" name="livestream.title" value="{{ $settings['livestream.title'] ?? $settings['livestream_title'] ?? 'البث المباشر لمحاضرات سماحة السيد' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
                 </div>
             </div>
 
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">رابط البث (يوتيوب أو ميديا سيرفر):</label>
-                <input type="text" name="livestream.url" value="{{ $settings['livestream.url'] ?? '' }}" placeholder="https://youtube.com/live/..." class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50" dir="ltr">
+                <input type="text" name="livestream.url" value="{{ $settings['livestream.url'] ?? $settings['livestream_url'] ?? '' }}" placeholder="https://youtube.com/live/... أو رابط أي فيديو يوتيوب" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50" dir="ltr">
             </div>
         </div>
 

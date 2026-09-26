@@ -548,15 +548,18 @@
     </div>
 
     <!-- Live Stream Alert Bar (if active) -->
-    @if(($siteSettings['livestream.is_live'] ?? '0') === '1')
-    <div class="bg-red-700 text-white py-2 px-4 shadow-md text-sm font-medium">
+    @if(($siteSettings['livestream.is_live'] ?? $siteSettings['livestream_is_live'] ?? '0') === '1')
+    <div class="bg-red-700 text-white py-2.5 px-4 shadow-md text-sm font-medium z-40 relative">
         <div class="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-2">
-            <div class="flex items-center gap-2">
-                <span class="w-3 h-3 rounded-full bg-white animate-ping"></span>
-                <span><strong>بث مباشر الآن:</strong> {{ $siteSettings['livestream.title'] ?? 'محاضرة سماحة العلامة السيد منير الخباز' }}</span>
+            <div class="flex items-center gap-2.5">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+                </span>
+                <span><strong>بث مباشر الآن:</strong> {{ $siteSettings['livestream.title'] ?? $siteSettings['livestream_title'] ?? 'محاضرة سماحة العلامة السيد منير الخباز' }}</span>
             </div>
-            <a href="{{ $siteSettings['livestream.url'] ?? '#' }}" target="_blank" class="px-3 py-1 bg-white text-red-700 rounded-lg text-xs font-bold hover:bg-slate-100 transition flex items-center gap-1">
-                <i class="fa-solid fa-play"></i>
+            <a href="{{ $siteSettings['livestream.url'] ?? $siteSettings['livestream_url'] ?? '#' }}" target="_blank" class="px-3.5 py-1.5 bg-white text-red-700 rounded-lg text-xs font-bold hover:bg-slate-100 transition flex items-center gap-1.5 shadow-sm">
+                <i class="fa-solid fa-play text-[10px]"></i>
                 <span>مشاهدة البث</span>
             </a>
         </div>
