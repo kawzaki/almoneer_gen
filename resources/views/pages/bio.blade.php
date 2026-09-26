@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'نبذة عن حياة سماحة العلامة السيد منير الخباز | الموقع الرسمي')
+@section('title', 'نبذة عن حياة سماحة السيد منير الخباز | الموقع الرسمي')
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
@@ -17,14 +17,14 @@
         
         <div class="flex flex-col sm:flex-row items-center gap-6 pb-8 border-b border-slate-100 text-center sm:text-right">
             <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl p-1 bg-gradient-to-tr from-gold-400 to-emerald-800 shadow-xl overflow-hidden flex-shrink-0 border border-gold-500/40">
-                <img src="{{ !empty($siteSettings['site.hero_photo']) ? asset($siteSettings['site.hero_photo']) : asset('images/sayyid-muneer-portrait.jpg') }}" alt="{{ $siteSettings['site.hero_name'] ?? 'سماحة العلامة السيد منير الخباز' }}" class="w-full h-full object-cover object-top">
+                <img src="{{ !empty($siteSettings['site.hero_photo']) ? asset($siteSettings['site.hero_photo']) : asset('images/sayyid-muneer-portrait.jpg') }}" alt="{{ $siteSettings['site.hero_name'] ?? 'سماحة السيد منير الخباز' }}" class="w-full h-full object-cover object-top">
             </div>
             <div class="space-y-1">
                 <span class="px-3 py-0.5 rounded-full bg-gold-50 text-gold-700 text-xs font-bold border border-gold-200">
                     السيرة الذاتية والعلمية
                 </span>
                 <h1 class="text-2xl sm:text-3xl font-bold font-scholarly text-slate-900">
-                    سماحة العلامة السيد منير بن السيد عدنان الخباز (دام عزه)
+                    سماحة السيد منير بن السيد عدنان الخباز (دام عزه)
                 </h1>
                 <p class="text-xs text-slate-500">أستاذ البحث الخارج في الحوزة العلمية والمفكر الإسلامي</p>
             </div>
@@ -38,7 +38,7 @@
                 <div class="space-y-6">
                     <div>
                         <h3 class="text-lg font-bold text-emerald-900 font-scholarly mb-2">الولادة والنشأة:</h3>
-                        <p>ولد سماحة العلامة السيد منير بن السيد عدنان الخباز في مدينة القطيف بالمنطقة الشرقية عام 1384هـ، ونشأ في بيت علم وفضل وتقوى، وتلقى تعليمه الأولي ومبادئ العلوم في مدينته قبل أن يشد الرحال إلى الحوزات العلمية العريقة.</p>
+                        <p>ولد سماحة السيد منير بن السيد عدنان الخباز في مدينة القطيف بالمنطقة الشرقية عام 1384هـ، ونشأ في بيت علم وفضل وتقوى، وتلقى تعليمه الأولي ومبادئ العلوم في مدينته قبل أن يشد الرحال إلى الحوزات العلمية العريقة.</p>
                     </div>
 
                     <div>
