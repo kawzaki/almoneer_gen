@@ -135,6 +135,41 @@
             font-weight: normal !important;
         }
 
+        /* Quill Rich Text Editor Output Support */
+        .ql-align-center {
+            text-align: center !important;
+        }
+        .ql-align-justify {
+            text-align: justify !important;
+            text-justify: inter-word;
+        }
+        .ql-align-right {
+            text-align: right !important;
+        }
+        .ql-align-left {
+            text-align: left !important;
+        }
+        .ql-size-small {
+            font-size: 0.75em !important;
+        }
+        .ql-size-large {
+            font-size: 1.5em !important;
+        }
+        .ql-size-huge {
+            font-size: 2.2em !important;
+        }
+        .ql-direction-rtl {
+            direction: rtl !important;
+            text-align: inherit;
+        }
+        .ql-direction-ltr {
+            direction: ltr !important;
+            text-align: inherit;
+        }
+        html[dir="rtl"] .ql-indent-1, [dir="rtl"] .ql-indent-1 { padding-right: 2.5em !important; }
+        html[dir="rtl"] .ql-indent-2, [dir="rtl"] .ql-indent-2 { padding-right: 5em !important; }
+        html[dir="rtl"] .ql-indent-3, [dir="rtl"] .ql-indent-3 { padding-right: 7.5em !important; }
+
         /* Authentic Islamic Geometric Pattern (Dynamic based on theme) */
         @if($isTurquoise)
         .islamic-pattern {
