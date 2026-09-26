@@ -12,10 +12,24 @@
                 <!-- Hero Content (7 Cols) -->
                 <div class="lg:col-span-7 space-y-6 text-right">
 
+                    @php
+                        $heroBadge = 'أحدث الأخبار والنشاطات';
+                        if ($featuredArticle) {
+                            if ($featuredArticle->category) {
+                                $heroBadge = $featuredArticle->category->name;
+                            } elseif (!empty($featuredArticle->tags_list)) {
+                                $heroBadge = $featuredArticle->tags_list[0];
+                            } elseif ($featuredArticle->is_featured) {
+                                $heroBadge = 'خبر بارز ومميز';
+                            }
+                        } else {
+                            $heroBadge = 'الموقع الرسمي المعتمد';
+                        }
+                    @endphp
                     <div
                         class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/80 border border-gold-400/40 text-gold-300 text-xs font-medium backdrop-blur-sm shadow-md">
                         <span class="w-2 h-2 rounded-full bg-gold-400 animate-pulse"></span>
-                        <span>الموسم العاشورائي ١٤٤٧هـ - المنظومة الأخلاقية</span>
+                        <span>{{ $heroBadge }}</span>
                     </div>
 
                     <h1
@@ -70,7 +84,7 @@
                                     <div
                                         class="w-full h-full rounded-full overflow-hidden bg-gradient-to-b from-[#083b45] to-[#041f25]">
                                         <img src="{{ !empty($siteSettings['site.hero_photo']) ? asset($siteSettings['site.hero_photo']) : (!empty($siteSettings['site_hero_photo']) ? asset($siteSettings['site_hero_photo']) : asset('images/sayyid-muneer-portrait.png')) }}"
-                                            alt="{{ $siteSettings['site.hero_name'] ?? $siteSettings['site_hero_name'] ?? 'سماحة العلامة السيد منير الخباز' }}"
+                                            alt="{{ $siteSettings['site.hero_name'] ?? $siteSettings['site_hero_name'] ?? 'سماحة السيد منير الخباز' }}"
                                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
                                     </div>
                                 </div>
@@ -78,7 +92,7 @@
 
                             <div class="space-y-1.5">
                                 <h3 class="text-xl sm:text-2xl font-bold font-scholarly text-gold-300 drop-shadow">
-                                    {{ $siteSettings['site.hero_name'] ?? $siteSettings['site_hero_name'] ?? 'سماحة العلامة السيد منير الخباز' }}
+                                    {{ $siteSettings['site.hero_name'] ?? $siteSettings['site_hero_name'] ?? 'سماحة السيد منير الخباز' }}
                                 </h3>
                                 <p class="text-xs text-slate-200 font-light">
                                     {{ $siteSettings['site.hero_title'] ?? $siteSettings['site_hero_title'] ?? 'أستاذ البحث الخارج في الحوزة العلمية' }}
