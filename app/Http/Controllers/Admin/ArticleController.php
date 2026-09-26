@@ -21,7 +21,7 @@ class ArticleController extends Controller
 
     public function create()
     {
-        $categories = Category::where('module', 'article')->get();
+        $categories = Category::where('module', 'article')->active()->orderBy('order')->get();
         return view('admin.articles.create', compact('categories'));
     }
 
@@ -30,7 +30,7 @@ class ArticleController extends Controller
         $request->validate([
             'title'        => 'required|string|max:255',
             'content'      => 'required',
-            'type'         => 'required|in:news,activity,bio,article,statement',
+            'category_id'  => 'nullable|exists:categories,id',
             'image_file'   => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:10240',
             'published_at' => 'nullable|date',
         ]);
@@ -66,6 +66,12 @@ class ArticleController extends Controller
             }
         }
 
+        $category = $request->filled('category_id') ? Category::find($request->category_id) : null;
+        $type = 'news';
+        if ($category && in_array($category->slug, ['news', 'activity', 'statement', 'article', 'bio'])) {
+            $type = $category->slug;
+        }
+
         Article::create([
             'title'        => $request->title,
             'slug'         => $slug,
@@ -73,7 +79,7 @@ class ArticleController extends Controller
             'summary'      => $request->summary,
             'content'      => $request->content,
             'image'        => $imagePath,
-            'type'         => $request->type,
+            'type'         => $type,
             'tags'         => $request->tags,
             'is_featured'  => $request->boolean('is_featured'),
             'is_active'    => $request->boolean('is_active', true),
@@ -85,7 +91,7 @@ class ArticleController extends Controller
 
     public function edit(Article $article)
     {
-        $categories = Category::where('module', 'article')->get();
+        $categories = Category::where('module', 'article')->active()->orderBy('order')->get();
         return view('admin.articles.edit', compact('article', 'categories'));
     }
 
@@ -94,7 +100,7 @@ class ArticleController extends Controller
         $request->validate([
             'title'        => 'required|string|max:255',
             'content'      => 'required',
-            'type'         => 'required|in:news,activity,bio,article,statement',
+            'category_id'  => 'nullable|exists:categories,id',
             'image_file'   => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:10240',
             'published_at' => 'nullable|date',
         ]);
@@ -125,13 +131,19 @@ class ArticleController extends Controller
             }
         }
 
+        $category = $request->filled('category_id') ? Category::find($request->category_id) : null;
+        $type = $article->type ?: 'news';
+        if ($category && in_array($category->slug, ['news', 'activity', 'statement', 'article', 'bio'])) {
+            $type = $category->slug;
+        }
+
         $article->update([
             'title'        => $request->title,
             'category_id'  => $request->category_id,
             'summary'      => $request->summary,
             'content'      => $request->content,
             'image'        => $imagePath,
-            'type'         => $request->type,
+            'type'         => $type,
             'tags'         => $request->tags,
             'is_featured'  => $request->boolean('is_featured'),
             'is_active'    => $request->boolean('is_active', true),

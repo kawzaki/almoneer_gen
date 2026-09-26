@@ -56,18 +56,8 @@
             <input type="text" name="title" value="{{ old('title') }}" required placeholder="أدخل عنوان الخبر البارز..." class="w-full text-xs sm:text-sm rounded-xl border-slate-200 p-3 bg-slate-50 focus:bg-white focus:border-emerald-800 focus:ring-1 focus:ring-emerald-800/20 transition">
         </div>
 
-        <!-- Type, Category and Published Date -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1.5">النوع:</label>
-                <select name="type" required class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 focus:bg-white transition">
-                    <option value="news" {{ old('type', 'news') === 'news' ? 'selected' : '' }}>خبر عام</option>
-                    <option value="activity" {{ old('type') === 'activity' ? 'selected' : '' }}>نشاط / جولة تبليغية</option>
-                    <option value="statement" {{ old('type') === 'statement' ? 'selected' : '' }}>بيان رسمي</option>
-                    <option value="article" {{ old('type') === 'article' ? 'selected' : '' }}>مقال فكري</option>
-                    <option value="bio" {{ old('type') === 'bio' ? 'selected' : '' }}>سيرة ذاتية</option>
-                </select>
-            </div>
+        <!-- Category and Published Date -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
                 <div class="flex items-center justify-between mb-1.5">
                     <label class="block text-xs font-bold text-slate-700">التصنيف:</label>

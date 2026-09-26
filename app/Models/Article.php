@@ -10,6 +10,8 @@ class Article extends Model
 {
     use ClearsFrontendCache, LogsActivity;
 
+    protected $with = ['category'];
+
     protected $fillable = [
         'category_id',
         'title',
@@ -73,6 +75,9 @@ class Article extends Model
 
     public function getTypeNameAttribute(): string
     {
+        if ($this->category) {
+            return $this->category->name;
+        }
         return self::typeLabels()[$this->type] ?? ($this->type ?: 'خبر عام');
     }
 }

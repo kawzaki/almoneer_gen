@@ -11,7 +11,11 @@ class NewsController extends Controller
     public function index(Request $request)
     {
         $selectedTag = trim($request->query('tag', ''));
-        $query = Article::active()->where('type', '!=', 'bio');
+        $query = Article::active()
+            ->where('type', '!=', 'bio')
+            ->whereDoesntHave('category', function ($q) {
+                $q->where('slug', 'bio');
+            });
 
         if (!empty($selectedTag)) {
             $query->where('tags', 'like', '%' . $selectedTag . '%');
@@ -30,11 +34,14 @@ class NewsController extends Controller
         }
 
         $articles = $query->orderByRaw('COALESCE(published_at, created_at) DESC')->paginate(9)->withQueryString();
-        $categories = Category::where('module', 'article')->active()->orderBy('order')->get();
+        $categories = Category::where('module', 'article')->where('slug', '!=', 'bio')->active()->orderBy('order')->get();
 
         // Extract distinct tags across all active news articles
         $allTags = Article::active()
             ->where('type', '!=', 'bio')
+            ->whereDoesntHave('category', function ($q) {
+                $q->where('slug', 'bio');
+            })
             ->whereNotNull('tags')
             ->where('tags', '!=', '')
             ->pluck('tags');
@@ -62,6 +69,9 @@ class NewsController extends Controller
         $recentNews = Article::active()
             ->where('id', '!=', $article->id)
             ->where('type', '!=', 'bio')
+            ->whereDoesntHave('category', function ($q) {
+                $q->where('slug', 'bio');
+            })
             ->orderByRaw('COALESCE(published_at, created_at) DESC')
             ->take(4)
             ->get();

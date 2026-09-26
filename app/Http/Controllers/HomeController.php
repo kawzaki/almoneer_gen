@@ -19,7 +19,7 @@ class HomeController extends Controller
         $data = Cache::rememberForever('site.home.payload', function () {
             return [
                 'featuredArticle' => Article::active()->featured()->orderByRaw('COALESCE(published_at, created_at) DESC')->first() ?? Article::active()->orderByRaw('COALESCE(published_at, created_at) DESC')->first(),
-                'recentNews'      => Article::active()->where('type', '!=', 'bio')->orderByRaw('COALESCE(published_at, created_at) DESC')->take(3)->get(),
+                'recentNews'      => Article::active()->where('type', '!=', 'bio')->whereDoesntHave('category', fn($q) => $q->where('slug', 'bio'))->orderByRaw('COALESCE(published_at, created_at) DESC')->take(3)->get(),
                 'weeklyWisdom'    => WeeklyWisdom::active()->latest()->first(),
                 'featuredAudios'  => MediaItem::active()->audios()->latest()->take(4)->get(),
                 'featuredVideos'  => MediaItem::active()->videos()->latest()->take(4)->get(),
