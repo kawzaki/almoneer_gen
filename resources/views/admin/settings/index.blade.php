@@ -132,8 +132,8 @@
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">حالة البث:</label>
                     <select name="livestream.is_live" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 font-bold">
-                        <option value="0" {{ ($settings['livestream.is_live'] ?? $settings['livestream_is_live'] ?? '0') === '0' ? 'selected' : '' }}>🔴 البث غير مفعل حالياً (متوقف)</option>
-                        <option value="1" {{ ($settings['livestream.is_live'] ?? $settings['livestream_is_live'] ?? '0') === '1' ? 'selected' : '' }}>🟢 البث مباشر الآن (يظهر في الهيدر وكافة صفحات الموقع)</option>
+                        <option value="0" {{ (string)($settings['livestream.is_live'] ?? $settings['livestream_is_live'] ?? '0') === '0' ? 'selected' : '' }}>🔴 البث غير مفعل حالياً (متوقف)</option>
+                        <option value="1" {{ (string)($settings['livestream.is_live'] ?? $settings['livestream_is_live'] ?? '0') === '1' ? 'selected' : '' }}>🟢 البث مباشر الآن (يظهر في الهيدر وكافة صفحات الموقع)</option>
                     </select>
                 </div>
                 <div>

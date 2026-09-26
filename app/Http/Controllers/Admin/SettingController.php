@@ -52,8 +52,23 @@ class SettingController extends Controller
             Setting::set('site.hero_photo', null);
         }
 
+        // Build a canonical lookup map of existing keys in database
+        $existingKeys = Setting::pluck('key')->toArray();
+        $normalizedMap = [];
+        foreach ($existingKeys as $k) {
+            $cleaned = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $k));
+            $normalizedMap[$cleaned][] = $k;
+        }
+
         foreach ($data as $key => $val) {
-            Setting::set($key, $val);
+            $cleaned = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $key));
+            if (!empty($normalizedMap[$cleaned])) {
+                foreach ($normalizedMap[$cleaned] as $targetKey) {
+                    Setting::updateOrCreate(['key' => $targetKey], ['value' => $val]);
+                }
+            } else {
+                Setting::set($key, $val);
+            }
         }
 
         // Flush cached settings and home payload
