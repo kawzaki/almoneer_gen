@@ -1,17 +1,17 @@
 @extends('layouts.admin')
 
-@section('title', 'إدارة كلمة الأسبوع والحكم')
+@section('title', 'إدارة الحكم والأقوال')
 
 @section('content')
 <div class="space-y-6">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-            <h2 class="text-lg sm:text-xl font-bold text-slate-800">إدارة كلمة الأسبوع وقبسات الحكم</h2>
-            <p class="text-xs text-slate-500 mt-0.5 sm:mt-1">تعديل الاقتباس الأسبوعي المعروض في الهيدر والصفحة الرئيسية.</p>
+            <h2 class="text-lg sm:text-xl font-bold text-slate-800">إدارة الحكم والأقوال</h2>
+            <p class="text-xs text-slate-500 mt-0.5 sm:mt-1">تعديل ونشر الاقتباسات والحكم المعروضة في شريط الموقع والصفحة الرئيسية.</p>
         </div>
         <a href="{{ route('admin.wisdom.create') }}" class="self-start sm:self-auto px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center gap-2">
             <i class="fa-solid fa-plus"></i>
-            <span>إضافة كلمة أسبوع جديدة</span>
+            <span>إضافة حكمة / مقولة جديدة</span>
         </a>
     </div>
 

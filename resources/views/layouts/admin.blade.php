@@ -168,7 +168,7 @@
 
             <a href="{{ route('admin.wisdom.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.wisdom.*') ? 'bg-gold-500 text-emerald-950 font-bold shadow-sm' : 'text-slate-300 hover:bg-emerald-900' }}">
                 <i class="fa-solid fa-quote-right w-5 text-center"></i>
-                <span>كلمة الأسبوع والحكم</span>
+                <span>الحكم والأقوال</span>
             </a>
 
             <div class="pt-3 pb-1 text-[11px] font-bold text-gold-400/80 px-3 uppercase tracking-wider">أدوات التحرير والموقع</div>

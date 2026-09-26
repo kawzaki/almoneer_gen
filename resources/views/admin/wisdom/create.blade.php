@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
-@section('title', 'إضافة كلمة أسبوع جديدة')
+@section('title', 'إضافة حكمة / مقولة جديدة')
 
 @section('content')
 <div class="max-w-3xl mx-auto space-y-6">
     <div class="flex items-center justify-between">
-        <h2 class="text-xl font-bold text-slate-800">إضافة كلمة أسبوع / قبس جديد</h2>
+        <h2 class="text-xl font-bold text-slate-800">إضافة حكمة / مقولة جديدة</h2>
         <a href="{{ route('admin.wisdom.index') }}" class="text-xs text-slate-500 hover:text-slate-800">← العودة للقائمة</a>
     </div>
 
