@@ -69,8 +69,8 @@
                                     class="relative w-full h-full rounded-full p-1.5 bg-gradient-to-tr from-gold-300 via-gold-500 to-emerald-800 shadow-2xl overflow-hidden border-2 border-gold-400">
                                     <div
                                         class="w-full h-full rounded-full overflow-hidden bg-gradient-to-b from-[#083b45] to-[#041f25]">
-                                        <img src="{{ !empty($siteSettings['site.hero_photo']) ? asset($siteSettings['site.hero_photo']) : asset('images/sayyid-muneer-portrait.png') }}"
-                                            alt="{{ $siteSettings['site.hero_name'] ?? 'سماحة العلامة السيد منير الخباز' }}"
+                                        <img src="{{ !empty($siteSettings['site.hero_photo']) ? asset($siteSettings['site.hero_photo']) : (!empty($siteSettings['site_hero_photo']) ? asset($siteSettings['site_hero_photo']) : asset('images/sayyid-muneer-portrait.png')) }}"
+                                            alt="{{ $siteSettings['site.hero_name'] ?? $siteSettings['site_hero_name'] ?? 'سماحة العلامة السيد منير الخباز' }}"
                                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
                                     </div>
                                 </div>
@@ -78,17 +78,17 @@
 
                             <div class="space-y-1.5">
                                 <h3 class="text-xl sm:text-2xl font-bold font-scholarly text-gold-300 drop-shadow">
-                                    {{ $siteSettings['site.hero_name'] ?? 'سماحة العلامة السيد منير الخباز' }}
+                                    {{ $siteSettings['site.hero_name'] ?? $siteSettings['site_hero_name'] ?? 'سماحة العلامة السيد منير الخباز' }}
                                 </h3>
                                 <p class="text-xs text-slate-200 font-light">
-                                    {{ $siteSettings['site.hero_title'] ?? 'أستاذ البحث الخارج في الحوزة العلمية' }}
+                                    {{ $siteSettings['site.hero_title'] ?? $siteSettings['site_hero_title'] ?? 'أستاذ البحث الخارج في الحوزة العلمية' }}
                                 </p>
                             </div>
 
                             <div class="pt-2">
-                                <a href="{{ $siteSettings['site.hero_btn_url'] ?? route('bio') }}"
+                                <a href="{{ $siteSettings['site.hero_btn_url'] ?? $siteSettings['site_hero_btn_url'] ?? route('bio') }}"
                                     class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gold-500/15 hover:bg-gold-500/25 border border-gold-500/40 text-gold-300 hover:text-white text-xs font-semibold transition shadow-sm hover:shadow-gold-500/10">
-                                    <span>{{ $siteSettings['site.hero_btn_text'] ?? 'استعراض السيرة الذاتية المفصلة' }}</span>
+                                    <span>{{ $siteSettings['site.hero_btn_text'] ?? $siteSettings['site_hero_btn_text'] ?? 'استعراض السيرة الذاتية المفصلة' }}</span>
                                     <i class="fa-solid fa-arrow-left text-[10px]"></i>
                                 </a>
                             </div>

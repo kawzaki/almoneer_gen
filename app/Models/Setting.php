@@ -19,14 +19,25 @@ class Setting extends Model
 
     public static function get(string $key, $default = null)
     {
-        $setting = static::where('key', $key)->first();
+        $dotKey = str_replace('_', '.', $key);
+        $underKey = str_replace('.', '_', $key);
+
+        $setting = static::whereIn('key', [$key, $dotKey, $underKey])->first();
         return $setting ? $setting->value : $default;
     }
 
     public static function set(string $key, $value, string $group = 'general', string $type = 'string')
     {
+        $dotKey = str_replace('_', '.', $key);
+        $underKey = str_replace('.', '_', $key);
+
+        static::updateOrCreate(
+            ['key' => $dotKey],
+            ['value' => $value, 'group' => $group, 'type' => $type]
+        );
+
         return static::updateOrCreate(
-            ['key' => $key],
+            ['key' => $underKey],
             ['value' => $value, 'group' => $group, 'type' => $type]
         );
     }

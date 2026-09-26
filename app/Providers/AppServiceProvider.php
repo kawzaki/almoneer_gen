@@ -50,7 +50,14 @@ class AppServiceProvider extends ServiceProvider
 
             $siteSettings = Cache::rememberForever('site.settings', function () {
                 try {
-                    return Setting::pluck('value', 'key')->toArray();
+                    $raw = Setting::pluck('value', 'key')->toArray();
+                    $normalized = [];
+                    foreach ($raw as $k => $v) {
+                        $normalized[$k] = $v;
+                        $normalized[str_replace('_', '.', $k)] = $v;
+                        $normalized[str_replace('.', '_', $k)] = $v;
+                    }
+                    return $normalized;
                 } catch (\Throwable $e) {
                     return [];
                 }

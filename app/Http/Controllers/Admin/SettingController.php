@@ -12,7 +12,13 @@ class SettingController extends Controller
 {
     public function index()
     {
-        $settings = Setting::all()->pluck('value', 'key');
+        $raw = Setting::all()->pluck('value', 'key')->toArray();
+        $settings = [];
+        foreach ($raw as $k => $v) {
+            $settings[$k] = $v;
+            $settings[str_replace('_', '.', $k)] = $v;
+            $settings[str_replace('.', '_', $k)] = $v;
+        }
         return view('admin.settings.index', compact('settings'));
     }
 
