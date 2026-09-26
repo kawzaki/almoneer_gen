@@ -145,7 +145,7 @@
             </h1>
 
             <p class="text-xs text-slate-500 font-scholarly">
-                نظم: سماحة العلامة السيد منير الخباز (دام عزه)
+                نظم: سماحة السيد منير الخباز (دام عزه)
             </p>
 
             <!-- Poem Specific Image (Displayed ONLY inside the topic) -->
@@ -210,7 +210,7 @@
         <!-- Print-only footer -->
         <div class="print-poem-footer hidden">
             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 8.5pt; color: #64748b; direction: rtl; font-family: 'IBM Plex Sans Arabic', sans-serif;">
-                <span>ديوان شبكة المنير — سماحة العلامة السيد منير الخباز</span>
+                <span>ديوان شبكة المنير — سماحة السيد منير الخباز</span>
                 <span lang="en" dir="ltr" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important; font-variant-numeric: lining-nums tabular-nums !important; font-size: 8.5pt; color: #1e293b; font-weight: bold; unicode-bidi: isolate;">almoneer.org/p/{{ $poem->id }}</span>
             </div>
         </div>
