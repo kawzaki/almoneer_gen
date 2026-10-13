@@ -203,7 +203,7 @@
                             <span>الكلمات الدلالية:</span>
                         </span>
                         @foreach($video->tags_list as $tag)
-                            <a href="{{ route('lectures.index', ['tag' => $tag]) }}"
+                            <a href="{{ route('lectures.index', ['browse' => 'topics', 'tag' => $tag]) }}"
                                 class="inline-flex items-center gap-1 px-3 py-1 rounded-xl bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-900 text-xs border border-slate-200 hover:border-emerald-300 transition duration-150 group shadow-2xs"
                                 title="البحث عن محاضرات موسومة بـ {{ $tag }}">
                                 <span class="text-emerald-700/60 group-hover:text-emerald-700 font-bold">#</span>

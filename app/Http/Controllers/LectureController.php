@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\MediaItem;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class LectureController extends Controller
 {
@@ -18,7 +19,7 @@ class LectureController extends Controller
     ];
 
     /**
-     * Display all lectures & available Hijri years
+     * Display all lectures & available Hijri years / Topics explorer
      */
     public function index(Request $request)
     {
@@ -37,6 +38,7 @@ class LectureController extends Controller
         $selectedTag = $request->get('tag');
         $search = $request->get('q');
         $viewMode = $request->get('view', 'grid'); // grid, list
+        $browseMode = $request->get('browse', !empty($selectedTag) ? 'topics' : 'seasons');
 
         $query = MediaItem::active();
 
@@ -110,17 +112,98 @@ class LectureController extends Controller
             $yearsData[$yr] = $seasonsInYear;
         }
 
+        // Build all topics/tags list with counts across all active lectures
+        $allTagsWithCounts = Cache::remember('site.lectures.all_tags', 3600, function () {
+            $tagStrings = MediaItem::active()
+                ->whereNotNull('tags')
+                ->where('tags', '!=', '')
+                ->pluck('tags');
+
+            $tags = [];
+            foreach ($tagStrings as $str) {
+                $parts = preg_split('/[,،|]+/u', $str);
+                foreach ($parts as $p) {
+                    $clean = trim($p);
+                    if (!empty($clean)) {
+                        $tags[$clean] = ($tags[$clean] ?? 0) + 1;
+                    }
+                }
+            }
+            arsort($tags);
+            return $tags;
+        });
+
+        // Curate topics into scholarly thematic clusters
+        $thematicClusters = [
+            'theology' => [
+                'name' => 'العقيدة والفلسفة والفكر',
+                'description' => 'مباحث التوحيد، الإمامة، العدل الإلهي، الفلسفة ونقد الإلحاد',
+                'icon' => 'fa-brain',
+                'badge' => 'عقائد وفكر',
+                'tags' => [],
+            ],
+            'ahlulbayt' => [
+                'name' => 'عاشوراء والشعائر وأهل البيت (ع)',
+                'description' => 'المواسم الحسينية، السيرة العطرة، المعارف الولائية والشعائر',
+                'icon' => 'fa-mosque',
+                'badge' => 'سيرة وشعائر',
+                'tags' => [],
+            ],
+            'ethics' => [
+                'name' => 'الأخلاق والتربية والمجتمع',
+                'description' => 'تزكية النفس، بناء الأسرة، قضايا الشباب وتنمية المجتمع',
+                'icon' => 'fa-heart-pulse',
+                'badge' => 'تربية وسلوك',
+                'tags' => [],
+            ],
+            'contemporary' => [
+                'name' => 'الفقه والقضايا المعاصرة',
+                'description' => 'الاجتهاد الفقهي، التكنولوجيا، الإعلام والمسائل المستحدثة',
+                'icon' => 'fa-scale-balanced',
+                'badge' => 'فقه ومعاصرة',
+                'tags' => [],
+            ],
+            'general' => [
+                'name' => 'مفاهيم ومناسبات عامة',
+                'description' => 'أبحاث قرآنية، مناسبات عامة وكلمات توجيهية',
+                'icon' => 'fa-tags',
+                'badge' => 'مواضيع عامة',
+                'tags' => [],
+            ],
+        ];
+
+        foreach ($allTagsWithCounts as $tag => $count) {
+            if (preg_match('/(عقيد|فلسف|إلحاد|إيمان|عقل|نقد|مادي|فكر|قضاء|قدر|ظهور|مهدي|انتظار|توحيد|معرف|شبه)/u', $tag)) {
+                $thematicClusters['theology']['tags'][$tag] = $count;
+            } elseif (preg_match('/(عاشوراء|حسين|صفر|شائر|شعائر|أربعين|منبر|توسل|شفاع|أهل البيت|زهراء|فاطم|كربل|محرم|قطيف|سيرة|نبو|رسول)/u', $tag)) {
+                $thematicClusters['ahlulbayt']['tags'][$tag] = $count;
+            } elseif (preg_match('/(تربي|أخلاق|مجتمع|تغيير|إنسان|أسرة|شباب|نفس|تزكي|خوف|رجاء|وعي|وحد)/u', $tag)) {
+                $thematicClusters['ethics']['tags'][$tag] = $count;
+            } elseif (preg_match('/(فقه|اجتهاد|ذكاء|تكنولوج|إعلام|معاصر|حديث|تقني|فتو|شريع)/u', $tag)) {
+                $thematicClusters['contemporary']['tags'][$tag] = $count;
+            } else {
+                $thematicClusters['general']['tags'][$tag] = $count;
+            }
+        }
+
+        // Top 15 prominent tags
+        $topTags = array_slice($allTagsWithCounts, 0, 15, true);
+
         return view('pages.lectures.index', compact(
             'lectures',
             'years',
             'allYearsWithCounts',
             'olderYears',
             'yearsData',
+            'allTagsWithCounts',
+            'thematicClusters',
+            'topTags',
             'selectedYear',
             'selectedFormat',
             'selectedTag',
             'search',
-            'viewMode'
+            'viewMode',
+            'browseMode'
         ));
     }
 

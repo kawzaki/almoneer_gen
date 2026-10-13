@@ -24,7 +24,7 @@
                     {{ $year }} هـ
                 </span>
                 <span class="px-3 py-1 rounded-full bg-emerald-800 text-slate-200 text-xs">
-                    {{ $totalLectures }} مجالس ومحاضرات
+                    {{ arabic_lectures($totalLectures) }}
                 </span>
             </div>
             <h1 class="text-2xl sm:text-4xl font-bold font-scholarly text-gold-300">
@@ -98,13 +98,20 @@
                 <i class="fa-solid fa-tags text-gold-500"></i>
                 <span>فلترة بحسب الكلمات الدلالية والموضوع:</span>
             </span>
-            @if($selectedTag)
-            <a href="{{ route('lectures.season', array_filter(['year' => $year, 'season' => $season, 'q' => $search, 'view' => $viewMode])) }}" 
-               class="text-xs text-red-600 hover:text-red-700 font-bold flex items-center gap-1 bg-red-50 px-2.5 py-1 rounded-lg transition">
-                <i class="fa-solid fa-xmark text-[10px]"></i>
-                <span>إلغاء فلترة الوسم (عرض كل مواضيع الموسم)</span>
-            </a>
-            @endif
+            <div class="flex items-center gap-3">
+                <a href="{{ route('lectures.index', ['browse' => 'topics']) }}" 
+                   class="text-[11px] text-emerald-800 hover:text-emerald-950 font-bold flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-layer-group text-gold-500"></i>
+                    <span>فهرس المواضيع العام &larr;</span>
+                </a>
+                @if($selectedTag)
+                <a href="{{ route('lectures.season', array_filter(['year' => $year, 'season' => $season, 'q' => $search, 'view' => $viewMode])) }}" 
+                   class="text-xs text-red-600 hover:text-red-700 font-bold flex items-center gap-1 bg-red-50 px-2.5 py-1 rounded-lg transition">
+                    <i class="fa-solid fa-xmark text-[10px]"></i>
+                    <span>إلغاء فلترة الوسم</span>
+                </a>
+                @endif
+            </div>
         </div>
         <div class="flex flex-wrap items-center gap-2">
             <a href="{{ route('lectures.season', array_filter(['year' => $year, 'season' => $season, 'q' => $search, 'view' => $viewMode])) }}" 

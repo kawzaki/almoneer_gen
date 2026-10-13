@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Blade;
 use App\Models\Setting;
+use App\Support\ArabicNumber;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,17 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
+
+        // Arabic pluralization Blade Directives
+        Blade::directive('arabicYears', function ($expression) {
+            return "<?php echo \App\Support\ArabicNumber::years($expression); ?>";
+        });
+        Blade::directive('arabicTags', function ($expression) {
+            return "<?php echo \App\Support\ArabicNumber::tags($expression); ?>";
+        });
+        Blade::directive('arabicLectures', function ($expression) {
+            return "<?php echo \App\Support\ArabicNumber::lectures($expression); ?>";
+        });
 
         // Share globally cached layout variables with all public views
         View::composer(['layouts.app', 'layouts.admin', 'home', 'pages.*'], function ($view) {

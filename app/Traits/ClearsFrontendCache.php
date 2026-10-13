@@ -34,6 +34,7 @@ trait ClearsFrontendCache
                 Cache::forget('site.media.recent');
                 Cache::forget('site.audios.recent');
                 Cache::forget('site.videos.recent');
+                Cache::forget('site.lectures.all_tags');
                 break;
 
             case 'Book':
