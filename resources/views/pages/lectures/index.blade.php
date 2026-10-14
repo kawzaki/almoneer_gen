@@ -208,7 +208,7 @@
             @endif
 
             <!-- 1. Thematic Curated Clusters (المحاور العلمية والفكرية الكبرى) -->
-            <div class="space-y-4">
+            <div class="space-y-4 pt-6 sm:pt-8">
                 <div class="flex items-center justify-between">
                     <h3 class="text-base sm:text-lg font-bold font-scholarly text-slate-900 flex items-center gap-2">
                         <i class="fa-solid fa-compass text-gold-500"></i>
@@ -220,7 +220,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     @foreach($thematicClusters as $clusterKey => $cluster)
                         @if(count($cluster['tags']) > 0)
-                        <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition space-y-3.5 group">
+                        <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition space-y-3.5 group thematic-cluster-card">
                             <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-3">
                                 <div class="flex items-center gap-2.5">
                                     <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center text-sm shadow-2xs group-hover:bg-emerald-900 group-hover:text-gold-300 transition">
@@ -252,46 +252,6 @@
                             </div>
                         </div>
                         @endif
-                    @endforeach
-                </div>
-            </div>
-
-            <!-- 2. Comprehensive Tag Cloud & Alphabetical Explorer (الفهرس الشامل لكافة الوسوم) -->
-            <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
-                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
-                    <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 rounded-xl bg-gold-500/20 text-gold-700 flex items-center justify-center text-xs font-bold">
-                            <i class="fa-solid fa-list-ul"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-sm sm:text-base text-slate-900">
-                                الفهرس الشامل لكافة الكلمات الدلالية (أ - ي)
-                            </h3>
-                            <span class="text-xs text-slate-400">انقر على أي وسم للانتقال للمحاضرات المتعلقة به فوراً</span>
-                        </div>
-                    </div>
-
-                    <div class="text-xs text-slate-500 flex items-center gap-2 font-mono">
-                        <span>الظاهر:</span>
-                        <span id="filtered-tags-count" class="font-bold text-emerald-900 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200">
-                            {{ count($allTagsWithCounts) }}
-                        </span>
-                        <span>من أصل {{ arabic_tags(count($allTagsWithCounts)) }}</span>
-                    </div>
-                </div>
-
-                <!-- Complete Tags Cloud Container -->
-                <div id="all-tags-cloud-container" class="flex flex-wrap gap-2 pt-2 max-h-96 overflow-y-auto p-1">
-                    @foreach($allTagsWithCounts as $allTag => $allCount)
-                        <a href="{{ route('lectures.index', ['browse' => 'topics', 'tag' => $allTag]) }}"
-                           class="topic-tag-chip inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs transition duration-150 {{ $selectedTag === $allTag ? 'bg-emerald-900 text-gold-300 font-bold shadow-sm ring-1 ring-gold-500/40' : 'bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-900 border border-slate-200 hover:border-emerald-300' }}"
-                           data-tag-name="{{ $allTag }}">
-                            <span class="text-emerald-700 font-bold">#</span>
-                            <span class="tag-title-text">{{ $allTag }}</span>
-                            <span class="text-[10px] px-1.5 py-0.2 rounded-md {{ $selectedTag === $allTag ? 'bg-emerald-950 text-gold-300' : 'bg-slate-200/80 text-slate-600' }} font-mono">
-                                {{ $allCount }}
-                            </span>
-                        </a>
                     @endforeach
                 </div>
             </div>
@@ -641,6 +601,16 @@
                         matchCount++;
                     } else {
                         chip.style.display = 'none';
+                    }
+                });
+
+                // Toggle thematic cluster cards based on visible chips
+                document.querySelectorAll('.thematic-cluster-card').forEach(card => {
+                    if (!q) {
+                        card.style.display = '';
+                    } else {
+                        const visibleChips = Array.from(card.querySelectorAll('.topic-tag-chip')).filter(c => c.style.display !== 'none');
+                        card.style.display = visibleChips.length > 0 ? '' : 'none';
                     }
                 });
 
