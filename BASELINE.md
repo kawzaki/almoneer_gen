@@ -97,3 +97,27 @@ Provide sub-second page loads to visitors via aggressive query/view caching, wit
 - Never edit production files directly on the server.
 - Database changes must always be managed through version-controlled Laravel migrations.
 - Storage symlink (`php artisan storage:link`) connects `storage/app/public` to `public/storage`.
+
+---
+
+## 7. Lectures Explorer & Thematic Clustering Architecture
+
+### Dual Browsing Modes (`/lectures`)
+- **Seasons & Years Mode (`browse=seasons`):** Chronological and seasonal breakdown (Muharram, Safar, Ramadan, Fatimiya, General).
+- **Thematic Topics Mode (`browse=topics`):** Curated scholarly clusters categorizing all extracted tags:
+  - **العقيدة والفلسفة والفكر (`theology`)**
+  - **عاشوراء والشعائر وأهل البيت (ع) (`ahlulbayt`)**
+  - **الأخلاق والتربية والمجتمع (`ethics`)**
+  - **الفقه والقضايا المعاصرة (`contemporary`)**
+  - **مفاهيم ومناسبات عامة (`general`)**
+- Complete architecture documentation: [THEMATIC_CLUSTERS_AND_LECTURES_EXPLORER.md](file:///c:/wamp/www/almoneer-gen/docs/THEMATIC_CLUSTERS_AND_LECTURES_EXPLORER.md).
+
+### Arabic Grammatical Counting Engine (`App\Support\ArabicNumber`)
+- Custom grammar helper for cardinal count numbers and distinction (تمييز العدد):
+  - 1: المفرد (`عام واحد`)
+  - 2: المثنى (`عامان`)
+  - 3-10: جمع مجرور (`4 أعوام`)
+  - 11-99: مفرد منصوب (`44 وسماً`)
+  - 100+: مفرد مجرور (`100 عام`)
+- Available helpers: `arabic_years()`, `arabic_lectures()`, `arabic_tags()`, `arabic_seasons()`.
+
