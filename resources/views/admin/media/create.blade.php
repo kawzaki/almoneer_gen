@@ -382,6 +382,25 @@
                    .replace(/عليهم السلام/g, "(عع)")
                    .replace(/«عليها السلام»/g, "(عه)")
                    .replace(/عليها السلام/g, "(عه)")
+                   .replace(/«رحمه الله»/g, "(ره)")
+                   .replace(/رحمه الله/g, "(ره)")
+                   .replace(/«قدس سره»/g, "(قده)")
+                   .replace(/قدس سره/g, "(قده)")
+                   .replace(/«دام ظله»/g, "(دام ظله)")
+                   .replace(/دام ظله/g, "(دام ظله)")
+                   // رموز خط أبو ذر (Abo-Thar)
+                   .replace(/(?:\(|«|\[|”|")\s*A\s*(?:\)|»|\]|“|")/g, "(ع)")
+                   .replace(/(?:\(|«|\[|”|")\s*C\s*(?:\)|»|\]|“|")/g, "(عه)")
+                   .replace(/(?:\(|«|\[|”|")\s*D\s*(?:\)|»|\]|“|")/g, "(عع)")
+                   .replace(/(?:\(|«|\[|”|")\s*H\s*(?:\)|»|\]|“|")/g, "(قده)")
+                   .replace(/(?:\(|«|\[|”|")\s*J\s*(?:\)|»|\]|“|")/g, "(ص)")
+                   .replace(/(?:\(|«|\[|”|")\s*K\s*(?:\)|»|\]|“|")/g, "(دام ظله)")
+                   .replace(/(?<=[\u0600-\u06FF\s،.؛:؟!«»\(\)\[\]"'"”„…–—]|^)A(?=[\u0600-\u06FF\s،.؛:؟!«»\(\)\[\]"'"”„…–—]|$)/gu, "(ع)")
+                   .replace(/(?<=[\u0600-\u06FF\s،.؛:؟!«»\(\)\[\]"'"”„…–—]|^)C(?=[\u0600-\u06FF\s،.؛:؟!«»\(\)\[\]"'"”„…–—]|$)/gu, "(عه)")
+                   .replace(/(?<=[\u0600-\u06FF\s،.؛:؟!«»\(\)\[\]"'"”„…–—]|^)D(?=[\u0600-\u06FF\s،.؛:؟!«»\(\)\[\]"'"”„…–—]|$)/gu, "(عع)")
+                   .replace(/(?<=[\u0600-\u06FF\s،.؛:؟!«»\(\)\[\]"'"”„…–—]|^)H(?=[\u0600-\u06FF\s،.؛:؟!«»\(\)\[\]"'"”„…–—]|$)/gu, "(قده)")
+                   .replace(/(?<=[\u0600-\u06FF\s،.؛:؟!«»\(\)\[\]"'"”„…–—]|^)J(?=[\u0600-\u06FF\s،.؛:؟!«»\(\)\[\]"'"”„…–—]|$)/gu, "(ص)")
+                   .replace(/(?<=[\u0600-\u06FF\s،.؛:؟!«»\(\)\[\]"'"”„…–—]|^)K(?=[\u0600-\u06FF\s،.؛:؟!«»\(\)\[\]"'"”„…–—]|$)/gu, "(دام ظله)")
                    .replace(/\. \./g, "..")
                    .replace(/\، \،/g, "،،")
                    .replace(/\s+،/g, "،")
@@ -398,39 +417,57 @@
                    .replace(/(\d+\.)\s+(\d+)/g, "$1$2");
     }
 
-    function cleanTranscriptWithVacum() {
-        if (isRawTranscriptMode) {
-            let text = rawTranscriptEditor.value;
-            if (!text.trim()) {
-                alert('يرجى كتابة أو لصق النص أولاً');
-                return;
-            }
-            text = applyVacumString(text);
-            text = text.replace(/^[ \t]+|[ \t]+$/gm, "").replace(/\n{3,}/g, "\n\n");
-            rawTranscriptEditor.value = text.trim();
-            transcriptInput.value = text.trim();
-            alert('تم تنظيف وتنسيق النص بنجاح وفق قواعد المخمة!');
-            return;
-        }
-
-        if (!quillTranscript.getText().trim()) {
+    async function cleanTranscriptWithVacum() {
+        let content = isRawTranscriptMode ? rawTranscriptEditor.value : quillTranscript.root.innerHTML;
+        if (!content || !content.trim() || content.trim() === '<p><br></p>') {
             alert('يرجى كتابة أو لصق النص أولاً');
             return;
         }
 
-        // Clean text nodes in Quill while preserving HTML tags/formatting
-        var walker = document.createTreeWalker(quillTranscript.root, NodeFilter.SHOW_TEXT, null, false);
-        var node;
-        var textNodes = [];
-        while (node = walker.nextNode()) {
-            textNodes.push(node);
+        try {
+            const response = await fetch('{{ route("admin.tools.vacum.process") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ content: content })
+            });
+            const data = await response.json();
+            if (data.success) {
+                if (isRawTranscriptMode) {
+                    rawTranscriptEditor.value = data.html;
+                    transcriptInput.value = data.html;
+                } else {
+                    quillTranscript.root.innerHTML = data.html;
+                    transcriptInput.value = data.html;
+                }
+                alert('تم تنظيف وتنسيق النص بنجاح عبر المخمة وفق معايير الموقع!');
+                return;
+            }
+        } catch (e) {
+            console.warn('Backend vacum process failed, falling back to client-side:', e);
         }
 
-        textNodes.forEach(function(n) {
-            n.nodeValue = applyVacumString(n.nodeValue);
-        });
-
-        transcriptInput.value = quillTranscript.root.innerHTML;
+        // Fallback to client-side clean
+        if (isRawTranscriptMode) {
+            let text = applyVacumString(rawTranscriptEditor.value);
+            text = text.replace(/^[ \t]+|[ \t]+$/gm, "").replace(/\n{3,}/g, "\n\n");
+            rawTranscriptEditor.value = text.trim();
+            transcriptInput.value = text.trim();
+        } else {
+            var walker = document.createTreeWalker(quillTranscript.root, NodeFilter.SHOW_TEXT, null, false);
+            var node;
+            var textNodes = [];
+            while (node = walker.nextNode()) {
+                textNodes.push(node);
+            }
+            textNodes.forEach(function(n) {
+                n.nodeValue = applyVacumString(n.nodeValue);
+            });
+            transcriptInput.value = quillTranscript.root.innerHTML;
+        }
         alert('تم تنظيف وتنسيق النص بنجاح وفق قواعد المخمة!');
     }
 </script>
