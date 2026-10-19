@@ -579,6 +579,27 @@
                                 page-break-inside: avoid !important;
                             }
 
+                            /* تنسيق الأبيات والقصائد في الطباعة */
+                            #transcript-body .lecture-poem-box {
+                                background: #fafaf9 !important;
+                                border: 1px solid #e2e8f0 !important;
+                                border-radius: 8pt !important;
+                                padding: 10pt 16pt !important;
+                                margin: 16pt auto !important;
+                                break-inside: avoid !important;
+                                page-break-inside: avoid !important;
+                            }
+
+                            #transcript-body .couplet-line {
+                                display: flex !important;
+                                justify-content: space-between !important;
+                                align-items: center !important;
+                                border-bottom: 1px dotted #cbd5e1 !important;
+                                padding: 4pt 0 !important;
+                                break-inside: avoid !important;
+                                page-break-inside: avoid !important;
+                            }
+
                             /* جدول الطباعة لضمان تكرار التذييل في كل صفحة دون أي تداخل مع النص */
                             table.print-layout-table {
                                 width: 100% !important;

@@ -382,6 +382,11 @@ class TranscriptFormatter
                 return '<span class="text-amber-800 font-bold font-scholarly inline-block my-2" style="color: #8B4513 !important; font-weight: bold !important;">' . e(trim($matches[1])) . '</span>';
             }, $formatted);
 
+            // استبدال أبيات وقصائد الشعر [poem]...[/poem] أو [شعر]...[/شعر]
+            $formatted = preg_replace_callback('/\[(?:poem|شعر)\](.*?)\[\/(?:poem|شعر)\]/su', function ($matches) {
+                return self::renderPoemBlock($matches[1]);
+            }, $formatted);
+
             // 2. استبدال الآيات القرآنية {الآية} أو ﴿الآية﴾ بالخط العثماني واللون الأخضر المعتمد
             $formatted = preg_replace_callback('/(?:\{|﴿)([^}﴾]+)(?:\}|﴾)/u', function ($matches) {
                 $verse = html_entity_decode(trim($matches[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
@@ -463,6 +468,11 @@ class TranscriptFormatter
             return '<span class="text-amber-800 font-bold font-scholarly inline-block my-2" style="color: #8B4513 !important; font-weight: bold !important;">' . e(trim($matches[1])) . '</span>';
         }, $cleaned);
 
+        // استبدال أبيات وقصائد الشعر [poem]...[/poem] أو [شعر]...[/شعر]
+        $cleaned = preg_replace_callback('/\[(?:poem|شعر)\](.*?)\[\/(?:poem|شعر)\]/su', function ($matches) {
+            return self::renderPoemBlock($matches[1]);
+        }, $cleaned);
+
         // 2. استبدال الآيات القرآنية {الآية} أو ﴿الآية﴾ بالخط العثماني واللون الأخضر المعتمد
         $cleaned = preg_replace_callback('/(?:\{|﴿)([^}﴾]+)(?:\}|﴾)/u', function ($matches) {
             $verse = html_entity_decode(trim($matches[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
@@ -496,7 +506,7 @@ class TranscriptFormatter
             $p = trim($p);
             if (empty($p)) continue;
 
-            if (str_starts_with($p, '<h3') || str_starts_with($p, '<h4')) {
+            if (str_starts_with($p, '<h3') || str_starts_with($p, '<h4') || str_starts_with($p, '<div class="lecture-poem-box')) {
                 $html .= $p . "\n\n";
             } else {
                 // فحص القوائم النقطية
@@ -537,10 +547,70 @@ class TranscriptFormatter
     }
 
     /**
-     * Convert formatted HTML back into clean plain text with Almoneer markdown tags ([t], [c], { }).
+     * Helper to render poetic couplets ([poem]...[/poem] or [شعر]...[/شعر]).
+     */
+    public static function renderPoemBlock(string $content): string
+    {
+        $content = str_replace(["\r\n", "\r", "<br />", "<br>", "<br/>", "</p>", "</div>"], "\n", $content);
+        $content = strip_tags($content);
+        $lines = explode("\n", $content);
+        $coupletsHtml = '';
+
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if (empty($line)) continue;
+
+            if (str_contains($line, '|')) {
+                $parts = explode('|', $line, 2);
+                $first = trim($parts[0]);
+                $second = trim($parts[1]);
+            } elseif (preg_match('/\s{3,}|\t|\.{3,}|…/u', $line)) {
+                $parts = preg_split('/\s{3,}|\t|\.{3,}|…/u', $line, 2);
+                $first = trim($parts[0]);
+                $second = trim($parts[1]);
+            } else {
+                $first = $line;
+                $second = '';
+            }
+
+            if (empty($second)) {
+                $coupletsHtml .= '  <div class="couplet-line text-center py-2.5 border-b border-dotted border-amber-200/60 leading-loose">' . "\n";
+                $coupletsHtml .= '    <span class="text-slate-900 font-medium font-scholarly w-full text-center block text-base sm:text-lg">' . e($first) . '</span>' . "\n";
+                $coupletsHtml .= '  </div>' . "\n";
+            } else {
+                $coupletsHtml .= '  <div class="couplet-line flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-6 py-2.5 border-b border-dotted border-amber-200/60 leading-loose">' . "\n";
+                $coupletsHtml .= '    <span class="couplet-first text-slate-900 font-medium font-scholarly text-center sm:text-justify w-full sm:w-[42%] text-base sm:text-lg">' . e($first) . '</span>' . "\n";
+                $coupletsHtml .= '    <span class="couplet-center-icon text-gold-600 text-xs sm:text-sm shrink-0 px-2 sm:px-4 select-none">✤</span>' . "\n";
+                $coupletsHtml .= '    <span class="couplet-second text-slate-800 font-scholarly text-center sm:text-justify w-full sm:w-[42%] text-base sm:text-lg">' . e($second) . '</span>' . "\n";
+                $coupletsHtml .= '  </div>' . "\n";
+            }
+        }
+
+        return '<div class="lecture-poem-box couplets-container my-8 py-5 px-4 sm:px-8 bg-amber-50/40 rounded-2xl border border-amber-200/60 max-w-2xl mx-auto shadow-2xs">' . "\n"
+             . $coupletsHtml
+             . '</div>';
+    }
+
+    /**
+     * Convert formatted HTML back into clean plain text with Almoneer markdown tags ([t], [c], { }, [poem]).
      */
     public static function toCleanText(string $html): string
     {
+        // 0. Convert poem blocks back to [poem]
+        $html = preg_replace_callback('/<div\b[^>]*class=["\'][^"\']*(?:lecture-poem-box|couplets-container)[^"\']*["\'][^>]*>(.*?)<\/div>\s*<\/div>/su', function ($m) {
+            preg_match_all('/<div\b[^>]*class=["\'][^"\']*couplet-line[^"\']*["\'][^>]*>(.*?)<\/div>/su', $m[0], $lines);
+            $poemText = "\n\n[poem]\n";
+            foreach ($lines[1] as $lineHtml) {
+                if (preg_match('/class=["\'][^"\']*couplet-first[^"\']*["\'][^>]*>(.*?)<\/span>.*?class=["\'][^"\']*couplet-second[^"\']*["\'][^>]*>(.*?)<\/span>/su', $lineHtml, $part)) {
+                    $poemText .= trim(strip_tags($part[1])) . ' | ' . trim(strip_tags($part[2])) . "\n";
+                } else {
+                    $poemText .= trim(strip_tags($lineHtml)) . "\n";
+                }
+            }
+            $poemText .= "[/poem]\n\n";
+            return $poemText;
+        }, $html);
+
         // 1. Convert headings
         $text = preg_replace_callback('/<h[1-3][^>]*>(.*?)<\/h[1-3]>/su', function ($m) {
             return "\n\n[t]" . trim(strip_tags($m[1])) . "[/t]\n\n";
