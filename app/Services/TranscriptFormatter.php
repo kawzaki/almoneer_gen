@@ -171,6 +171,27 @@ class TranscriptFormatter
         ];
         $text = str_replace(array_keys($replacements), array_values($replacements), $text);
 
+        // 5.1 استبدال رموز خط أبو ذر (Abo-Thar) القادمة من الوورد (A, C, D, H, J, K)
+        $text = preg_replace('/(?:\(|«|\[|”|")\s*A\s*(?:\)|»|\]|“|")/u', '(ع)', $text);
+        $text = preg_replace('/(?:\(|«|\[|”|")\s*C\s*(?:\)|»|\]|“|")/u', '(عه)', $text);
+        $text = preg_replace('/(?:\(|«|\[|”|")\s*D\s*(?:\)|»|\]|“|")/u', '(عع)', $text);
+        $text = preg_replace('/(?:\(|«|\[|”|")\s*H\s*(?:\)|»|\]|“|")/u', '(قده)', $text);
+        $text = preg_replace('/(?:\(|«|\[|”|")\s*J\s*(?:\)|»|\]|“|")/u', '(ص)', $text);
+        $text = preg_replace('/(?:\(|«|\[|”|")\s*K\s*(?:\)|»|\]|“|")/u', '(دام ظله)', $text);
+
+        // استبدال الحروف المفردة المحاطة بنص عربي أو فواصل أو أقواس
+        $glyphMap = [
+            'A' => '(ع)',
+            'C' => '(عه)',
+            'D' => '(عع)',
+            'H' => '(قده)',
+            'J' => '(ص)',
+            'K' => '(دام ظله)',
+        ];
+        $text = preg_replace_callback('/(?<=[\p{Arabic}\s،.؛:؟!«»\(\)\[\]"\'”„…–—]|^)([ACDHJK])(?=[\p{Arabic}\s،.؛:؟!«»\(\)\[\]"\'”„…–—]|$)/u', function ($m) use ($glyphMap) {
+            return $glyphMap[$m[1]];
+        }, $text);
+
         // إزالة أي أقواس متكررة ناتجة عن التحويل مثل ((دام ظله)) أو ((ع))
         $text = preg_replace('/\(+\s*(ص|ع|عه|عع|عم|ره|قده|دام ظله)\s*\)+/u', '($1)', $text);
 
@@ -205,6 +226,14 @@ class TranscriptFormatter
      */
     public static function cleanHtmlTextNodes(string $html): string
     {
+        // حماية عناصر خط أبو ذر المنسقة مسبقاً لمنع تغيير حروفها الداخلية
+        $placeholders = [];
+        $html = preg_replace_callback('/<span\b[^>]*class=["\'][^"\']*symbol-abothar[^"\']*["\'][^>]*>.*?<\/span>/su', function ($m) use (&$placeholders) {
+            $key = '___ABOTHAR_' . count($placeholders) . '___';
+            $placeholders[$key] = $m[0];
+            return $key;
+        }, $html);
+
         $parts = preg_split('/(<[^>]+>)/u', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
         $result = '';
 
@@ -215,6 +244,10 @@ class TranscriptFormatter
             } else {
                 $result .= self::cleanInlineText($part);
             }
+        }
+
+        if (!empty($placeholders)) {
+            $result = strtr($result, $placeholders);
         }
 
         return $result;
