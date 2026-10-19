@@ -122,6 +122,10 @@ class TranscriptFormatter
             '"عليهم السلام"'            => '(عع)',
             '”عليهم السلام“'            => '(عع)',
             'عليهم السلام'              => '(عع)',
+            '«عليهما السلام»'           => '(عما)',
+            '"عليهما السلام"'           => '(عما)',
+            '”عليهما السلام“'           => '(عما)',
+            'عليهما السلام'             => '(عما)',
             '«عليها السلام»'            => '(عه)',
             '"عليها السلام"'            => '(عه)',
             '”عليها السلام“'            => '(عه)',
@@ -150,6 +154,7 @@ class TranscriptFormatter
             '«ص»'                       => '(ص)',
             '«ع»'                       => '(ع)',
             '«عع»'                      => '(عع)',
+            '«عما»'                     => '(عما)',
             '«عه»'                      => '(عه)',
             '«عم»'                      => '(عم)',
             '«ره»'                      => '(ره)',
@@ -157,6 +162,7 @@ class TranscriptFormatter
             '"ص"'                       => '(ص)',
             '"ع"'                       => '(ع)',
             '"عع"'                      => '(عع)',
+            '"عما"'                     => '(عما)',
             '"عه"'                      => '(عه)',
             '"عم"'                      => '(عم)',
             '"ره"'                      => '(ره)',
@@ -164,6 +170,7 @@ class TranscriptFormatter
             '”ص“'                       => '(ص)',
             '”ع“'                       => '(ع)',
             '”عع“'                      => '(عع)',
+            '”عما“'                     => '(عما)',
             '”عه“'                      => '(عه)',
             '”عم“'                      => '(عم)',
             '”ره“'                      => '(ره)',
@@ -171,9 +178,10 @@ class TranscriptFormatter
         ];
         $text = str_replace(array_keys($replacements), array_values($replacements), $text);
 
-        // 5.1 استبدال رموز خط أبو ذر (Abo-Thar) القادمة من الوورد (A, C, D, H, J, K)
+        // 5.1 استبدال رموز خط أبو ذر (Abo-Thar) القادمة من الوورد (A, C, D, H, J, K, h)
         $text = preg_replace('/(?:\(|«|\[|”|")\s*A\s*(?:\)|»|\]|“|")/u', '(ع)', $text);
         $text = preg_replace('/(?:\(|«|\[|”|")\s*C\s*(?:\)|»|\]|“|")/u', '(عه)', $text);
+        $text = preg_replace('/(?:\(|«|\[|”|")\s*h\s*(?:\)|»|\]|“|")/u', '(عه)', $text);
         $text = preg_replace('/(?:\(|«|\[|”|")\s*D\s*(?:\)|»|\]|“|")/u', '(عع)', $text);
         $text = preg_replace('/(?:\(|«|\[|”|")\s*H\s*(?:\)|»|\]|“|")/u', '(قده)', $text);
         $text = preg_replace('/(?:\(|«|\[|”|")\s*J\s*(?:\)|»|\]|“|")/u', '(ص)', $text);
@@ -183,17 +191,18 @@ class TranscriptFormatter
         $glyphMap = [
             'A' => '(ع)',
             'C' => '(عه)',
+            'h' => '(عه)',
             'D' => '(عع)',
             'H' => '(قده)',
             'J' => '(ص)',
             'K' => '(دام ظله)',
         ];
-        $text = preg_replace_callback('/(?<=[\p{Arabic}\s،.؛:؟!«»\(\)\[\]"\'”„…–—]|^)([ACDHJK])(?=[\p{Arabic}\s،.؛:؟!«»\(\)\[\]"\'”„…–—]|$)/u', function ($m) use ($glyphMap) {
+        $text = preg_replace_callback('/(?<=[\p{Arabic}\s،.؛:؟!«»\(\)\[\]"\'”„…–—]|^)([ACDHJKh])(?=[\p{Arabic}\s،.؛:؟!«»\(\)\[\]"\'”„…–—]|$)/u', function ($m) use ($glyphMap) {
             return $glyphMap[$m[1]];
         }, $text);
 
         // إزالة أي أقواس متكررة ناتجة عن التحويل مثل ((دام ظله)) أو ((ع))
-        $text = preg_replace('/\(+\s*(ص|ع|عه|عع|عم|ره|قده|دام ظله)\s*\)+/u', '($1)', $text);
+        $text = preg_replace('/\(+\s*(ص|ع|عه|عما|عع|عم|ره|قده|دام ظله)\s*\)+/u', '($1)', $text);
 
         // 6. تشذيب علامات الترقيم والفراغات بعد التعديل
         $text = str_replace('. .', '..', $text);
@@ -388,7 +397,8 @@ class TranscriptFormatter
             $formatted = preg_replace('/(?:(?:\(|«|\[)\s*ص\s*(?:\)|»|\])|ﷺ|﵌|&#xFD4C;)/u', $prophetSymbol, $formatted);
             $formatted = preg_replace('/(?:\(|«|\[)\s*ع\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليه السلام">A</span>', $formatted);
             $formatted = preg_replace('/(?:\(|«|\[)\s*(?:عع|عم)\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليهم السلام">D</span>', $formatted);
-            $formatted = preg_replace('/(?:\(|«|\[)\s*عه\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليها السلام">C</span>', $formatted);
+            $formatted = preg_replace('/(?:\(|«|\[)\s*عما\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليهما السلام">C</span>', $formatted);
+            $formatted = preg_replace('/(?:\(|«|\[)\s*عه\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليها السلام">h</span>', $formatted);
             $formatted = preg_replace('/(?:\(|«|\[)\s*ره\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="رحمه الله">6</span>', $formatted);
             $formatted = preg_replace('/(?:\(|«|\[)\s*قده\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="قدس سره">H</span>', $formatted);
             $formatted = preg_replace('/(?:\(|«|\[)\s*دام\s*ظله\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="دام ظله">K</span>', $formatted);
@@ -463,7 +473,8 @@ class TranscriptFormatter
         $cleaned = preg_replace('/(?:(?:\(|«|\[)\s*ص\s*(?:\)|»|\])|ﷺ|﵌|&#xFD4C;)/u', $prophetSymbol, $cleaned);
         $cleaned = preg_replace('/(?:\(|«|\[)\s*ع\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليه السلام">A</span>', $cleaned);
         $cleaned = preg_replace('/(?:\(|«|\[)\s*(?:عع|عم)\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليهم السلام">D</span>', $cleaned);
-        $cleaned = preg_replace('/(?:\(|«|\[)\s*عه\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليها السلام">C</span>', $cleaned);
+        $cleaned = preg_replace('/(?:\(|«|\[)\s*عما\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليهما السلام">C</span>', $cleaned);
+        $cleaned = preg_replace('/(?:\(|«|\[)\s*عه\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليها السلام">h</span>', $cleaned);
         $cleaned = preg_replace('/(?:\(|«|\[)\s*ره\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="رحمه الله">6</span>', $cleaned);
         $cleaned = preg_replace('/(?:\(|«|\[)\s*قده\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="قدس سره">H</span>', $cleaned);
         $cleaned = preg_replace('/(?:\(|«|\[)\s*دام\s*ظله\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="دام ظله">K</span>', $cleaned);
@@ -545,13 +556,14 @@ class TranscriptFormatter
         $text = preg_replace_callback('/<span[^>]*class=["\'][^"\']*symbol-abothar[^"\']*["\'][^>]*>(.*?)<\/span>/su', function ($m) {
             $ch = trim(strip_tags($m[1]));
             return match ($ch) {
-                'A', '8', 'B', 'g', 'j' => '(ع)',
-                'C', '$', '3', 'h' => '(عه)',
+                'A', '8', 'g', 'j' => '(ع)',
+                'B', 'C', 'b', 'c' => '(عما)',
+                'h', '$', '3' => '(عه)',
                 'D', '%' => '(عع)',
-                '6', 'I' => '(ره)',
+                '6', 'I', 'w' => '(ره)',
                 'H', 'u', 'v' => '(قده)',
                 'K' => '(دام ظله)',
-                'J', 'a', '2' => '(ص)',
+                'J', 'a', 'd', 'n', 's', '2' => '(ص)',
                 default => "(ع)",
             };
         }, $text);
