@@ -20,4 +20,5 @@
 /public/uploads/settings/*
 /public/uploads/pdf/*
 !.gitkeep
+/scratch/*
 
