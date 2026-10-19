@@ -49,8 +49,8 @@
             </h1>
 
             @if($video->description)
-            <div class="prose prose-slate max-w-none text-slate-600 text-sm leading-relaxed font-light">
-                {!! $video->description !!}
+            <div class="lecture-description-box p-4 sm:p-5 rounded-2xl bg-amber-50/40 border border-amber-200/50 text-slate-700 text-sm sm:text-base leading-relaxed shadow-2xs">
+                {!! \App\Services\TranscriptFormatter::formatDescription($video->description) !!}
             </div>
             @endif
         </div>

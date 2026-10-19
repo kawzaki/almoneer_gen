@@ -190,8 +190,8 @@
                 </h1>
 
                 @if($video->description)
-                    <div class="prose prose-slate max-w-none text-slate-600 text-sm leading-relaxed font-light">
-                        {!! $video->description !!}
+                    <div class="lecture-description-box p-4 sm:p-5 rounded-2xl bg-amber-50/40 border border-amber-200/50 text-slate-700 text-sm sm:text-base leading-relaxed shadow-2xs">
+                        {!! \App\Services\TranscriptFormatter::formatDescription($video->description) !!}
                     </div>
                 @endif
 
@@ -406,14 +406,15 @@
                         #transcript-body h3,
                         #transcript-body h4,
                         #transcript-body h5,
-                        #transcript-body .lecture-heading {
+                        #transcript-body .lecture-heading,
+                        .lecture-themes-heading {
                             color: #990000 !important;
                             font-weight: bold !important;
-                            font-size: 1.55rem !important;
-                            margin-top: 2.25rem !important;
-                            margin-bottom: 1rem !important;
+                            font-size: 1.45rem !important;
+                            margin-top: 1.5rem !important;
+                            margin-bottom: 0.85rem !important;
                             display: block !important;
-                            font-family: 'Traditional Arabic', serif !important;
+                            font-family: 'Traditional Arabic', 'Amiri', serif !important;
                         }
 
                         #transcript-body .lecture-subheading {

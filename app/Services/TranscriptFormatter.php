@@ -97,6 +97,10 @@ class TranscriptFormatter
         $text = preg_replace('/\sه:/u', ' هـ:', $text);
         $text = preg_replace('/([0-9]+)ه(?!\w)/u', '$1 هـ ', $text);
 
+        // 4.1 تصحيح ألقاب الأئمة والنساء المعصومات (الزهراء عليها السلام بدلاً من التذكير الخطأ)
+        $text = preg_replace('/(الزهراء|فاطمة|خديجة|زينب|أم كلثوم|مريم|معصومة)\s*(?:\(|«|\[)\s*ع\s*(?:\)|»|\])/u', '$1 (عه)', $text);
+        $text = preg_replace('/(الزهراء|فاطمة|خديجة|زينب|أم كلثوم|مريم|معصومة)\s+A(?=[\p{Arabic}\s،.؛:؟!«»\(\)\[\]"\'”„…–—]|$)/u', '$1 h', $text);
+
         // 5. الصلوات والأدعية (قواعد المخمة الأصلية)
         $replacements = [
             '﵌'                         => '(ص)',
@@ -357,7 +361,7 @@ class TranscriptFormatter
                 // العناوين الكبرى الرئيسية (المحاور، الفصول، المنطلقات، الأبواب، أو h1..h3)
                 $isMainHeading = !$isSubheading && (
                     $level <= 3
-                    || preg_match('/^(?:المحور|الفصل|الباب|المنطلق|المقدمة|الخاتمة)\s+(?:الأول|الثاني|الثالث|الرابع|الخامس|\d+)/u', $plain)
+                    || preg_match('/^(?:المحاور|محاور المحاضرة|محاور البحث|المحور|الفصل|الباب|المنطلق|المقدمة|الخاتمة)(?:\s+(?:الأول|الثاني|الثالث|الرابع|الخامس|\d+)|:|$)/u', $plain)
                 );
 
                 if ($isSubheading) {
@@ -411,6 +415,11 @@ class TranscriptFormatter
                     return '<li class="lecture-bullet-item font-bold text-slate-900 leading-loose" style="list-style-type: disc !important; display: list-item !important; margin-bottom: 0.6rem !important; font-weight: bold !important; color: #1e293b !important; line-height: 2.1 !important;">' . $item . '</li>';
                 }, $inner);
                 return '<ul class="lecture-bullets list-disc pr-8 my-6 space-y-2 text-slate-900 font-bold" style="list-style-type: disc !important; padding-right: 2.25rem !important; margin: 1.25rem 0 !important; display: block !important;">' . $inner . '</ul>';
+            }, $formatted);
+
+            // ترقية فقرات "المحاور:" المستقلة لتصبح عناوين رئيسية معتمدة (#990000)
+            $formatted = preg_replace_callback('/<p\b[^>]*>\s*(?:<strong>|<b>)?\s*(المحاور|محاور المحاضرة|محاور البحث):?\s*(?:<\/strong>|<\/b>)?\s*<\/p>/u', function ($m) {
+                return self::renderMainHeading(trim($m[1]) . ':');
             }, $formatted);
 
             // 7. تحسين تنسيق الفقرات العادية وتوسيط البسملة والحمدلة
@@ -604,5 +613,48 @@ class TranscriptFormatter
                 'headings' => $headingsCount,
             ]
         ];
+    }
+
+    /**
+     * Format short description / lecture summary with proper heading colors (#990000),
+     * bullet lists, and Abo-Thar honorific symbols.
+     */
+    public static function formatDescription(?string $text): string
+    {
+        if (empty(trim($text ?? ''))) {
+            return '';
+        }
+
+        // 1. Sanitize Word HTML if present
+        $text = self::sanitizeWordHtml($text);
+
+        // 2. Clean inline text nodes (honorifics, symbols, punctuation)
+        $text = self::cleanHtmlTextNodes($text);
+
+        // 3. Convert Abo-Thar symbols
+        $prophetSymbol = '<img src="/images/prophet-pbuhaf.svg" alt="صلى الله عليه وآله وسلم" title="صلى الله عليه وآله وسلم" class="prophet-symbol-icon inline-block align-middle" style="display: inline-block; vertical-align: -0.22em; height: 1.35em; width: auto; margin: 0 2px;" />';
+        $text = preg_replace('/(?:(?:\(|«|\[)\s*ص\s*(?:\)|»|\])|ﷺ|﵌|&#xFD4C;)/u', $prophetSymbol, $text);
+        $text = preg_replace('/(?:\(|«|\[)\s*ع\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليه السلام">A</span>', $text);
+        $text = preg_replace('/(?:\(|«|\[)\s*(?:عع|عم)\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليهم السلام">D</span>', $text);
+        $text = preg_replace('/(?:\(|«|\[)\s*عما\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليهما السلام">C</span>', $text);
+        $text = preg_replace('/(?:\(|«|\[)\s*عه\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليها السلام">h</span>', $text);
+
+        // 4. Style "المحاور:" with the approved red color #990000 and Traditional Arabic font
+        $text = preg_replace_callback('/<p\b[^>]*>\s*(?:<strong>|<b>)?\s*(المحاور|محاور المحاضرة|محاور البحث):?\s*(?:<\/strong>|<\/b>)?\s*<\/p>/u', function ($m) {
+            return '<div class="lecture-themes-heading text-lg sm:text-xl font-bold font-scholarly text-red-900 mt-1 mb-2 flex items-center gap-2" style="color: #990000 !important; font-weight: bold !important; font-family: \'Traditional Arabic\', \'Amiri\', serif !important; font-size: 1.35rem !important;">'
+                 . '<i class="fa-solid fa-compass text-gold-600 text-sm"></i>'
+                 . '<span>' . trim($m[1]) . ':</span>'
+                 . '</div>';
+        }, $text);
+
+        // 5. Convert dash bullet lines into clean styled list items
+        $text = preg_replace_callback('/<p\b[^>]*>\s*[-•]\s*(.*?)<\/p>/su', function ($m) {
+            return '<div class="lecture-theme-item flex items-start gap-2.5 text-slate-800 my-1.5 font-scholarly text-sm sm:text-base leading-relaxed" style="line-height: 2 !important;">'
+                 . '<span class="text-emerald-700 font-bold mt-0.5">•</span>'
+                 . '<span>' . trim($m[1]) . '</span>'
+                 . '</div>';
+        }, $text);
+
+        return trim($text);
     }
 }
