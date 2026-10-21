@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" class="scroll-smooth">
+<html lang="ar" dir="rtl" class="scroll-smooth overflow-x-hidden">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -81,10 +81,17 @@
     @endif
 
     <style>
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+            position: relative;
+        }
         body {
             font-family: 'IBM Plex Sans Arabic', sans-serif;
             background-color: {{ $isTurquoise ? '#f2fafb' : '#faf9f5' }};
             color: #1e293b;
+            overflow-x: hidden;
+            max-width: 100vw;
         }
 
         /* Uthmanic Quranic Font Styles */
@@ -418,7 +425,7 @@
 
     @stack('styles')
 </head>
-<body class="theme-{{ $activeTheme }} min-h-screen flex flex-col antialiased selection:bg-gold-500 selection:text-white">
+<body class="theme-{{ $activeTheme }} min-h-screen flex flex-col antialiased selection:bg-gold-500 selection:text-white overflow-x-hidden w-full max-w-full">
 
     <!-- 1. Top Cross-Portal Switcher Bar (Connecting with Hawza Portal on Port 8000) -->
     <div class="no-print bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-950 text-gold-300 text-xs border-b border-gold-500/30 py-1.5 px-4 shadow-sm">
@@ -431,7 +438,7 @@
                 <span class="text-gold-500/50">|</span>
                 <span class="hidden sm:inline text-slate-300">{{ $siteSettings['site.hadith'] ?? 'لا يزال المرء عالماً ما طلب العلم' }}</span>
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex flex-wrap items-center gap-2 sm:gap-3">
                 <!-- Theme Switcher Pill -->
                 <div class="inline-flex items-center rounded-full bg-black/30 p-0.5 border border-gold-500/30 text-[11px] shadow-inner">
                     <a href="{{ route('theme.switch', 'almoneer-emerald') }}" 
@@ -472,19 +479,19 @@
                     </button>
 
                     <!-- Brand Link & Calligraphy -->
-                    <a href="{{ route('home') }}" class="group flex items-center gap-3 sm:gap-5">
-                        <div class="h-14 sm:h-20 md:h-24 lg:h-28 w-auto flex-shrink-0 flex items-center justify-center">
-                            <img src="{{ asset('images/almoneer-logo-official.png') }}" alt="شعار شبكة المنير" class="h-14 sm:h-20 md:h-24 lg:h-28 w-auto object-contain drop-shadow-[0_4px_18px_rgba(212,170,72,0.65)] group-hover:scale-105 transition-transform">
+                    <a href="{{ route('home') }}" class="group flex items-center gap-2 sm:gap-5 min-w-0 max-w-full">
+                        <div class="h-12 sm:h-20 md:h-24 lg:h-28 w-auto flex-shrink-0 flex items-center justify-center">
+                            <img src="{{ asset('images/almoneer-logo-official.png') }}" alt="شعار شبكة المنير" class="h-12 sm:h-20 md:h-24 lg:h-28 w-auto object-contain drop-shadow-[0_4px_18px_rgba(212,170,72,0.65)] group-hover:scale-105 transition-transform">
                         </div>
-                        <div class="flex flex-col justify-center">
+                        <div class="flex flex-col justify-center min-w-0">
                             <!-- Handwritten Arabic Calligraphy (Official Artwork) -->
-                            <div class="flex flex-col items-start gap-1.5 sm:gap-2">
+                            <div class="flex flex-col items-start gap-1 sm:gap-2">
                                 <img src="{{ asset('images/calligraphy-sayyid-muneer-gold.png') }}" 
                                      alt="{{ $siteSettings['site.title'] ?? 'سماحة السيد منير الخباز' }}" 
-                                     class="h-10 sm:h-14 md:h-18 lg:h-22 w-auto object-contain drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)] group-hover:brightness-110 transition">
+                                     class="h-8 sm:h-14 md:h-18 lg:h-22 w-auto max-w-full object-contain drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)] group-hover:brightness-110 transition">
                                 <img src="{{ asset('images/calligraphy-markaz-light.png') }}" 
                                      alt="{{ $siteSettings['site.subtitle'] ?? 'موقع يُعنى بمجمع النتاج الفقهي والفكري والنشاط التبليغي' }}" 
-                                     class="h-3.5 sm:h-5 md:h-6.5 lg:h-8 w-auto object-contain opacity-95 group-hover:opacity-100 transition drop-shadow-[0_2px_8px_rgba(0,0,0,0.55)]">
+                                     class="h-3 sm:h-5 md:h-6.5 lg:h-8 w-auto max-w-full object-contain opacity-95 group-hover:opacity-100 transition drop-shadow-[0_2px_8px_rgba(0,0,0,0.55)]">
                             </div>
                             <h1 class="sr-only">{{ $siteSettings['site.title'] ?? 'سماحة السيد منير الخباز' }} - {{ $siteSettings['site.subtitle'] ?? 'موقع يُعنى بمجمع النتاج الفقهي والفكري والنشاط التبليغي' }}</h1>
                         </div>
@@ -627,7 +634,7 @@
     @endif
 
     <!-- Main Page Content -->
-    <main class="flex-grow">
+    <main class="flex-grow overflow-x-hidden w-full max-w-full">
         @yield('content')
     </main>
 
