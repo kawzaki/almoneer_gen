@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" class="scroll-smooth overflow-x-hidden">
+<html lang="ar" dir="rtl" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -81,17 +81,16 @@
     @endif
 
     <style>
-        html, body {
-            max-width: 100%;
-            overflow-x: hidden;
-            position: relative;
-        }
         body {
             font-family: 'IBM Plex Sans Arabic', sans-serif;
             background-color: {{ $isTurquoise ? '#f2fafb' : '#faf9f5' }};
             color: #1e293b;
-            overflow-x: hidden;
-            max-width: 100vw;
+        }
+
+        @media (max-width: 1023px) {
+            html, body {
+                overflow-x: hidden;
+            }
         }
 
         /* Uthmanic Quranic Font Styles */
@@ -425,7 +424,7 @@
 
     @stack('styles')
 </head>
-<body class="theme-{{ $activeTheme }} min-h-screen flex flex-col antialiased selection:bg-gold-500 selection:text-white overflow-x-hidden w-full max-w-full">
+<body class="theme-{{ $activeTheme }} min-h-screen flex flex-col antialiased selection:bg-gold-500 selection:text-white">
 
     <!-- 1. Top Cross-Portal Switcher Bar (Connecting with Hawza Portal on Port 8000) -->
     <div class="no-print bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-950 text-gold-300 text-xs border-b border-gold-500/30 py-1.5 px-4 shadow-sm">
@@ -634,7 +633,7 @@
     @endif
 
     <!-- Main Page Content -->
-    <main class="flex-grow overflow-x-hidden w-full max-w-full">
+    <main class="flex-grow">
         @yield('content')
     </main>
 

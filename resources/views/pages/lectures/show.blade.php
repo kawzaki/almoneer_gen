@@ -3,7 +3,7 @@
 @section('title', $video->title . ' | شبكة العلامة المنير')
 
 @section('content')
-    <div class="lecture-page-container max-w-5xl mx-auto px-3 sm:px-6 py-6 sm:py-10 space-y-6 sm:space-y-8 max-w-full overflow-hidden">
+    <div class="lecture-page-container max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-8">
 
         <!-- Top Section (No Print) -->
         <div class="no-print space-y-8">
@@ -347,7 +347,7 @@
         </div>
 
         <!-- Full Transcribed Text (التفريغ النصي الكامل للمحاضرة) -->
-        <div id="transcript-section" class="transcript-card bg-white rounded-3xl p-4 sm:p-8 border border-slate-200 shadow-sm space-y-6 max-w-full overflow-hidden">
+        <div id="transcript-section" class="transcript-card bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
             <div class="no-print flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
                 <div class="flex items-center gap-3">
                     <div
@@ -364,17 +364,8 @@
 
                 @push('styles')
                     <style>
-                        table.print-layout-table {
-                            table-layout: fixed !important;
-                            width: 100% !important;
-                            max-width: 100% !important;
-                        }
-
                         #transcript-body {
                             --transcript-font-size: 18px;
-                            max-width: 100% !important;
-                            overflow-wrap: break-word;
-                            word-break: break-word;
                         }
 
                         #transcript-body p,
@@ -722,13 +713,13 @@
             </div>
 
             <!-- Print Layout Table (Ensures perfect page pagination without footer overlap) -->
-            <table class="print-layout-table w-full border-none border-collapse p-0 m-0 table-fixed">
+            <table class="print-layout-table w-full border-none border-collapse p-0 m-0">
                 <tbody>
                     <tr>
                         <td class="p-0 border-none m-0">
                             <!-- Transcript Content Area (with Uthmanic Quranic Font) -->
                             <div id="transcript-body"
-                                class="prose prose-slate max-w-none text-slate-800 leading-loose font-scholarly bg-amber-50/20 p-4 sm:p-10 rounded-2xl border border-amber-100/60 transition-all max-w-full overflow-hidden break-words">
+                                class="prose prose-slate max-w-none text-slate-800 leading-loose font-scholarly bg-amber-50/20 p-6 sm:p-10 rounded-2xl border border-amber-100/60 transition-all">
                                 @if(!empty($video->transcript))
                                     {!! \App\Services\TranscriptFormatter::format($video->transcript) !!}
                                 @else
