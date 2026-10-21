@@ -47,10 +47,13 @@
                         <td class="p-3.5 sm:p-4 text-slate-500 whitespace-nowrap">{{ $m->views_count }}</td>
                         <td class="p-3.5 sm:p-4 text-center whitespace-nowrap">
                             <div class="inline-flex items-center gap-2">
-                                <a href="{{ route('admin.media.edit', $m->id) }}" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg"><i class="fa-solid fa-pen"></i></a>
+                                <a href="{{ $m->live_url }}" target="_blank" rel="noopener noreferrer" class="p-1.5 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition" title="فتح المحاضرة في الموقع">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </a>
+                                <a href="{{ route('admin.media.edit', $m->id) }}" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition" title="تعديل"><i class="fa-solid fa-pen"></i></a>
                                 <form action="{{ route('admin.media.destroy', $m->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg"><i class="fa-solid fa-trash"></i></button>
+                                    <button type="submit" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition" title="حذف"><i class="fa-solid fa-trash"></i></button>
                                 </form>
                             </div>
                         </td>

@@ -60,7 +60,13 @@
                 </span>
             </div>
         </div>
-        <a href="{{ route('admin.media.index') }}" class="text-xs text-slate-600 hover:text-slate-900 bg-white border border-slate-200 px-3.5 py-2 rounded-xl shadow-xs transition">← العودة للقائمة</a>
+        <div class="flex items-center gap-2">
+            <a href="{{ $item->live_url }}" target="_blank" rel="noopener noreferrer" class="text-xs text-emerald-800 hover:text-emerald-950 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3.5 py-2 rounded-xl shadow-xs transition flex items-center gap-1.5 font-bold" title="فتح المحاضرة في الموقع">
+                <span>فتح في الموقع</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+            </a>
+            <a href="{{ route('admin.media.index') }}" class="text-xs text-slate-600 hover:text-slate-900 bg-white border border-slate-200 px-3.5 py-2 rounded-xl shadow-xs transition">← العودة للقائمة</a>
+        </div>
     </div>
 
     <form id="media-form" action="{{ route('admin.media.update', $item->id) }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-sm space-y-4">

@@ -163,4 +163,20 @@ class MediaItem extends Model
         }
         return asset('images/video-pending-placeholder.svg');
     }
+
+    public function getLiveUrlAttribute(): string
+    {
+        if (!empty($this->slug)) {
+            $year = (!empty($this->hijri_year) && preg_match('/^\d{4}$/', (string)$this->hijri_year))
+                ? (string)$this->hijri_year
+                : '1448';
+            $season = !empty($this->season_slug) ? $this->season_slug : 'general';
+            return route('lectures.show', [
+                'year'   => $year,
+                'season' => $season,
+                'slug'   => $this->slug,
+            ]);
+        }
+        return route('lectures.short', ['id' => $this->id]);
+    }
 }

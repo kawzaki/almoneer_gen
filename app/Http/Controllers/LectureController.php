@@ -355,9 +355,11 @@ class LectureController extends Controller
      */
     public function show($year, $season, $slug)
     {
-        $video = MediaItem::active()
-            ->where('slug', $slug)
-            ->firstOrFail();
+        $query = MediaItem::query()->where('slug', $slug);
+        if (!auth()->check()) {
+            $query->active();
+        }
+        $video = $query->firstOrFail();
 
         $video->increment('views_count');
 
@@ -410,7 +412,11 @@ class LectureController extends Controller
      */
     public function showBySlug($slug)
     {
-        $video = MediaItem::active()->where('slug', $slug)->firstOrFail();
+        $query = MediaItem::query()->where('slug', $slug);
+        if (!auth()->check()) {
+            $query->active();
+        }
+        $video = $query->firstOrFail();
         $year = $video->hijri_year ?? '1448';
         $season = $video->season_slug ?? 'general';
 
@@ -426,7 +432,11 @@ class LectureController extends Controller
      */
     public function shortRedirect($id)
     {
-        $video = MediaItem::active()->where('id', $id)->firstOrFail();
+        $query = MediaItem::query()->where('id', $id);
+        if (!auth()->check()) {
+            $query->active();
+        }
+        $video = $query->firstOrFail();
         $year = $video->hijri_year ?? '1448';
         $season = $video->season_slug ?? 'general';
 
