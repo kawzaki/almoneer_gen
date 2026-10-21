@@ -56,6 +56,12 @@ class TranscriptFormatter
      */
     public static function cleanInlineText(string $text): string
     {
+        // 0. توحيد المسافات غير القابلة للكسر والمسافات المشفرة الشاذة القادمة من الوورد (Non-breaking & zero-width spaces)
+        $text = preg_replace('/[\x{00A0}\x{2000}-\x{200B}\x{202F}\x{FEFF}]/u', ' ', $text);
+
+        // 0.1 ضبط أقواس الأحاديث الشريفة >...< إلى أقواس عربية معتمدة «...»
+        $text = preg_replace('/>\s*([^<>\n]+?)\s*</u', ' «$1» ', $text);
+
         // 1. علامات الترقيم والتنصيص
         $text = str_replace(',', '،', $text);
         $text = preg_replace('/،\s*/u', '، ', $text);
@@ -70,6 +76,12 @@ class TranscriptFormatter
         $text = str_replace('))', '»', $text);
         $text = preg_replace('/«\s*/u', ' «', $text);
         $text = preg_replace('/\s*»/u', '» ', $text);
+
+        // إزالة الفراغات الملاصقة داخل الأقواس
+        $text = preg_replace('/\(\s+/u', '(', $text);
+        $text = preg_replace('/\s+\)/u', ')', $text);
+        $text = preg_replace('/\[\s+/u', '[', $text);
+        $text = preg_replace('/\s+\]/u', ']', $text);
 
         // إزالة الفراغات الملاصقة لبداية ونهاية الآيات القرآنية
         $text = preg_replace('/([\{﴿])\s+/u', '$1', $text);
@@ -101,90 +113,26 @@ class TranscriptFormatter
         $text = preg_replace('/(الزهراء|فاطمة|خديجة|زينب|أم كلثوم|مريم|معصومة)\s*(?:\(|«|\[)\s*ع\s*(?:\)|»|\])/u', '$1 (عه)', $text);
         $text = preg_replace('/(الزهراء|فاطمة|خديجة|زينب|أم كلثوم|مريم|معصومة)\s+A(?=[\p{Arabic}\s،.؛:؟!«»\(\)\[\]"\'”„…–—]|$)/u', '$1 h', $text);
 
-        // 5. الصلوات والأدعية (قواعد المخمة الأصلية)
-        $replacements = [
-            '﵌'                         => '(ص)',
-            '&#xFD4C;'                  => '(ص)',
-            'ﷺ'                         => '(ص)',
-            '«صلى الله عليه وآله وسلم»' => '(ص)',
-            '"صلى الله عليه وآله وسلم"' => '(ص)',
-            '”صلى الله عليه وآله وسلم“' => '(ص)',
-            'صلى الله عليه وآله وسلم'   => '(ص)',
-            '«صلى الله عليه وآله»'      => '(ص)',
-            '"صلى الله عليه وآله"'      => '(ص)',
-            '”صلى الله عليه وآله“'      => '(ص)',
-            'صلى الله عليه وآله'        => '(ص)',
-            '«صلى الله عليه وسلم»'      => '(ص)',
-            '"صلى الله عليه وسلم"'      => '(ص)',
-            '”صلى الله عليه وسلم“'      => '(ص)',
-            'صلى الله عليه وسلم'        => '(ص)',
-            '«عليه السلام»'             => '(ع)',
-            '"عليه السلام"'             => '(ع)',
-            '”عليه السلام“'             => '(ع)',
-            'عليه السلام'               => '(ع)',
-            '«عليهم السلام»'            => '(عع)',
-            '"عليهم السلام"'            => '(عع)',
-            '”عليهم السلام“'            => '(عع)',
-            'عليهم السلام'              => '(عع)',
-            '«عليهما السلام»'           => '(عما)',
-            '"عليهما السلام"'           => '(عما)',
-            '”عليهما السلام“'           => '(عما)',
-            'عليهما السلام'             => '(عما)',
-            '«عليها السلام»'            => '(عه)',
-            '"عليها السلام"'            => '(عه)',
-            '”عليها السلام“'            => '(عه)',
-            'عليها السلام'              => '(عه)',
-            '«رحمه الله»'               => '(ره)',
-            '"رحمه الله"'               => '(ره)',
-            '”رحمه الله“'               => '(ره)',
-            'رحمة الله عليه'            => '(ره)',
-            'رضوان الله عليه'           => '(ره)',
-            'رحمه الله'                 => '(ره)',
-            'قدس سره الشريف'            => '(قده)',
-            '«قدس سره»'                 => '(قده)',
-            '"قدس سره"'                 => '(قده)',
-            '”قدس سره“'                 => '(قده)',
-            'قدس سره'                   => '(قده)',
-            '«دام ظله»'                 => '(دام ظله)',
-            '"دام ظله"'                 => '(دام ظله)',
-            '”دام ظله“'                 => '(دام ظله)',
-            'دام ظله العالي'            => '(دام ظله)',
-            'دام ظله'                   => '(دام ظله)',
-            'مد ظله العالي'             => '(دام ظله)',
-            '«مد ظله»'                  => '(دام ظله)',
-            '"مد ظله"'                  => '(دام ظله)',
-            'مد ظله'                    => '(دام ظله)',
-            'دامت بركاته'               => '(دام ظله)',
-            '«ص»'                       => '(ص)',
-            '«ع»'                       => '(ع)',
-            '«عع»'                      => '(عع)',
-            '«عما»'                     => '(عما)',
-            '«عه»'                      => '(عه)',
-            '«عم»'                      => '(عم)',
-            '«ره»'                      => '(ره)',
-            '«قده»'                     => '(قده)',
-            '"ص"'                       => '(ص)',
-            '"ع"'                       => '(ع)',
-            '"عع"'                      => '(عع)',
-            '"عما"'                     => '(عما)',
-            '"عه"'                      => '(عه)',
-            '"عم"'                      => '(عم)',
-            '"ره"'                      => '(ره)',
-            '"قده"'                     => '(قده)',
-            '”ص“'                       => '(ص)',
-            '”ع“'                       => '(ع)',
-            '”عع“'                      => '(عع)',
-            '”عما“'                     => '(عما)',
-            '”عه“'                      => '(عه)',
-            '”عم“'                      => '(عم)',
-            '”ره“'                      => '(ره)',
-            '”قده“'                     => '(قده)',
+        // 5. الصلوات والأدعية (Regex مرن يدعم الفراغات البينية والأقواس المتنوعة)
+        $honorificPatterns = [
+            '/(?:[\(\[«"”]\s*)?صلى\s+الله\s+عليه\s+وآله\s+وسلم(?:\s*[\)\]»"”])?/u' => ' (ص) ',
+            '/(?:[\(\[«"”]\s*)?صلى\s+الله\s+عليه\s+وآله(?:\s*[\)\]»"”])?/u'      => ' (ص) ',
+            '/(?:[\(\[«"”]\s*)?صلى\s+الله\s+عليه\s+وسلم(?:\s*[\)\]»"”])?/u'        => ' (ص) ',
+            '/(?:[\(\[«"”]\s*)?عليه\s+السلام(?:\s*[\)\]»"”])?/u'                   => ' (ع) ',
+            '/(?:[\(\[«"”]\s*)?عليها\s+السلام(?:\s*[\)\]»"”])?/u'                  => ' (عه) ',
+            '/(?:[\(\[«"”]\s*)?عليهما\s+السلام(?:\s*[\)\]»"”])?/u'                 => ' (عما) ',
+            '/(?:[\(\[«"”]\s*)?عليهم\s+السلام(?:\s*[\)\]»"”])?/u'                  => ' (عع) ',
+            '/(?:[\(\[«"”]\s*)?(?:رحمه\s+الله|رحمة\s+الله\s+عليه|رضوان\s+الله\s+عليه)(?:\s*[\)\]»"”])?/u' => ' (ره) ',
+            '/(?:[\(\[«"”]\s*)?قدس\s+سره(?:\s+الشريف)?(?:\s*[\)\]»"”])?/u'        => ' (قده) ',
+            '/(?:[\(\[«"”]\s*)?(?:دام|مد)\s+ظله(?:\s+العالي)?(?:\s*[\)\]»"”])?/u'   => ' (دام ظله) ',
+            '/(?:[\(\[«"”]\s*)?دامت\s+بركاته(?:\s*[\)\]»"”])?/u'                   => ' (دام ظله) ',
+            '/﵌|&#xFD4C;|ﷺ/u'                                                     => ' (ص) ',
         ];
-        $text = str_replace(array_keys($replacements), array_values($replacements), $text);
+        $text = preg_replace(array_keys($honorificPatterns), array_values($honorificPatterns), $text);
 
         // 5.1 استبدال رموز خط أبو ذر (Abo-Thar) القادمة من الوورد (A, C, D, H, J, K, h)
         $text = preg_replace('/(?:\(|«|\[|”|")\s*A\s*(?:\)|»|\]|“|")/u', '(ع)', $text);
-        $text = preg_replace('/(?:\(|«|\[|”|")\s*C\s*(?:\)|»|\]|“|")/u', '(عه)', $text);
+        $text = preg_replace('/(?:\(|«|\[|”|")\s*C\s*(?:\)|»|\]|“|")/u', '(عما)', $text);
         $text = preg_replace('/(?:\(|«|\[|”|")\s*h\s*(?:\)|»|\]|“|")/u', '(عه)', $text);
         $text = preg_replace('/(?:\(|«|\[|”|")\s*D\s*(?:\)|»|\]|“|")/u', '(عع)', $text);
         $text = preg_replace('/(?:\(|«|\[|”|")\s*H\s*(?:\)|»|\]|“|")/u', '(قده)', $text);
@@ -194,7 +142,7 @@ class TranscriptFormatter
         // استبدال الحروف المفردة المحاطة بنص عربي أو فواصل أو أقواس
         $glyphMap = [
             'A' => '(ع)',
-            'C' => '(عه)',
+            'C' => '(عما)',
             'h' => '(عه)',
             'D' => '(عع)',
             'H' => '(قده)',
@@ -205,8 +153,9 @@ class TranscriptFormatter
             return $glyphMap[$m[1]];
         }, $text);
 
-        // إزالة أي أقواس متكررة ناتجة عن التحويل مثل ((دام ظله)) أو ((ع))
-        $text = preg_replace('/\(+\s*(ص|ع|عه|عما|عع|عم|ره|قده|دام ظله)\s*\)+/u', '($1)', $text);
+        // إزالة أي أقواس متكررة ناتجة عن التحويل مثل ((دام ظله)) أو ((ع)) أو ( (ع) )
+        $text = preg_replace('/[\(\[«\s]*[\(\[«]\s*(ص|ع|عه|عما|عع|عم|ره|قده|دام ظله)\s*[\)\]»][\)\]»\s]*/u', ' ($1) ', $text);
+        $text = preg_replace('/(?:\(|«|\[)\s*(ص|ع|عه|عما|عع|عم|ره|قده|دام ظله)\s*(?:\)|»|\])/u', '($1)', $text);
 
         // 6. تشذيب علامات الترقيم والفراغات بعد التعديل
         $text = str_replace('. .', '..', $text);
@@ -231,6 +180,9 @@ class TranscriptFormatter
         // تصحيح الأرقام العشرية
         $text = preg_replace('/(\d+\.)\s+(\d+)/u', '$1$2', $text);
 
+        // تنظيف المسافات المكررة
+        $text = preg_replace('/[ ]{2,}/u', ' ', $text);
+
         return $text;
     }
 
@@ -247,12 +199,13 @@ class TranscriptFormatter
             return $key;
         }, $html);
 
-        $parts = preg_split('/(<[^>]+>)/u', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
+        // تقسيم النص فقط على وسوم HTML الحقيقية الصالحة (التي تبدأ بحرف لاتيني أو / أو تعليق)
+        $parts = preg_split('/(<\/?(?:[a-zA-Z][a-zA-Z0-9]*|!--.*?--)(?:\s+[^>]*)?>)/su', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
         $result = '';
 
         foreach ($parts as $part) {
             if (empty($part)) continue;
-            if (str_starts_with($part, '<') && str_ends_with($part, '>')) {
+            if (preg_match('/^<\/?(?:[a-zA-Z][a-zA-Z0-9]*|!--.*?--)(?:\s+[^>]*)?>$/su', $part)) {
                 $result .= $part;
             } else {
                 $result .= self::cleanInlineText($part);
@@ -404,13 +357,15 @@ class TranscriptFormatter
             // 5. استبدال الصلوات والأدعية المختصرة مع رموز خط أبو ذر والنبي الأكرم
             $prophetSymbol = '<img src="/images/prophet-pbuhaf.svg" alt="صلى الله عليه وآله وسلم" title="صلى الله عليه وآله وسلم" class="prophet-symbol-icon inline-block align-middle" style="display: inline-block; vertical-align: -0.22em; height: 1.35em; width: auto; margin: 0 2px;" />';
             $formatted = preg_replace('/(?:(?:\(|«|\[)\s*ص\s*(?:\)|»|\])|ﷺ|﵌|&#xFD4C;)/u', $prophetSymbol, $formatted);
-            $formatted = preg_replace('/(?:\(|«|\[)\s*ع\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليه السلام">A</span>', $formatted);
-            $formatted = preg_replace('/(?:\(|«|\[)\s*(?:عع|عم)\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليهم السلام">D</span>', $formatted);
-            $formatted = preg_replace('/(?:\(|«|\[)\s*عما\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليهما السلام">C</span>', $formatted);
-            $formatted = preg_replace('/(?:\(|«|\[)\s*عه\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليها السلام">h</span>', $formatted);
-            $formatted = preg_replace('/(?:\(|«|\[)\s*ره\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="رحمه الله">6</span>', $formatted);
-            $formatted = preg_replace('/(?:\(|«|\[)\s*قده\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="قدس سره">H</span>', $formatted);
-            $formatted = preg_replace('/(?:\(|«|\[)\s*دام\s*ظله\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="دام ظله">K</span>', $formatted);
+            $formatted = preg_replace('/(?:\(|«|\[)?\s*(?:صلى\s+الله\s+عليه\s+وآله\s+وسلم|صلى\s+الله\s+عليه\s+وآله|صلى\s+الله\s+عليه\s+وسلم)\s*(?:\)|»|\])?/u', $prophetSymbol, $formatted);
+
+            $formatted = preg_replace('/(?:\(|«|\[)\s*(?:ع|عليه\s+السلام)\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليه السلام">A</span>', $formatted);
+            $formatted = preg_replace('/(?:\(|«|\[)\s*(?:عع|عم|عليهم\s+السلام)\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليهم السلام">D</span>', $formatted);
+            $formatted = preg_replace('/(?:\(|«|\[)\s*(?:عما|عليهما\s+السلام)\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليهما السلام">C</span>', $formatted);
+            $formatted = preg_replace('/(?:\(|«|\[)\s*(?:عه|عليها\s+السلام)\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليها السلام">h</span>', $formatted);
+            $formatted = preg_replace('/(?:\(|«|\[)\s*(?:ره|رحمه\s+الله|رحمة\s+الله\s+عليه|رضوان\s+الله\s+عليه)\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="رحمه الله">6</span>', $formatted);
+            $formatted = preg_replace('/(?:\(|«|\[)\s*(?:قده|قدس\s+سره(?:\s+الشريف)?)\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="قدس سره">H</span>', $formatted);
+            $formatted = preg_replace('/(?:\(|«|\[)\s*(?:دام\s*ظله|دامت\s*بركاته|مد\s*ظله(?:\s*العالي)?)\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="دام ظله">K</span>', $formatted);
 
             // 6. استبدال وتنسيق القوائم النقطية <ul> و <li> لتطابق هوية الموقع
             $formatted = preg_replace_callback('/<ul[^>]*>(.*?)<\/ul>/su', function ($matches) {
@@ -704,10 +659,11 @@ class TranscriptFormatter
         // 3. Convert Abo-Thar symbols
         $prophetSymbol = '<img src="/images/prophet-pbuhaf.svg" alt="صلى الله عليه وآله وسلم" title="صلى الله عليه وآله وسلم" class="prophet-symbol-icon inline-block align-middle" style="display: inline-block; vertical-align: -0.22em; height: 1.35em; width: auto; margin: 0 2px;" />';
         $text = preg_replace('/(?:(?:\(|«|\[)\s*ص\s*(?:\)|»|\])|ﷺ|﵌|&#xFD4C;)/u', $prophetSymbol, $text);
-        $text = preg_replace('/(?:\(|«|\[)\s*ع\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليه السلام">A</span>', $text);
-        $text = preg_replace('/(?:\(|«|\[)\s*(?:عع|عم)\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليهم السلام">D</span>', $text);
-        $text = preg_replace('/(?:\(|«|\[)\s*عما\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليهما السلام">C</span>', $text);
-        $text = preg_replace('/(?:\(|«|\[)\s*عه\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليها السلام">h</span>', $text);
+        $text = preg_replace('/(?:\(|«|\[)?\s*(?:صلى\s+الله\s+عليه\s+وآله\s+وسلم|صلى\s+الله\s+عليه\s+وآله|صلى\s+الله\s+عليه\s+وسلم)\s*(?:\)|»|\])?/u', $prophetSymbol, $text);
+        $text = preg_replace('/(?:\(|«|\[)\s*(?:ع|عليه\s+السلام)\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليه السلام">A</span>', $text);
+        $text = preg_replace('/(?:\(|«|\[)\s*(?:عع|عم|عليهم\s+السلام)\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليهم السلام">D</span>', $text);
+        $text = preg_replace('/(?:\(|«|\[)\s*(?:عما|عليهما\s+السلام)\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليهما السلام">C</span>', $text);
+        $text = preg_replace('/(?:\(|«|\[)\s*(?:عه|عليها\s+السلام)\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليها السلام">h</span>', $text);
 
         // 4. Style "المحاور:" with the approved red color #990000 and Traditional Arabic font
         $text = preg_replace_callback('/<p\b[^>]*>\s*(?:<strong>|<b>)?\s*(المحاور|محاور المحاضرة|محاور البحث):?\s*(?:<\/strong>|<\/b>)?\s*<\/p>/u', function ($m) {
