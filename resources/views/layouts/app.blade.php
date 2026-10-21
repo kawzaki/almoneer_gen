@@ -141,6 +141,18 @@
             font-weight: normal !important;
         }
 
+        .prophet-symbol-icon,
+        img[src*="prophet-pbuhaf"],
+        img[alt*="صلى الله عليه وآله"] {
+            display: inline-block !important;
+            vertical-align: -0.22em !important;
+            height: 1.35em !important;
+            max-height: 1.5em !important;
+            width: auto !important;
+            max-width: 3.5em !important;
+            margin: 0 2px !important;
+        }
+
         /* Quill Rich Text Editor Output Support */
         .ql-align-center {
             text-align: center !important;

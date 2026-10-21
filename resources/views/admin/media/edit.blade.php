@@ -33,6 +33,17 @@
         border-color: #e2e8f0;
         background-color: #ffffff;
     }
+    .ql-editor img[src*="prophet-pbuhaf"],
+    .ql-editor img[alt*="صلى الله عليه وآله"],
+    .ql-editor .prophet-symbol-icon {
+        display: inline-block !important;
+        vertical-align: -0.22em !important;
+        height: 1.35em !important;
+        max-height: 1.5em !important;
+        width: auto !important;
+        max-width: 3.5em !important;
+        margin: 0 2px !important;
+    }
 </style>
 @endpush
 

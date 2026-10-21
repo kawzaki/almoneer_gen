@@ -356,6 +356,7 @@ class TranscriptFormatter
 
             // 5. استبدال الصلوات والأدعية المختصرة مع رموز خط أبو ذر والنبي الأكرم
             $prophetSymbol = '<img src="/images/prophet-pbuhaf.svg" alt="صلى الله عليه وآله وسلم" title="صلى الله عليه وآله وسلم" class="prophet-symbol-icon inline-block align-middle" style="display: inline-block; vertical-align: -0.22em; height: 1.35em; width: auto; margin: 0 2px;" />';
+            $formatted = preg_replace('/<img\b[^>]*src=["\'][^"\']*prophet-pbuhaf\.svg[^"\']*["\'][^>]*>/i', $prophetSymbol, $formatted);
             $formatted = preg_replace('/(?:(?:\(|«|\[)\s*ص\s*(?:\)|»|\])|ﷺ|﵌|&#xFD4C;)/u', $prophetSymbol, $formatted);
             $formatted = preg_replace('/(?:\(|«|\[)\s*ع\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليه السلام">A</span>', $formatted);
             $formatted = preg_replace('/(?:\(|«|\[)\s*(?:عع|عم)\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليهم السلام">D</span>', $formatted);
@@ -442,6 +443,7 @@ class TranscriptFormatter
 
         // 5. استبدال الصلوات والأدعية المختصرة مع رموز خط أبو ذر والنبي الأكرم
         $prophetSymbol = '<img src="/images/prophet-pbuhaf.svg" alt="صلى الله عليه وآله وسلم" title="صلى الله عليه وآله وسلم" class="prophet-symbol-icon inline-block align-middle" style="display: inline-block; vertical-align: -0.22em; height: 1.35em; width: auto; margin: 0 2px;" />';
+        $cleaned = preg_replace('/<img\b[^>]*src=["\'][^"\']*prophet-pbuhaf\.svg[^"\']*["\'][^>]*>/i', $prophetSymbol, $cleaned);
         $cleaned = preg_replace('/(?:(?:\(|«|\[)\s*ص\s*(?:\)|»|\])|ﷺ|﵌|&#xFD4C;)/u', $prophetSymbol, $cleaned);
         $cleaned = preg_replace('/(?:\(|«|\[)\s*ع\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليه السلام">A</span>', $cleaned);
         $cleaned = preg_replace('/(?:\(|«|\[)\s*(?:عع|عم)\s*(?:\)|»|\])/u', '<span class="symbol-abothar text-emerald-800" title="عليهم السلام">D</span>', $cleaned);
