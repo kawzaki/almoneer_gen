@@ -305,12 +305,15 @@
             <!-- Rich Visual Editor Container for Description -->
             <div id="quill-editor-wrapper" class="rounded-xl border border-slate-200 overflow-hidden bg-white">
                 <div class="flex flex-wrap items-center gap-1 px-2.5 py-1.5 bg-slate-50 border-b border-slate-200 text-xs">
-                    <button type="button" onclick="execEditorCmd('quill-editor', 'bold')" class="px-2 py-1 rounded hover:bg-slate-200 font-bold" title="عريض"><i class="fa-solid fa-bold"></i></button>
-                    <button type="button" onclick="execEditorCmd('quill-editor', 'italic')" class="px-2 py-1 rounded hover:bg-slate-200" title="مائل"><i class="fa-solid fa-italic"></i></button>
-                    <button type="button" onclick="execEditorCmd('quill-editor', 'underline')" class="px-2 py-1 rounded hover:bg-slate-200" title="تسطير"><i class="fa-solid fa-underline"></i></button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="execEditorCmd('quill-editor', 'undo')" class="px-2 py-1 rounded hover:bg-slate-200 text-slate-700" title="تراجع (Ctrl+Z)"><i class="fa-solid fa-rotate-left"></i></button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="execEditorCmd('quill-editor', 'redo')" class="px-2 py-1 rounded hover:bg-slate-200 text-slate-700" title="إعادة (Ctrl+Y)"><i class="fa-solid fa-rotate-right"></i></button>
                     <span class="h-4 w-[1px] bg-slate-300 mx-1"></span>
-                    <button type="button" onclick="execEditorCmd('quill-editor', 'insertUnorderedList')" class="px-2 py-1 rounded hover:bg-slate-200" title="قائمة نقطية"><i class="fa-solid fa-list-ul"></i></button>
-                    <button type="button" onclick="execEditorCmd('quill-editor', 'removeFormat')" class="px-2 py-1 rounded hover:bg-slate-200 text-slate-500" title="مسح التنسيق"><i class="fa-solid fa-eraser"></i></button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="execEditorCmd('quill-editor', 'bold')" class="px-2 py-1 rounded hover:bg-slate-200 font-bold" title="عريض"><i class="fa-solid fa-bold"></i></button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="execEditorCmd('quill-editor', 'italic')" class="px-2 py-1 rounded hover:bg-slate-200" title="مائل"><i class="fa-solid fa-italic"></i></button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="execEditorCmd('quill-editor', 'underline')" class="px-2 py-1 rounded hover:bg-slate-200" title="تسطير"><i class="fa-solid fa-underline"></i></button>
+                    <span class="h-4 w-[1px] bg-slate-300 mx-1"></span>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="execEditorCmd('quill-editor', 'insertUnorderedList')" class="px-2 py-1 rounded hover:bg-slate-200" title="قائمة نقطية"><i class="fa-solid fa-list-ul"></i></button>
+                    <button type="button" onmousedown="event.preventDefault()" onclick="execEditorCmd('quill-editor', 'removeFormat')" class="px-2 py-1 rounded hover:bg-slate-200 text-slate-500" title="مسح التنسيق"><i class="fa-solid fa-eraser"></i></button>
                 </div>
                 <div id="quill-editor" contenteditable="true" data-placeholder="اكتب وصف المحاضرة أو الصق النص المنسق هنا..." class="scholarly-rich-editor p-4">{!! old('description') !!}</div>
             </div>
@@ -351,23 +354,34 @@
                 <!-- Formatting Input Toolbar -->
                 <div class="flex flex-wrap items-center justify-between gap-1.5 px-3 py-2 bg-slate-50 border-b border-slate-200 text-xs">
                     <div class="flex flex-wrap items-center gap-1">
-                        <button type="button" onclick="wrapTranscriptTag('[t]', '[/t]', 'عنوان رئيسي')" class="px-2 py-1 rounded-lg bg-red-50 hover:bg-red-100 text-red-900 font-bold border border-red-200 text-[11px]" title="عنوان رئيسي أحمر [t]...[/t]">[t] عنوان رئيسي</button>
-                        <button type="button" onclick="wrapTranscriptTag('[c]', '[/c]', 'عنوان فرعي')" class="px-2 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold border border-amber-200 text-[11px]" title="عنوان فرعي بني [c]...[/c]">[c] عنوان فرعي</button>
-                        <button type="button" onclick="wrapTranscriptTag('{', '}', 'آية قرآنية')" class="px-2 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-900 font-bold border border-emerald-200 text-[11px]" title="آية قرآنية بالخط العثماني {...}">{ آية }</button>
-                        <button type="button" onclick="wrapTranscriptTag('«', '»', 'نص روائي')" class="px-2 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-900 font-bold border border-sky-200 text-[11px]" title="تنصيص مزدوج «...»">«حديث»</button>
-                        <button type="button" onclick="wrapTranscriptTag('”', '“', 'نص مقتبس')" class="px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold border border-slate-300 text-[11px]" title="علامة اقتباس ”...“">”اقتباس“</button>
+                        <!-- History: Undo & Redo (Keyboard & Touch/Mouse) -->
+                        <button type="button" onmousedown="event.preventDefault()" onclick="transcriptUndo()" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold border border-slate-300 text-[11px] flex items-center gap-1 shadow-2xs" title="تراجع (Ctrl + Z)">
+                            <i class="fa-solid fa-rotate-left text-slate-600"></i>
+                            <span>تراجع</span>
+                        </button>
+                        <button type="button" onmousedown="event.preventDefault()" onclick="transcriptRedo()" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold border border-slate-300 text-[11px] flex items-center gap-1 shadow-2xs" title="إعادة (Ctrl + Y)">
+                            <i class="fa-solid fa-rotate-right text-slate-600"></i>
+                            <span>إعادة</span>
+                        </button>
                         <span class="h-4 w-[1px] bg-slate-300 mx-0.5"></span>
-                        <button type="button" onclick="insertPoemTemplate()" class="px-2 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-900 font-bold border border-purple-200 text-[11px] flex items-center gap-1" title="إدراج أبيات شعرية [poem] الشطر الأول | الشطر الثاني [/poem]">
+
+                        <button type="button" onmousedown="event.preventDefault()" onclick="wrapTranscriptTag('[t]', '[/t]', 'عنوان رئيسي')" class="px-2 py-1 rounded-lg bg-red-50 hover:bg-red-100 text-red-900 font-bold border border-red-200 text-[11px]" title="عنوان رئيسي أحمر [t]...[/t]">[t] عنوان رئيسي</button>
+                        <button type="button" onmousedown="event.preventDefault()" onclick="wrapTranscriptTag('[c]', '[/c]', 'عنوان فرعي')" class="px-2 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold border border-amber-200 text-[11px]" title="عنوان فرعي بني [c]...[/c]">[c] عنوان فرعي</button>
+                        <button type="button" onmousedown="event.preventDefault()" onclick="wrapTranscriptTag('{', '}', 'آية قرآنية')" class="px-2 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-900 font-bold border border-emerald-200 text-[11px]" title="آية قرآنية بالخط العثماني {...}">{ آية }</button>
+                        <button type="button" onmousedown="event.preventDefault()" onclick="wrapTranscriptTag('«', '»', 'نص روائي')" class="px-2 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-900 font-bold border border-sky-200 text-[11px]" title="تنصيص مزدوج «...»">«حديث»</button>
+                        <button type="button" onmousedown="event.preventDefault()" onclick="wrapTranscriptTag('”', '“', 'نص مقتبس')" class="px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold border border-slate-300 text-[11px]" title="علامة اقتباس ”...“">”اقتباس“</button>
+                        <span class="h-4 w-[1px] bg-slate-300 mx-0.5"></span>
+                        <button type="button" onmousedown="event.preventDefault()" onclick="insertPoemTemplate()" class="px-2 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-900 font-bold border border-purple-200 text-[11px] flex items-center gap-1" title="إدراج أبيات شعرية [poem] الشطر الأول | الشطر الثاني [/poem]">
                             <i class="fa-solid fa-feather-pointed text-[10px]"></i>
                             <span>أبيات شعرية [poem]</span>
                         </button>
-                        <button type="button" onclick="insertQaTemplate()" class="px-2 py-1 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-900 font-bold border border-teal-200 text-[11px]" title="إدراج سؤال وجواب [س]...[/س] [ج]...[/ج]">[س / ج]</button>
+                        <button type="button" onmousedown="event.preventDefault()" onclick="insertQaTemplate()" class="px-2 py-1 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-900 font-bold border border-teal-200 text-[11px]" title="إدراج سؤال وجواب [س]...[/س] [ج]...[/ج]">[س / ج]</button>
                         <span class="h-4 w-[1px] bg-slate-300 mx-0.5"></span>
-                        <button type="button" onclick="toggleFootnotePanel()" class="px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-950 font-bold border border-amber-400/60 text-[11px] flex items-center gap-1" title="إضافة رقم هامش في المتن مع نصه في أسفل المحاضرة">
+                        <button type="button" onmousedown="event.preventDefault()" onclick="toggleFootnotePanel()" class="px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-950 font-bold border border-amber-400/60 text-[11px] flex items-center gap-1" title="إضافة رقم هامش في المتن مع نصه في أسفل المحاضرة">
                             <i class="fa-solid fa-superscript text-amber-800"></i>
                             <span>+ هامش مرجعي [1]</span>
                         </button>
-                        <button type="button" onclick="toggleAnchorPanel()" class="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-900 font-bold border border-blue-200 text-[11px] flex items-center gap-1" title="إضافة اسم مرساة (Anchor) والربط إليها">
+                        <button type="button" onmousedown="event.preventDefault()" onclick="toggleAnchorPanel()" class="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-900 font-bold border border-blue-200 text-[11px] flex items-center gap-1" title="إضافة اسم مرساة (Anchor) والربط إليها">
                             <i class="fa-solid fa-anchor text-blue-700 text-[10px]"></i>
                             <span>+ مرساة / رابط</span>
                         </button>
@@ -376,18 +390,18 @@
                     <!-- Quick Honorific Markers -->
                     <div class="flex flex-wrap items-center gap-1 pt-1 sm:pt-0 border-t sm:border-t-0 border-slate-200 w-full sm:w-auto">
                         <span class="text-[10px] text-slate-400 ml-1">الرموز:</span>
-                        <button type="button" onclick="insertTranscriptText(' (ص) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="صلى الله عليه وآله">(ص)</button>
-                        <button type="button" onclick="insertTranscriptText(' (ع) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="عليه السلام">(ع)</button>
-                        <button type="button" onclick="insertTranscriptText(' (عه) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="عليها السلام">(عه)</button>
-                        <button type="button" onclick="insertTranscriptText(' (عما) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="عليهما السلام">(عما)</button>
-                        <button type="button" onclick="insertTranscriptText(' (عع) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="عليهم السلام">(عع)</button>
-                        <button type="button" onclick="insertTranscriptText(' (عج) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="عجل الله فرجه">(عج)</button>
-                        <button type="button" onclick="insertTranscriptText(' (قده) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="قدس سره">(قده)</button>
-                        <button type="button" onclick="insertTranscriptText(' (دام ظله) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="دام ظله">(دام ظله)</button>
-                        <button type="button" onclick="insertTranscriptText(' (ره) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="رحمه الله">(ره)</button>
-                        <button type="button" onclick="insertTranscriptText(' (رض) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="رضي الله عنه">(رض)</button>
-                        <button type="button" onclick="insertTranscriptText(' (طاب ثراه) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="طاب ثراه">(طاب ثراه)</button>
-                        <button type="button" onclick="insertTranscriptText(' (مد ظله) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="مد ظله">(مد ظله)</button>
+                        <button type="button" onmousedown="event.preventDefault()" onclick="insertTranscriptText(' (ص) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="صلى الله عليه وآله">(ص)</button>
+                        <button type="button" onmousedown="event.preventDefault()" onclick="insertTranscriptText(' (ع) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="عليه السلام">(ع)</button>
+                        <button type="button" onmousedown="event.preventDefault()" onclick="insertTranscriptText(' (عه) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="عليها السلام">(عه)</button>
+                        <button type="button" onmousedown="event.preventDefault()" onclick="insertTranscriptText(' (عما) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="عليهما السلام">(عما)</button>
+                        <button type="button" onmousedown="event.preventDefault()" onclick="insertTranscriptText(' (عع) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="عليهم السلام">(عع)</button>
+                        <button type="button" onmousedown="event.preventDefault()" onclick="insertTranscriptText(' (عج) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="عجل الله فرجه">(عج)</button>
+                        <button type="button" onmousedown="event.preventDefault()" onclick="insertTranscriptText(' (قده) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="قدس سره">(قده)</button>
+                        <button type="button" onmousedown="event.preventDefault()" onclick="insertTranscriptText(' (دام ظله) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="دام ظله">(دام ظله)</button>
+                        <button type="button" onmousedown="event.preventDefault()" onclick="insertTranscriptText(' (ره) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="رحمه الله">(ره)</button>
+                        <button type="button" onmousedown="event.preventDefault()" onclick="insertTranscriptText(' (رض) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="رضي الله عنه">(رض)</button>
+                        <button type="button" onmousedown="event.preventDefault()" onclick="insertTranscriptText(' (طاب ثراه) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="طاب ثراه">(طاب ثراه)</button>
+                        <button type="button" onmousedown="event.preventDefault()" onclick="insertTranscriptText(' (مد ظله) ')" class="px-1.5 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-[11px] font-semibold text-emerald-900" title="مد ظله">(مد ظله)</button>
                     </div>
                 </div>
 
@@ -563,6 +577,180 @@
         }
     }
 
+    // =========================================================================
+    // Robust Undo & Redo History System for Transcript (Keyboard & Buttons)
+    // =========================================================================
+    var undoStack = [];
+    var redoStack = [];
+    var isPerformingUndoRedo = false;
+    var typingTimer = null;
+    var typingSnapshotTaken = false;
+
+    // Push snapshot to undo stack
+    function pushTranscriptUndo(force = false) {
+        if (isPerformingUndoRedo || !transcriptInput) return;
+
+        const currentState = {
+            value: transcriptInput.value,
+            selectionStart: transcriptInput.selectionStart || 0,
+            selectionEnd: transcriptInput.selectionEnd || 0,
+            scrollTop: transcriptInput.scrollTop || 0
+        };
+
+        if (undoStack.length > 0) {
+            const last = undoStack[undoStack.length - 1];
+            if (last.value === currentState.value && !force) {
+                return;
+            }
+        }
+
+        undoStack.push(currentState);
+        if (undoStack.length > 150) undoStack.shift();
+        if (!force) {
+            redoStack.length = 0; // Clear redo on new edit
+        }
+    }
+
+    // Undo action (Ctrl+Z / Toolbar Button)
+    function transcriptUndo() {
+        if (!transcriptInput || undoStack.length === 0) return;
+
+        // Save current state for Redo
+        const currentState = {
+            value: transcriptInput.value,
+            selectionStart: transcriptInput.selectionStart || 0,
+            selectionEnd: transcriptInput.selectionEnd || 0,
+            scrollTop: transcriptInput.scrollTop || 0
+        };
+        redoStack.push(currentState);
+
+        const prevState = undoStack.pop();
+        isPerformingUndoRedo = true;
+
+        const savedWindowY = window.pageYOffset || document.documentElement.scrollTop;
+        transcriptInput.value = prevState.value;
+        transcriptInput.focus({ preventScroll: true });
+        transcriptInput.setSelectionRange(prevState.selectionStart, prevState.selectionEnd);
+        transcriptInput.scrollTop = prevState.scrollTop;
+        window.scrollTo(0, savedWindowY);
+
+        requestAnimationFrame(() => {
+            transcriptInput.scrollTop = prevState.scrollTop;
+            window.scrollTo(0, savedWindowY);
+            isPerformingUndoRedo = false;
+        });
+    }
+
+    // Redo action (Ctrl+Y / Ctrl+Shift+Z / Toolbar Button)
+    function transcriptRedo() {
+        if (!transcriptInput || redoStack.length === 0) return;
+
+        // Save current state to Undo
+        const currentState = {
+            value: transcriptInput.value,
+            selectionStart: transcriptInput.selectionStart || 0,
+            selectionEnd: transcriptInput.selectionEnd || 0,
+            scrollTop: transcriptInput.scrollTop || 0
+        };
+        undoStack.push(currentState);
+
+        const nextState = redoStack.pop();
+        isPerformingUndoRedo = true;
+
+        const savedWindowY = window.pageYOffset || document.documentElement.scrollTop;
+        transcriptInput.value = nextState.value;
+        transcriptInput.focus({ preventScroll: true });
+        transcriptInput.setSelectionRange(nextState.selectionStart, nextState.selectionEnd);
+        transcriptInput.scrollTop = nextState.scrollTop;
+        window.scrollTo(0, savedWindowY);
+
+        requestAnimationFrame(() => {
+            transcriptInput.scrollTop = nextState.scrollTop;
+            window.scrollTo(0, savedWindowY);
+            isPerformingUndoRedo = false;
+        });
+    }
+
+    // Keydown Listener: Intercept Undo (Ctrl+Z) and Redo (Ctrl+Y / Ctrl+Shift+Z)
+    transcriptInput.addEventListener('keydown', function(e) {
+        if (e.ctrlKey || e.metaKey) {
+            const key = e.key.toLowerCase();
+            if (key === 'z') {
+                e.preventDefault();
+                e.stopPropagation();
+                if (e.shiftKey) {
+                    transcriptRedo();
+                } else {
+                    transcriptUndo();
+                }
+                return;
+            } else if (key === 'y') {
+                e.preventDefault();
+                e.stopPropagation();
+                transcriptRedo();
+                return;
+            }
+        }
+
+        // Before user begins a new typing burst, take an undo snapshot
+        if (!e.ctrlKey && !e.metaKey && !e.altKey) {
+            if (e.key.length === 1 || e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Enter') {
+                if (!typingSnapshotTaken) {
+                    pushTranscriptUndo(true);
+                    typingSnapshotTaken = true;
+                }
+            }
+        }
+    });
+
+    // Debounced input listener to commit typing snapshots
+    transcriptInput.addEventListener('input', function() {
+        if (isPerformingUndoRedo) return;
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(() => {
+            pushTranscriptUndo();
+            typingSnapshotTaken = false;
+        }, 500);
+    });
+
+    // =========================================================================
+    // Core Helper: Replace / Insert Text Without Scrolling to Bottom
+    // (Preserves scroll in Opera, Chrome, Edge & Firefox via setRangeText & lock)
+    // =========================================================================
+    function replaceSelectedTextPreservingScroll(replacement, selectInsideOffset = 0, selectInsideLen = 0) {
+        pushTranscriptUndo(true);
+
+        const start = transcriptInput.selectionStart || 0;
+        const end = transcriptInput.selectionEnd || 0;
+        const savedScrollTop = transcriptInput.scrollTop;
+        const savedWindowY = window.pageYOffset || document.documentElement.scrollTop;
+
+        // Use setRangeText: replaces ONLY selected range; does NOT re-parse the full textarea
+        transcriptInput.focus({ preventScroll: true });
+        transcriptInput.setRangeText(replacement, start, end, 'select');
+
+        // Position cursor/selection
+        let targetStart, targetEnd;
+        if (selectInsideLen > 0) {
+            targetStart = start + selectInsideOffset;
+            targetEnd = targetStart + selectInsideLen;
+        } else {
+            targetStart = start + replacement.length;
+            targetEnd = targetStart;
+        }
+        transcriptInput.setSelectionRange(targetStart, targetEnd);
+
+        // Immediately lock scroll in textarea and outer window
+        transcriptInput.scrollTop = savedScrollTop;
+        window.scrollTo(0, savedWindowY);
+
+        // Follow up on next frame to prevent browser layout engine from jumping
+        requestAnimationFrame(() => {
+            transcriptInput.scrollTop = savedScrollTop;
+            window.scrollTo(0, savedWindowY);
+        });
+    }
+
     // Wrap selected text or insert tag in #media-transcript
     function wrapTranscriptTag(openTag, closeTag, placeholder) {
         const start = transcriptInput.selectionStart || 0;
@@ -570,19 +758,12 @@
         const text = transcriptInput.value;
         const selected = text.substring(start, end) || placeholder;
         const replacement = openTag + selected + closeTag;
-        transcriptInput.value = text.substring(0, start) + replacement + text.substring(end);
-        transcriptInput.focus();
-        transcriptInput.setSelectionRange(start + openTag.length, start + openTag.length + selected.length);
+
+        replaceSelectedTextPreservingScroll(replacement, openTag.length, selected.length);
     }
 
     function insertTranscriptText(snippet) {
-        const start = transcriptInput.selectionStart || 0;
-        const end = transcriptInput.selectionEnd || 0;
-        const text = transcriptInput.value;
-        transcriptInput.value = text.substring(0, start) + snippet + text.substring(end);
-        transcriptInput.focus();
-        const cursor = start + snippet.length;
-        transcriptInput.setSelectionRange(cursor, cursor);
+        replaceSelectedTextPreservingScroll(snippet, snippet.length, 0);
     }
 
     function insertPoemTemplate() {
@@ -592,13 +773,12 @@
         const selected = text.substring(start, end).trim();
         const body = selected ? selected : 'الشطر الأول من البيت | الشطر الثاني من البيت';
         const snippet = `\n\n[poem]\n${body}\n[/poem]\n\n`;
-        transcriptInput.value = text.substring(0, start) + snippet + text.substring(end);
-        transcriptInput.focus();
+        replaceSelectedTextPreservingScroll(snippet, 9, body.length);
     }
 
     function insertQaTemplate() {
         const snippet = `\n\n[س] نص السؤال هنا؟ [/س]\n[ج] نص الجواب هنا. [/ج]\n\n`;
-        insertTranscriptText(snippet);
+        replaceSelectedTextPreservingScroll(snippet, snippet.length, 0);
     }
 
     // Compute next available footnote number [1], [2], ...
@@ -635,34 +815,43 @@
 
     // Insert [n] at cursor AND append [n] footnoteText under الهوامش: at the bottom
     function insertFootnoteAndReference() {
+        pushTranscriptUndo(true);
+
         const numRaw = (document.getElementById('fn-number-input').value || '').trim() || String(getNextFootnoteNumber());
         const fnText = (document.getElementById('fn-text-input').value || '').trim();
         const isNumeric = /^\d+$/.test(numRaw);
         const inlineMarker = isNumeric ? `[${numRaw}]` : `[إحالة:${numRaw}][${numRaw}][/إحالة]`;
 
-        // 1. Insert marker at cursor
         const start = transcriptInput.selectionStart || 0;
         const end = transcriptInput.selectionEnd || 0;
-        let currentText = transcriptInput.value;
-        currentText = currentText.substring(0, start) + inlineMarker + currentText.substring(end);
+        const savedScrollTop = transcriptInput.scrollTop;
+        const savedWindowY = window.pageYOffset || document.documentElement.scrollTop;
 
-        // 2. Append footnote definition at the bottom under الهوامش: if footnote text provided
+        transcriptInput.focus({ preventScroll: true });
+        transcriptInput.setRangeText(inlineMarker, start, end, 'end');
+
         if (fnText) {
             const fnLine = `[${numRaw}] ${fnText}`;
-            if (/الهوامش\s*:/u.test(currentText)) {
-                currentText = currentText.replace(/\s*$/u, '\n' + fnLine + '\n');
+            let fullText = transcriptInput.value;
+            if (/الهوامش\s*:/u.test(fullText)) {
+                fullText = fullText.replace(/\s*$/u, '\n' + fnLine + '\n');
             } else {
-                currentText = currentText.replace(/\s*$/u, '\n\nالهوامش:\n' + fnLine + '\n');
+                fullText = fullText.replace(/\s*$/u, '\n\nالهوامش:\n' + fnLine + '\n');
             }
+            transcriptInput.value = fullText;
         }
 
-        transcriptInput.value = currentText;
         document.getElementById('fn-text-input').value = '';
         document.getElementById('fn-number-input').value = getNextFootnoteNumber();
         document.getElementById('footnote-helper-panel').classList.add('hidden');
-        transcriptInput.focus();
-        const newCursor = start + inlineMarker.length;
-        transcriptInput.setSelectionRange(newCursor, newCursor);
+
+        transcriptInput.focus({ preventScroll: true });
+        transcriptInput.scrollTop = savedScrollTop;
+        window.scrollTo(0, savedWindowY);
+        requestAnimationFrame(() => {
+            transcriptInput.scrollTop = savedScrollTop;
+            window.scrollTo(0, savedWindowY);
+        });
     }
 
     function insertCustomAnchorLink() {
@@ -745,10 +934,21 @@
             });
             const data = await response.json();
             if (data.success) {
+                pushTranscriptUndo(true);
+                const savedScrollTop = transcriptInput.scrollTop;
+                const savedWindowY = window.pageYOffset || document.documentElement.scrollTop;
+
                 if (insertAtSelection && transcriptInput.value.trim() !== '') {
                     insertTranscriptText(data.clean_text);
                 } else {
                     transcriptInput.value = data.clean_text;
+                    transcriptInput.focus({ preventScroll: true });
+                    transcriptInput.scrollTop = savedScrollTop;
+                    window.scrollTo(0, savedWindowY);
+                    requestAnimationFrame(() => {
+                        transcriptInput.scrollTop = savedScrollTop;
+                        window.scrollTo(0, savedWindowY);
+                    });
                 }
                 transcriptPreview.innerHTML = data.html;
                 if (btn) {
