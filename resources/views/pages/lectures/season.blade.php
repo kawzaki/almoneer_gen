@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'موسم ' . $seasonInfo['name'] . ' ' . $year . ' هـ | شبكة العلامة المنير')
+@section('title', 'موسم ' . $seasonInfo['name'] . ' ' . $year . ' هـ | شبكة المنير')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
@@ -31,7 +31,7 @@
                 موسم {{ $seasonInfo['name'] ?? $season }} {{ $year }} هـ
             </h1>
             <p class="text-xs sm:text-sm text-slate-300 font-light max-w-2xl leading-relaxed">
-                سلسلة المحاضرات الفكرية والعقائدية لسماحة العلامة السيد منير الخباز التي ألقيت خلال هذا الموسم المبارك.
+                سلسلة المحاضرات الفكرية والعقائدية لسماحة السيد منير الخباز التي ألقيت خلال هذا الموسم المبارك.
             </p>
         </div>
 

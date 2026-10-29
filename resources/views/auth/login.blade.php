@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول إلى لوحة التحكم | شبكة العلامة المنير</title>
+    <title>تسجيل الدخول إلى لوحة التحكم | شبكة المنير</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -56,7 +56,7 @@
                 <i class="fa-solid fa-feather"></i>
             </div>
             <h2 class="text-2xl font-bold font-scholarly text-emerald-950">لوحة الإدارة الذكية</h2>
-            <p class="text-xs text-slate-500 font-medium">شبكة سماحة العلامة السيد منير الخباز (الموقع الرسمي)</p>
+            <p class="text-xs text-slate-500 font-medium">شبكة سماحة السيد منير الخباز (الموقع الرسمي)</p>
         </div>
 
         @if(session('status'))

@@ -6,10 +6,10 @@
 <style>
     /* Styling for the live website preview */
     .vacum-preview-box {
-        font-family: 'Traditional Arabic', 'Amiri', 'IBM Plex Sans Arabic', serif;
+        font-family: 'Traditional Arabic', 'Amiri', 'IBM Plex Sans Arabic', 'Arb3een', serif;
     }
     .vacum-preview-box .quran-verse {
-        font-family: 'Traditional Arabic', 'Amiri', serif !important;
+        font-family: 'Traditional Arabic', 'Amiri', 'Arb3een', serif !important;
         color: #09B182 !important;
         font-size: 1.15em;
     }
@@ -19,17 +19,24 @@
         font-size: 1.55rem !important;
         margin-top: 2rem !important;
         margin-bottom: 0.85rem !important;
-        font-family: 'Traditional Arabic', 'Amiri', serif !important;
+        font-family: 'Traditional Arabic', 'Amiri', 'Arb3een', serif !important;
         line-height: 1.4 !important;
     }
-    .vacum-preview-box .lecture-subheading {
+    .vacum-preview-box h4.lecture-subheading,
+    .vacum-preview-box div.lecture-subheading {
         color: #8B4513 !important;
         font-weight: bold !important;
         font-size: 1.35rem !important;
         margin-top: 1.6rem !important;
         margin-bottom: 0.65rem !important;
-        font-family: 'Traditional Arabic', 'Amiri', serif !important;
+        font-family: 'Traditional Arabic', 'Amiri', 'Arb3een', serif !important;
         line-height: 1.4 !important;
+    }
+    .vacum-preview-box span.lecture-subheading {
+        color: #8B4513 !important;
+        font-weight: bold !important;
+        font-size: 1.05em !important;
+        display: inline !important;
     }
     .vacum-preview-box .lecture-bullets {
         list-style-type: disc !important;
@@ -50,9 +57,8 @@
         width: auto !important;
         margin: 0 2px !important;
     }
-    .vacum-preview-box .symbol-abothar,
-    .symbol-abothar {
-        font-family: 'AboThar', serif !important;
+    .vacum-preview-box .symbol-arb3een, .vacum-preview-box .symbol-abothar, .symbol-arb3een, .symbol-abothar {
+        font-family: 'Arb3een', 'AboThar', serif !important;
         display: inline-block !important;
         vertical-align: -0.1em !important;
         line-height: 1 !important;
@@ -62,9 +68,27 @@
     }
     .vacum-preview-box p {
         line-height: 2.2 !important;
-        text-align: justify;
+        text-align: justify !important;
+        text-justify: kashida !important;
+        -ms-text-justify: kashida !important;
         margin-bottom: 1.25rem;
         color: #1e293b;
+    }
+    .vacum-preview-box .lecture-poem-box .couplet-line {
+        display: grid !important;
+        grid-template-columns: 1fr auto 1fr !important;
+        align-items: center !important;
+        gap: 0.75rem !important;
+    }
+    .vacum-preview-box .lecture-poem-box .couplet-first {
+        width: 100% !important;
+        text-align: left !important;
+        text-align-last: left !important;
+    }
+    .vacum-preview-box .lecture-poem-box .couplet-second {
+        width: 100% !important;
+        text-align: right !important;
+        text-align-last: right !important;
     }
     /* Placeholder for contenteditable */
     [contenteditable=true]:empty:before {
@@ -172,7 +196,7 @@
                         </button>
                         <button type="button" onclick="setOutputMode('text')" id="tab-out-text" class="px-3 py-1 text-slate-600 rounded-lg hover:bg-white/60 transition flex items-center gap-1">
                             <i class="fa-regular fa-file-lines text-slate-500"></i>
-                            <span>نص منقح</span>
+                            <span>نص المدخلات (للمحاضرة)</span>
                         </button>
                     </div>
                 </div>
@@ -201,7 +225,13 @@
             <div class="pt-3 flex items-center justify-between border-t border-slate-100 flex-wrap gap-2">
                 <span class="text-[11px] text-slate-500 font-medium" id="outTextStats">0 حرف • 0 كلمة</span>
                 
-                <div class="flex items-center gap-2">
+                <div class="flex flex-wrap items-center gap-2">
+                    <!-- Copy Clean Formatting Input Text (Recommended for Lectures) -->
+                    <button type="button" onclick="copyCleanText()" id="copy-text-btn" class="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs shadow transition flex items-center gap-1.5" title="نسخ نص المدخلات المنقح للحفظ والتعديل في المحاضرة">
+                        <i class="fa-regular fa-file-lines"></i>
+                        <span>نسخ نص المدخلات (للمحاضرة)</span>
+                    </button>
+
                     <!-- Copy Formatted Rich Text Button -->
                     <button type="button" onclick="copyRichText()" id="copy-rich-btn" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs shadow-xs transition flex items-center gap-1.5" title="نسخ بتنسيق الألوان والخطوط للصق المباشر في Word أو أي محرر مرئي">
                         <i class="fa-solid fa-palette text-amber-700"></i>
@@ -211,7 +241,7 @@
                     <!-- Copy Clean HTML Button -->
                     <button type="button" onclick="copyCleanHtml()" id="copy-html-btn" class="px-4 py-2 rounded-xl bg-gold-500 hover:bg-gold-400 text-emerald-950 font-bold text-xs shadow transition flex items-center gap-1.5" title="نسخ كود HTML الجاهز للنشر">
                         <i class="fa-regular fa-copy"></i>
-                        <span>نسخ كود HTML للنشر</span>
+                        <span>نسخ كود HTML</span>
                     </button>
                 </div>
             </div>
@@ -243,9 +273,9 @@
             <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 space-y-1">
                 <strong class="text-emerald-900 block font-bold flex items-center gap-1">
                     <span class="w-2 h-2 rounded-full bg-emerald-700"></span>
-                    <span>الآيات والصلوات والأدعية (Abo-Thar):</span>
+                    <span>الآيات والصلوات والرموز (خط الأربعين):</span>
                 </strong>
-                <span>الآيات بالخط العثماني، رمز الصلاة النبوية ﵌، والتحويل التلقائي للأدعية التكريمية (عليه السلام، عليها السلام، عليهم السلام، رحمه الله، قدس سره، دام ظله) إلى رموز خط أبو ذر الخطية.</span>
+                <span>الآيات بالخط العثماني، والتحويل التلقائي للصلوات والأدعية التكريمية (ص، ع، عه، عما، عع، عج، قده، دام ظله، ره، رض، طاب ثراه، مد ظله) إلى رموز خط الأربعين (arb3een).</span>
             </div>
             <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 space-y-1">
                 <strong class="text-slate-800 block font-bold flex items-center gap-1">
@@ -432,6 +462,22 @@
             btnMain.disabled = false;
             btnSub.disabled = false;
         }
+    }
+
+    // Copy Clean Formatting Input Text (for saving in Lecture Editor)
+    function copyCleanText() {
+        const textToCopy = lastCleanText || document.getElementById('outText').value;
+        if (!textToCopy.trim()) {
+            alert('لا يوجد نص منقح لنسخه، يرجى تنقيح النص أولاً.');
+            return;
+        }
+
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            const btn = document.getElementById('copy-text-btn');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-check text-gold-400"></i> <span>تم نسخ نص المدخلات!</span>';
+            setTimeout(() => { btn.innerHTML = orig; }, 2000);
+        });
     }
 
     // Copy Clean HTML Code

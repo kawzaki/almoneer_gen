@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'المركز الإعلامي وشبكات التواصل | شبكة العلامة المنير')
+@section('title', 'المركز الإعلامي وشبكات التواصل | شبكة المنير')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
@@ -10,7 +10,7 @@
         <span class="text-xs font-bold text-gold-600 uppercase tracking-wider">المركز الإعلامي الرقمي</span>
         <h1 class="text-3xl sm:text-4xl font-bold font-scholarly text-slate-900">تواصل .. ميديا وقنوات التواصل الاجتماعي</h1>
         <p class="text-xs sm:text-sm text-slate-500 font-light leading-relaxed">
-            استعرضوا آخر 3 منشورات وتحديثات مباشرة من كل منصة من المنصات الرسمية المعتمدة لسماحة العلامة السيد منير الخباز (دام عزه).
+            استعرضوا آخر 3 منشورات وتحديثات مباشرة من كل منصة من المنصات الرسمية المعتمدة لسماحة السيد منير الخباز (دام عزه).
         </p>
     </div>
 

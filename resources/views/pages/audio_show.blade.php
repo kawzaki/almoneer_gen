@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $audio->title . ' | شبكة العلامة المنير')
+@section('title', $audio->title . ' | شبكة المنير')
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12 space-y-8">

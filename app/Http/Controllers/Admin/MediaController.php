@@ -102,7 +102,7 @@ class MediaController extends Controller
             'lecture_number' => $num,
             'description'    => $request->description,
             'tags'           => $request->tags,
-            'transcript'     => $request->transcript,
+            'transcript'     => $request->filled('transcript') ? \App\Services\TranscriptFormatter::process($request->transcript)['clean_text'] : $request->transcript,
             'pdf_file'       => $pdfPath,
             'is_featured'    => $request->boolean('is_featured'),
             'is_active'      => $request->boolean('is_active', true),
@@ -141,7 +141,7 @@ class MediaController extends Controller
             'season_year'    => $request->season_year,
             'description'    => $request->description,
             'tags'           => $request->tags,
-            'transcript'     => $request->transcript,
+            'transcript'     => $request->filled('transcript') ? \App\Services\TranscriptFormatter::process($request->transcript)['clean_text'] : $request->transcript,
             'is_featured'    => $request->boolean('is_featured'),
             'is_active'      => $request->boolean('is_active', true),
         ];

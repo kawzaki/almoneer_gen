@@ -248,7 +248,7 @@
                     <div class="flex items-end justify-between min-h-[58px] pb-2">
                         <div>
                             <span class="text-xs font-bold text-gold-600 uppercase tracking-wider block">مكتبة المؤلفات</span>
-                            <h2 class="text-2xl font-bold font-scholarly text-slate-900 leading-tight">كتب وإصدارات سماحة العلامة</h2>
+                            <h2 class="text-2xl font-bold font-scholarly text-slate-900 leading-tight">كتب وإصدارات سماحة السيد</h2>
                         </div>
                         <a href="{{ route('books.index') }}" class="text-xs font-bold text-emerald-800 hover:underline">عرض
                             كل الكتب ←</a>

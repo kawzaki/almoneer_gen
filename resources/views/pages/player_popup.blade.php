@@ -27,7 +27,7 @@
                 <i class="fa-solid fa-headphones"></i>
             </div>
             <div>
-                <span class="font-bold text-amber-300 block leading-tight">شبكة العلامة المنير</span>
+                <span class="font-bold text-amber-300 block leading-tight">شبكة المنير</span>
                 <span class="text-[10px] text-slate-400">مشغل البث الصوتي المستقل</span>
             </div>
         </div>
@@ -45,7 +45,7 @@
             {{ $title }}
         </h1>
         <p class="text-xs text-amber-200/80 font-light">
-            سماحة العلامة السيد منير الخباز
+            سماحة السيد منير الخباز
         </p>
     </div>
 

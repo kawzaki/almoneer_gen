@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $article->title . ' | شبكة العلامة المنير')
+@section('title', $article->title . ' | شبكة المنير')
 @section('description', $article->summary ?? Str::limit(strip_tags($article->content), 160))
 
 @section('content')

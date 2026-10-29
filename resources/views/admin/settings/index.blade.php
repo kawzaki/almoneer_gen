@@ -104,7 +104,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">الاسم في البطاقة التعريفية:</label>
-                    <input type="text" name="site.hero_name" value="{{ $settings['site.hero_name'] ?? $settings['site_hero_name'] ?? 'سماحة العلامة السيد منير الخباز' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+                    <input type="text" name="site.hero_name" value="{{ $settings['site.hero_name'] ?? $settings['site_hero_name'] ?? 'سماحة السيد منير الخباز' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">الصفة / اللقب العلمي:</label>

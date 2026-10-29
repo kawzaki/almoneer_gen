@@ -85,7 +85,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">المؤلف: <span class="text-red-500">*</span></label>
-                <input type="text" name="author" value="{{ old('author', 'سماحة العلامة السيد منير الخباز') }}" required class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 focus:bg-white">
+                <input type="text" name="author" value="{{ old('author', 'سماحة السيد منير الخباز') }}" required class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 focus:bg-white">
             </div>
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">دار النشر:</label>

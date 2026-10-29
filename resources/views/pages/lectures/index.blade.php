@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', (!empty($selectedTag) ? 'محاضرات وسم #' . $selectedTag . ' | ' : '') . ($browseMode === 'topics' ? 'فهرس المواضيع والوسوم | ' : '') . 'المحاضرات والمواسم السنوية | شبكة العلامة المنير')
+@section('title', (!empty($selectedTag) ? 'محاضرات وسم #' . $selectedTag . ' | ' : '') . ($browseMode === 'topics' ? 'فهرس المواضيع والوسوم | ' : '') . 'المحاضرات والمواسم السنوية | شبكة المنير')
 
 @section('content')
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
@@ -33,7 +33,7 @@
             </div>
             <h1 class="text-3xl sm:text-4xl font-bold font-scholarly text-slate-900">المحاضرات والدروس العامة</h1>
             <p class="text-xs sm:text-sm text-slate-500 leading-relaxed font-light">
-                استعرض النتاج الفكري والعقائدي لسماحة العلامة السيد منير الخباز بالتسلسل الزمني للمواسم السنوية، أو تصفح المحاضرات حسب الفهرس الموضوعي والكلمات الدلالية.
+                استعرض النتاج الفكري والعقائدي لسماحة السيد منير الخباز بالتسلسل الزمني للمواسم السنوية، أو تصفح المحاضرات حسب الفهرس الموضوعي والكلمات الدلالية.
             </p>
         </div>
 

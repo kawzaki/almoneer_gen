@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $book->title . ' | مكتبة العلامة المنير')
+@section('title', $book->title . ' | مكتبة المنير')
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12 space-y-8">

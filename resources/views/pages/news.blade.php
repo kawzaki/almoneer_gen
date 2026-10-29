@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', !empty($selectedTag) ? 'أخبار موسومة بـ #' . $selectedTag . ' | شبكة العلامة المنير' : 'أخبار ونشاطات وجولات سماحة السيد منير الخباز')
+@section('title', !empty($selectedTag) ? 'أخبار موسومة بـ #' . $selectedTag . ' | شبكة المنير' : 'أخبار ونشاطات وجولات سماحة السيد منير الخباز')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-8">
@@ -17,7 +17,7 @@
             </h1>
         </div>
         <p class="text-xs text-slate-500 font-light max-w-md">
-            تغطية حصرية لكافة البيانات الرسمية، والجولات التبليغية، والمؤتمرات الفكرية لسماحة العلامة السيد منير الخباز.
+            تغطية حصرية لكافة البيانات الرسمية، والجولات التبليغية، والمؤتمرات الفكرية لسماحة السيد منير الخباز.
         </p>
     </div>
 

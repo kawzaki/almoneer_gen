@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $video->title . ' | شبكة العلامة المنير')
+@section('title', $video->title . ' | شبكة المنير')
 
 @section('content')
     <div class="lecture-page-container max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-8">
@@ -372,6 +372,9 @@
                         #transcript-body .transcript-p {
                             font-size: var(--transcript-font-size) !important;
                             line-height: 2.2 !important;
+                            text-align: justify !important;
+                            text-justify: kashida !important;
+                            -ms-text-justify: kashida !important;
                         }
 
                         #transcript-body .quran-verse {
@@ -417,14 +420,33 @@
                             font-family: 'Traditional Arabic', 'Amiri', serif !important;
                         }
 
-                        #transcript-body .lecture-subheading {
+                        #transcript-body h4.lecture-subheading,
+                        #transcript-body div.lecture-subheading {
                             color: #8B4513 !important;
                             font-weight: bold !important;
                             font-size: 1.35rem !important;
                             margin-top: 1.75rem !important;
                             margin-bottom: 0.75rem !important;
                             display: block !important;
-                            font-family: 'Traditional Arabic', serif !important;
+                            font-family: 'Traditional Arabic', 'Amiri', 'Arb3een', serif !important;
+                        }
+
+                        #transcript-body span.lecture-subheading {
+                            color: #8B4513 !important;
+                            font-weight: bold !important;
+                            font-size: 1.05em !important;
+                            display: inline !important;
+                        }
+
+                        #transcript-body .symbol-arb3een,
+                        #transcript-body .symbol-abothar {
+                            font-family: 'Arb3een', 'AboThar', serif !important;
+                            display: inline-block !important;
+                            vertical-align: -0.1em !important;
+                            line-height: 1 !important;
+                            font-size: 1.25em !important;
+                            margin: 0 0.18em !important;
+                            font-weight: normal !important;
                         }
 
                         #transcript-body .prophet-symbol-icon,
@@ -550,7 +572,8 @@
                                 page-break-after: avoid !important;
                             }
 
-                            #transcript-body .lecture-subheading {
+                            #transcript-body h4.lecture-subheading,
+                            #transcript-body div.lecture-subheading {
                                 color: #8B4513 !important;
                                 font-weight: bold !important;
                                 font-size: 15pt !important;
@@ -560,6 +583,24 @@
                                 page-break-inside: avoid !important;
                                 break-after: avoid !important;
                                 page-break-after: avoid !important;
+                            }
+
+                            #transcript-body span.lecture-subheading {
+                                color: #8B4513 !important;
+                                font-weight: bold !important;
+                                font-size: 14pt !important;
+                                display: inline !important;
+                            }
+
+                            #transcript-body .symbol-arb3een,
+                            #transcript-body .symbol-abothar {
+                                font-family: 'Arb3een', 'AboThar', serif !important;
+                                display: inline-block !important;
+                                vertical-align: -0.1em !important;
+                                line-height: 1 !important;
+                                font-size: 1.25em !important;
+                                margin: 0 0.18em !important;
+                                font-weight: normal !important;
                             }
 
                             #transcript-body ul,
@@ -697,7 +738,7 @@
             <!-- Print Header (Visible ONLY on print) -->
             <div class="print-header-banner hidden">
                 <div style="text-align: center; margin-bottom: 12px;">
-                    <img src="{{ asset('images/calligraphy-sayyid-muneer-dark.png') }}" alt="سماحة العلامة السيد منير الخباز" style="height: 65px; margin: 0 auto; display: inline-block;">
+                    <img src="{{ asset('images/calligraphy-sayyid-muneer-dark.png') }}" alt="سماحة السيد منير الخباز" style="height: 65px; margin: 0 auto; display: inline-block;">
                 </div>
                 <div style="font-size: 11pt; color: #475569; margin-bottom: 6px; font-family: 'Traditional Arabic', serif;">
                     المحاضرات المكتوبة » موسم {{ $resolvedSeasonName }} {{ $resolvedYear }}هـ
@@ -738,7 +779,7 @@
                         <td class="print-footer-cell p-0 border-none m-0">
                             <div class="print-footer-bar">
                                 <div style="display: flex; justify-content: space-between; align-items: center; font-size: 8.5pt; color: #64748b; direction: rtl; font-family: 'IBM Plex Sans Arabic', sans-serif; border-top: 1px solid #cbd5e1; padding-top: 5px;">
-                                    <span>شبكة المنير — سماحة العلامة السيد منير الخباز</span>
+                                    <span>شبكة المنير — سماحة السيد منير الخباز</span>
                                     <span lang="en" dir="ltr" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important; font-variant-numeric: lining-nums tabular-nums !important; font-feature-settings: 'locl' 0 !important; font-size: 8.5pt; color: #1e293b; font-weight: bold; unicode-bidi: isolate; display: inline-block;">almoneer.org/l/{{ $video->id }}</span>
                                 </div>
                             </div>

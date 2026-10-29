@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'متابعة حالة الاستفسار | شبكة العلامة المنير')
+@section('title', 'متابعة حالة الاستفسار | شبكة المنير')
 
 @section('content')
 <div class="max-w-xl mx-auto px-4 sm:px-6 py-12 space-y-8">

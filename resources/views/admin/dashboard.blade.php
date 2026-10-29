@@ -9,7 +9,7 @@
     <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-950 text-white shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 border border-gold-500/30">
         <div class="space-y-1">
             <span class="text-xs text-gold-300 font-semibold">أهلاً بك في لوحة الإدارة</span>
-            <h2 class="text-lg sm:text-2xl font-bold font-scholarly text-white">إدارة شبكة سماحة العلامة السيد منير الخباز</h2>
+            <h2 class="text-lg sm:text-2xl font-bold font-scholarly text-white">إدارة شبكة سماحة السيد منير الخباز</h2>
             <p class="text-xs text-slate-300">منظومة إدارة المحتوى للموقع العام والفكري — نظام الكاش التلقائي مفعل ونشط.</p>
         </div>
 

@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="{{ rtrim(url('/'), '/') }}/">
     <title>@yield('title', ($siteSettings['site.title'] ?? 'سماحة السيد منير الخباز') . ' | الموقع الرسمي')</title>
-    <meta name="description" content="@yield('description', 'الموقع العام والفكري لسماحة العلامة السيد منير الخباز - المحاضرات العامة، ديوان الشعر، الكتب والمؤلفات، الاستفسارات الفكرية والفقهية.')">
+    <meta name="description" content="@yield('description', 'الموقع العام والفكري لسماحة السيد منير الخباز - المحاضرات العامة، ديوان الشعر، الكتب والمؤلفات، الاستفسارات الفكرية والفقهية.')">
 
     <!-- Open Graph / Meta -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="@yield('title', $siteSettings['site.title'] ?? 'شبكة العلامة السيد منير الخباز')">
-    <meta property="og:description" content="@yield('description', 'الموقع العام والفكري لسماحة العلامة السيد منير الخباز')">
+    <meta property="og:title" content="@yield('title', $siteSettings['site.title'] ?? 'شبكة السيد منير الخباز')">
+    <meta property="og:description" content="@yield('description', 'الموقع العام والفكري لسماحة السيد منير الخباز')">
     <meta property="og:image" content="@yield('og_image', asset('assets/images/logo.png'))">
     <meta property="og:url" content="{{ url()->current() }}">
 
@@ -82,7 +82,7 @@
 
     <style>
         body {
-            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            font-family: 'IBM Plex Sans Arabic', 'Arb3een', sans-serif;
             background-color: {{ $isTurquoise ? '#f2fafb' : '#faf9f5' }};
             color: #1e293b;
         }
@@ -111,28 +111,29 @@
             padding: 0 1px;
         }
         .quran-ref {
-            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            font-family: 'IBM Plex Sans Arabic', 'Arb3een', sans-serif;
             font-size: 0.75rem;
             color: #a87920;
             font-weight: 600;
             margin-right: 0.35rem;
         }
         .font-scholarly {
-            font-family: 'Amiri', serif;
+            font-family: 'Amiri', 'Arb3een', serif;
         }
 
         /* Abo-Thar Calligraphic Religious Honorifics Web Font */
         @font-face {
             font-family: 'AboThar';
-            src: url("{{ asset('fonts/abo-thar.woff2') }}") format('woff2'),
-                 url("{{ asset('fonts/abo-thar.woff') }}") format('woff'),
-                 url("{{ asset('fonts/abo-thar.ttf') }}") format('truetype');
+            src: url("{{ asset('fonts/arb3een.woff2') }}") format('woff2'),
+                 url("{{ asset('fonts/arb3een.woff') }}") format('woff'),
+                 url("{{ asset('fonts/arb3een.ttf') }}") format('truetype');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
         }
-        .symbol-abothar {
-            font-family: 'AboThar', serif !important;
+        @font-face { font-family: 'Arb3een'; src: url("{{ asset('fonts/arb3een.woff2') }}") format('woff2'), url("{{ asset('fonts/arb3een.woff') }}") format('woff'), url("{{ asset('fonts/arb3een.ttf') }}") format('truetype'); font-weight: normal; font-style: normal; font-display: swap; }
+        .symbol-arb3een, .symbol-abothar {
+            font-family: 'Arb3een', 'AboThar', serif !important;
             display: inline-block;
             vertical-align: -0.1em;
             line-height: 1;
@@ -256,7 +257,7 @@
         .couplet-second {
             text-align: justify !important;
             text-align-last: justify !important;
-            -moz-text-align-last: justify !important;
+            -moz-text-align-last: justify !important; } .lecture-poem-box .couplet-line { display: grid !important; grid-template-columns: 1fr auto 1fr !important; align-items: center !important; gap: 0.75rem !important; } .lecture-poem-box .couplet-first { width: 100% !important; text-align: left !important; text-align-last: left !important; -moz-text-align-last: left !important; } .lecture-poem-box .couplet-second { width: 100% !important; text-align: right !important; text-align-last: right !important; -moz-text-align-last: right !important;
         }
         @media (min-width: 640px) {
             .couplet-first,
@@ -609,7 +610,7 @@
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
                 </span>
-                <span><strong>بث مباشر الآن:</strong> {{ $siteSettings['livestream.title'] ?? $siteSettings['livestream_title'] ?? 'محاضرة سماحة العلامة السيد منير الخباز' }}</span>
+                <span><strong>بث مباشر الآن:</strong> {{ $siteSettings['livestream.title'] ?? $siteSettings['livestream_title'] ?? 'محاضرة سماحة السيد منير الخباز' }}</span>
             </div>
             <a href="{{ $siteSettings['livestream.url'] ?? $siteSettings['livestream_url'] ?? '#' }}" target="_blank" class="px-3.5 py-1.5 bg-white text-red-700 rounded-lg text-xs font-bold hover:bg-slate-100 transition flex items-center gap-1.5 shadow-sm">
                 <i class="fa-solid fa-play text-[10px]"></i>

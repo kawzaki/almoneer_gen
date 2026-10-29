@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $poem->title . ' | ديوان العلامة المنير')
+@section('title', $poem->title . ' | ديوان المنير')
 
 @push('styles')
 <style>
