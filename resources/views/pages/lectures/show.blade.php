@@ -349,7 +349,9 @@
         <!-- Full Transcribed Text (التفريغ النصي الكامل للمحاضرة) -->
         <div id="transcript-section" class="transcript-card bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
             <!-- علامة مائية مطبوعة ثابتة في خلفية كل صفحة -->
-            <div class="print-watermark-overlay" aria-hidden="true"></div>
+            <div class="print-watermark-container" aria-hidden="true">
+                <img src="{{ asset('images/logo_watermark_print.png') }}" class="print-watermark-img" alt="">
+            </div>
             <div class="no-print flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
                 <div class="flex items-center gap-3">
                     <div
@@ -490,8 +492,8 @@
                         }
 
                         /* إخفاء خلفية العلامة المائية للطباعة على الشاشة */
-                        .print-watermark-overlay {
-                            display: none;
+                        .print-watermark-container {
+                            display: none !important;
                         }
 
                         /* إخفاء تذييل الطباعة في وضع التصفح العادي على الشاشة */
@@ -657,28 +659,41 @@
                             }
 
                             /* العلامة المائية الثابتة المكررة في كل صفحة لطباعة المحاضرة وتصدير PDF */
-                            .print-watermark-overlay {
-                                display: block !important;
+                            .print-watermark-container {
+                                display: flex !important;
                                 position: fixed !important;
-                                top: 50% !important;
-                                left: 50% !important;
-                                transform: translate(-50%, -50%) !important;
-                                width: 55vw !important;
-                                height: 55vh !important;
-                                max-width: 480px !important;
-                                max-height: 480px !important;
-                                background-image: url('{{ asset("images/logo_watermark_top_left.png") }}') !important;
-                                background-repeat: no-repeat !important;
-                                background-position: center center !important;
-                                background-size: contain !important;
-                                opacity: 0.055 !important;
+                                top: 0 !important;
+                                left: 0 !important;
+                                right: 0 !important;
+                                bottom: 0 !important;
+                                width: 100vw !important;
+                                height: 100vh !important;
+                                align-items: center !important;
+                                justify-content: center !important;
                                 pointer-events: none !important;
                                 z-index: 0 !important;
+                                margin: 0 !important;
+                                padding: 0 !important;
                             }
 
-                            table.print-layout-table, #transcript-body, .print-header-banner {
+                            .print-watermark-img {
+                                width: 52vw !important;
+                                max-width: 440px !important;
+                                height: auto !important;
+                                display: block !important;
+                                margin: auto !important;
+                                pointer-events: none !important;
+                                -webkit-print-color-adjust: exact !important;
+                                print-color-adjust: exact !important;
+                            }
+
+                            table.print-layout-table,
+                            table.print-layout-table > tbody > tr > td,
+                            #transcript-body,
+                            .print-header-banner {
                                 position: relative !important;
                                 z-index: 1 !important;
+                                background: transparent !important;
                             }
 
                             /* تنسيق الأبيات والقصائد في الطباعة */
