@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\Category;
+use App\Services\ImageWatermarkService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
@@ -55,6 +56,9 @@ class ArticleController extends Controller
             }
             $file->move($destPath, $filename);
             $imagePath = 'uploads/articles/' . $filename;
+            if ($request->boolean('apply_watermark')) {
+                ImageWatermarkService::apply(public_path($imagePath), $request->input('watermark_position', 'bottom_left'));
+            }
         }
 
         $publishedAt = now();
@@ -118,6 +122,9 @@ class ArticleController extends Controller
             }
             $file->move($destPath, $filename);
             $imagePath = 'uploads/articles/' . $filename;
+            if ($request->boolean('apply_watermark')) {
+                ImageWatermarkService::apply(public_path($imagePath), $request->input('watermark_position', 'bottom_left'));
+            }
         } elseif ($request->filled('image')) {
             $imagePath = $request->image;
         }

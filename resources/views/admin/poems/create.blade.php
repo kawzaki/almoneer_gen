@@ -71,6 +71,7 @@
             </label>
             <input type="file" name="image" accept="image/*" class="w-full text-xs rounded-xl border border-slate-200 p-2 bg-white cursor-pointer file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-800 file:text-white hover:file:bg-emerald-900">
             <p class="text-[10px] text-slate-400 mt-1">تظهر هذه الصورة كغلاف فني داخل موضوع القصيدة فقط، ولا تظهر في شبكة بطاقات الديوان العامة للحفاظ على رونق النص.</p>
+            @include('admin.partials.watermark_options', ['uniqueId' => 'poem_create'])
         </div>
 
         <div>

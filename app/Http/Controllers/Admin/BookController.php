@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Book;
 use App\Models\Category;
+use App\Services\ImageWatermarkService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
@@ -48,6 +49,9 @@ class BookController extends Controller
             }
             $file->move($destPath, $filename);
             $coverPath = 'uploads/books/' . $filename;
+            if ($request->boolean('apply_watermark')) {
+                ImageWatermarkService::apply(public_path($coverPath), $request->input('watermark_position', 'bottom_left'));
+            }
         }
 
         $pdfPath = $request->pdf_file;
@@ -114,6 +118,9 @@ class BookController extends Controller
             }
             $file->move($destPath, $filename);
             $coverPath = 'uploads/books/' . $filename;
+            if ($request->boolean('apply_watermark')) {
+                ImageWatermarkService::apply(public_path($coverPath), $request->input('watermark_position', 'bottom_left'));
+            }
         } elseif ($request->filled('cover_image')) {
             $coverPath = $request->cover_image;
         } elseif ($request->has('cover_image') && empty($request->cover_image)) {

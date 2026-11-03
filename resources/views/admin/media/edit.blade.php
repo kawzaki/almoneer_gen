@@ -37,22 +37,27 @@
         margin-bottom: 1rem;
         color: #1e293b;
     }
+    .scholarly-rich-editor .lecture-poem-box {
+        width: fit-content !important;
+        min-width: min(100%, 520px) !important;
+        max-width: 680px !important;
+        margin: 2rem auto !important;
+    }
     .scholarly-rich-editor .lecture-poem-box .couplet-line {
         display: grid !important;
         grid-template-columns: 1fr auto 1fr !important;
         align-items: center !important;
-        gap: 0.75rem !important;
+        gap: 1rem !important;
     }
-    .scholarly-rich-editor .lecture-poem-box .couplet-first {
-        width: 100% !important;
-        text-align: left !important;
-        text-align-last: left !important;
-        color: #501549 !important;
-    }
+    .scholarly-rich-editor .lecture-poem-box .couplet-first,
     .scholarly-rich-editor .lecture-poem-box .couplet-second {
         width: 100% !important;
-        text-align: right !important;
-        text-align-last: right !important;
+        text-align: justify !important;
+        text-justify: kashida !important;
+        -webkit-text-justify: kashida !important;
+        -ms-text-justify: kashida !important;
+        text-align-last: justify !important;
+        -moz-text-align-last: justify !important;
         color: #501549 !important;
     }
     .transcript-input-textarea {

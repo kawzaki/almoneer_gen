@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\GalleryAlbum;
 use App\Models\GalleryItem;
+use App\Services\ImageWatermarkService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -122,6 +123,9 @@ class GalleryController extends Controller
             $photos = json_decode($photos, true) ?: [];
         }
 
+        $applyWatermark = $request->boolean('apply_watermark');
+        $watermarkPosition = $request->input('watermark_position', 'bottom_left');
+
         if (is_array($photos) && count($photos) > 0) {
             $albumDir = public_path("uploads/gallery/{$album->id}");
             if (!File::exists($albumDir)) {
@@ -139,6 +143,10 @@ class GalleryController extends Controller
                     $finalRelPath = "uploads/gallery/{$album->id}/" . $finalFilename;
 
                     File::move($tempFullPath, public_path($finalRelPath));
+
+                    if ($applyWatermark) {
+                        ImageWatermarkService::apply(public_path($finalRelPath), $watermarkPosition);
+                    }
 
                     GalleryItem::create([
                         'album_id'   => $album->id,
@@ -201,6 +209,9 @@ class GalleryController extends Controller
             $coverImage = $request->input('cover_image');
         }
 
+        $applyWatermark = $request->boolean('apply_watermark');
+        $watermarkPosition = $request->input('watermark_position', 'bottom_left');
+
         // Handle direct cover file upload if provided
         if ($request->hasFile('cover_file')) {
             $coverFile = $request->file('cover_file');
@@ -211,6 +222,10 @@ class GalleryController extends Controller
             $coverFilename = 'cover_' . time() . '.' . $coverFile->getClientOriginalExtension();
             $coverFile->move($coverDir, $coverFilename);
             $coverImage = "uploads/gallery/{$gallery->id}/" . $coverFilename;
+
+            if ($applyWatermark) {
+                ImageWatermarkService::apply(public_path($coverImage), $watermarkPosition);
+            }
         }
 
         $gallery->update([
@@ -247,6 +262,10 @@ class GalleryController extends Controller
                     $finalRelPath = "uploads/gallery/{$gallery->id}/" . $finalFilename;
 
                     File::move($tempFullPath, public_path($finalRelPath));
+
+                    if ($applyWatermark) {
+                        ImageWatermarkService::apply(public_path($finalRelPath), $watermarkPosition);
+                    }
 
                     GalleryItem::create([
                         'album_id'   => $gallery->id,

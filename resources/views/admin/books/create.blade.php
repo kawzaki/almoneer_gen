@@ -184,6 +184,7 @@
                         <input type="file" name="cover_file" id="cover_file_input" accept="image/*" onchange="previewUploadedCoverFile(event)" 
                                class="block w-full text-xs text-slate-500 file:mr-0 file:ml-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-800 hover:file:bg-emerald-100 cursor-pointer border border-slate-200 rounded-xl p-1 bg-slate-50">
                         <p class="text-[10px] text-slate-400">سيتم حفظ الصورة المرفوعة في مجلد uploads/books واعتمادها كغلاف للكتاب.</p>
+                        @include('admin.partials.watermark_options', ['uniqueId' => 'book_create'])
                     </div>
 
                     <!-- Option 3: Manual path or external URL -->

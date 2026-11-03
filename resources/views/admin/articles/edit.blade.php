@@ -181,6 +181,9 @@
                     <p class="text-[11px] text-emerald-700">سيتم حفظها ورفعها تلقائياً عند النقر على تحديث الخبر.</p>
                 </div>
             </div>
+
+            <!-- خيارات إضافة الشعار المائي -->
+            @include('admin.partials.watermark_options', ['uniqueId' => 'article_edit'])
         </div>
 
         <!-- Summary -->

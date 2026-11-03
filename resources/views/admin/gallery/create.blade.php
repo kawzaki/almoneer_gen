@@ -142,6 +142,9 @@
                 data-max-files="50"
                 data-image-preview-height="120">
 
+            <!-- خيارات إضافة الشعار المائي -->
+            @include('admin.partials.watermark_options', ['uniqueId' => 'gallery_create'])
+
             <!-- Container for hidden inputs with uploaded file paths -->
             <div id="uploaded-paths"></div>
         </div>

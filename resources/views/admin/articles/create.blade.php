@@ -145,6 +145,9 @@
                     <p class="text-[11px] text-emerald-700">سيتم رفع الصورة وحفظها تلقائياً مع الخبر.</p>
                 </div>
             </div>
+
+            <!-- خيارات إضافة الشعار المائي -->
+            @include('admin.partials.watermark_options', ['uniqueId' => 'article_create'])
         </div>
 
         <!-- Summary -->

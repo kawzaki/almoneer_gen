@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Poem;
 use App\Models\Category;
+use App\Services\ImageWatermarkService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -40,6 +41,9 @@ class PoemController extends Controller
             $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('uploads/poems'), $filename);
             $imagePath = 'uploads/poems/' . $filename;
+            if ($request->boolean('apply_watermark')) {
+                ImageWatermarkService::apply(public_path($imagePath), $request->input('watermark_position', 'bottom_left'));
+            }
         } elseif ($request->filled('image_url')) {
             $imagePath = $request->image_url;
         }
@@ -81,6 +85,9 @@ class PoemController extends Controller
             $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('uploads/poems'), $filename);
             $imagePath = 'uploads/poems/' . $filename;
+            if ($request->boolean('apply_watermark')) {
+                ImageWatermarkService::apply(public_path($imagePath), $request->input('watermark_position', 'bottom_left'));
+            }
         } elseif ($request->filled('image_url')) {
             $imagePath = $request->image_url;
         }

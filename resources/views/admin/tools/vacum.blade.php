@@ -74,21 +74,28 @@
         margin-bottom: 1.25rem;
         color: #1e293b;
     }
+    .vacum-preview-box .lecture-poem-box {
+        width: fit-content !important;
+        min-width: min(100%, 520px) !important;
+        max-width: 680px !important;
+        margin: 2rem auto !important;
+    }
     .vacum-preview-box .lecture-poem-box .couplet-line {
         display: grid !important;
         grid-template-columns: 1fr auto 1fr !important;
         align-items: center !important;
-        gap: 0.75rem !important;
+        gap: 1rem !important;
     }
-    .vacum-preview-box .lecture-poem-box .couplet-first {
-        width: 100% !important;
-        text-align: left !important;
-        text-align-last: left !important;
-    }
+    .vacum-preview-box .lecture-poem-box .couplet-first,
     .vacum-preview-box .lecture-poem-box .couplet-second {
         width: 100% !important;
-        text-align: right !important;
-        text-align-last: right !important;
+        text-align: justify !important;
+        text-justify: kashida !important;
+        -webkit-text-justify: kashida !important;
+        -ms-text-justify: kashida !important;
+        text-align-last: justify !important;
+        -moz-text-align-last: justify !important;
+        color: #501549 !important;
     }
     /* Placeholder for contenteditable */
     [contenteditable=true]:empty:before {

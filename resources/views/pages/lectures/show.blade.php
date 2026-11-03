@@ -348,6 +348,8 @@
 
         <!-- Full Transcribed Text (التفريغ النصي الكامل للمحاضرة) -->
         <div id="transcript-section" class="transcript-card bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+            <!-- علامة مائية مطبوعة ثابتة في خلفية كل صفحة -->
+            <div class="print-watermark-overlay" aria-hidden="true"></div>
             <div class="no-print flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
                 <div class="flex items-center gap-3">
                     <div
@@ -460,6 +462,36 @@
                             width: auto !important;
                             max-width: 3.5em !important;
                             margin: 0 2px !important;
+                        }
+
+                        /* تنسيق الأبيات والقصائد (محاذاة الدواوين مع كشيدة خفيفة متزنة) */
+                        #transcript-body .lecture-poem-box {
+                            width: fit-content !important;
+                            min-width: min(100%, 520px) !important;
+                            max-width: 680px !important;
+                            margin: 2rem auto !important;
+                        }
+
+                        #transcript-body .couplet-line {
+                            display: grid !important;
+                            grid-template-columns: 1fr auto 1fr !important;
+                            align-items: center !important;
+                            gap: 1rem !important;
+                        }
+
+                        #transcript-body .couplet-first,
+                        #transcript-body .couplet-second {
+                            text-align: justify !important;
+                            text-justify: kashida !important;
+                            -webkit-text-justify: kashida !important;
+                            -ms-text-justify: kashida !important;
+                            text-align-last: justify !important;
+                            -moz-text-align-last: justify !important;
+                        }
+
+                        /* إخفاء خلفية العلامة المائية للطباعة على الشاشة */
+                        .print-watermark-overlay {
+                            display: none;
                         }
 
                         /* إخفاء تذييل الطباعة في وضع التصفح العادي على الشاشة */
@@ -624,6 +656,31 @@
                                 page-break-inside: avoid !important;
                             }
 
+                            /* العلامة المائية الثابتة المكررة في كل صفحة لطباعة المحاضرة وتصدير PDF */
+                            .print-watermark-overlay {
+                                display: block !important;
+                                position: fixed !important;
+                                top: 50% !important;
+                                left: 50% !important;
+                                transform: translate(-50%, -50%) !important;
+                                width: 55vw !important;
+                                height: 55vh !important;
+                                max-width: 480px !important;
+                                max-height: 480px !important;
+                                background-image: url('{{ asset("images/logo_watermark_top_left.png") }}') !important;
+                                background-repeat: no-repeat !important;
+                                background-position: center center !important;
+                                background-size: contain !important;
+                                opacity: 0.055 !important;
+                                pointer-events: none !important;
+                                z-index: 0 !important;
+                            }
+
+                            table.print-layout-table, #transcript-body, .print-header-banner {
+                                position: relative !important;
+                                z-index: 1 !important;
+                            }
+
                             /* تنسيق الأبيات والقصائد في الطباعة */
                             #transcript-body .lecture-poem-box {
                                 background: #fafaf9 !important;
@@ -631,18 +688,32 @@
                                 border-radius: 8pt !important;
                                 padding: 10pt 16pt !important;
                                 margin: 16pt auto !important;
+                                width: fit-content !important;
+                                min-width: 70% !important;
+                                max-width: 90% !important;
                                 break-inside: avoid !important;
                                 page-break-inside: avoid !important;
                             }
 
                             #transcript-body .couplet-line {
-                                display: flex !important;
-                                justify-content: space-between !important;
+                                display: grid !important;
+                                grid-template-columns: 1fr auto 1fr !important;
                                 align-items: center !important;
+                                gap: 8pt !important;
                                 border-bottom: 1px dotted #cbd5e1 !important;
                                 padding: 4pt 0 !important;
                                 break-inside: avoid !important;
                                 page-break-inside: avoid !important;
+                            }
+
+                            #transcript-body .couplet-first,
+                            #transcript-body .couplet-second {
+                                text-align: justify !important;
+                                text-justify: kashida !important;
+                                -webkit-text-justify: kashida !important;
+                                -ms-text-justify: kashida !important;
+                                text-align-last: justify !important;
+                                -moz-text-align-last: justify !important;
                             }
 
                             /* جدول الطباعة لضمان تكرار التذييل في كل صفحة دون أي تداخل مع النص */

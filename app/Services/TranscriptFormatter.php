@@ -704,12 +704,39 @@ class TranscriptFormatter
 
         // 8. فقرة تبدأ بعنوان فرعي متبوع بالشرح في نفس الفقرة (مثل "الركيزة الأولى: أكدت السيرة النبوية...")
         $formattedInline = self::formatInlineElements($plain);
-        $subPrefixPattern = '/^((?:الركيزة|الصفة|المصداق|الخطوة|الشاهد|الفرع|الأمر|الوجه|التنبيه|المسألة|الجهة|البند|النقطة|المقام|القاعدة)[ \t]+(?:الأول|الأولى|الثاني|الثانية|الثالث|الثالثة|الرابع|الرابعة|الخامس|الخامسة|السادس|السادسة|السابع|السابعة|الثامن|الثامنة|التاسع|التاسعة|العاشر|العاشرة|\d+)[ \t]*:)[ \t]*(.+)$/su';
+        $divPattern = self::getDivisionKeywordsPattern();
+        $ordPattern = self::getOrdinalsPattern();
+        $standaloneOrd = self::getStandaloneOrdinalsPattern();
+        $subPrefixPattern = '/^((?:(?:(?:' . $divPattern . ')[ \t]+(?:' . $ordPattern . '))|(?:' . $standaloneOrd . '))[ \t]*[:\-–—])[ \t]*(.+)$/su';
         if (preg_match($subPrefixPattern, $formattedInline, $pm)) {
             $formattedInline = '<strong class="lecture-inline-subheading font-bold" style="color: #8B4513 !important; font-weight: bold !important; font-size: 1.08em !important;">' . $pm[1] . '</strong> ' . $pm[2];
         }
 
         return '<p class="transcript-p mb-6 leading-loose text-justify text-slate-800 font-scholarly" style="line-height: 2.2 !important; text-align: justify !important; text-justify: kashida !important; -ms-text-justify: kashida !important; margin-bottom: 1.5rem !important;">' . $formattedInline . '</p>';
+    }
+
+    /**
+     * Regex pattern matching all 120+ base nouns for lecture divisions from الاتمتة.txt.
+     */
+    public static function getDivisionKeywordsPattern(): string
+    {
+        return 'الاتجاه|الاختصاص|الارتباط|الإطار|الأثر|الأداة|الأساس|الأصل|الأفق|الأمر|البحث|البرهان|البعد|البند|البيان|التجلي|التعريف|التعليقة|التفسير|التوصية|الجزء|الجناح|الجواب|الحاجة|الحركة|الحل|الخاصية|الخصلة|الخط|الخطوة|الخلق|الدافع|الدرجة|الدعامة|الدليل|الدور|الرافد|الرأي|الركن|الركيزة|الرواية|الرؤية|الزاوية|السمة|السنة|الشاهد|الشرط|الشيء|الصفة|الصنف|الصورة|الطريق|الظاهرة|العامل|العلاقة|العلامة|العلم|العنصر|العنوان|الغريزة|الفارق|الفرق|الفعالية|القدرة|القرينة|القسم|القصة|القول|القيمة|اللفظ|اللقب|اللون|المبدأ|المبرر|المجال|المحتمل|المحفز|المداخلة|المدرسة|المدلول|المرحلة|المسار|المستوى|المسلك|المشهد|المصدر|المصطلح|المضمون|المظهر|المعطى|المعلم|المعنى|المعيار|المفردة|المفهوم|المقال|المقالة|المقام|المقوم|المكون|الملاحظة|الملمح|المناقشة|المنشأ|المنطلق|المهارة|المورد|الموقف|المؤشر|الميزة|الميل|الناحية|النافذة|النظرية|النقطة|النوع|الهدف|الوجه|الوصية|الوظيفة|المصداق|التنبيه|المسألة|الجهة|القاعدة|الفرضية|الاحتمال|الفرع';
+    }
+
+    /**
+     * Regex pattern matching Arabic ordinals.
+     */
+    public static function getOrdinalsPattern(): string
+    {
+        return 'الأول|الأولى|الثاني|الثانية|الثالث|الثالثة|الرابع|الرابعة|الخامس|الخامسة|السادس|السادسة|السابع|السابعة|الثامن|الثامنة|التاسع|التاسعة|العاشر|العاشرة|الحادي عشر|الحادية عشرة|الثاني عشر|الثانية عشرة|\d+';
+    }
+
+    /**
+     * Regex pattern matching standalone ordinals (أولاً، ثانياً...).
+     */
+    public static function getStandaloneOrdinalsPattern(): string
+    {
+        return 'أولاً|أولا|ثانياً|ثانيا|ثانيًا|ثالثاً|ثالثا|ثالثًا|رابعاً|رابعا|رابعًا|خامساً|خامسا|خامسًا|سادساً|سادسا|سادسًا|سابعاً|سابعا|سابعًا|ثامناً|ثامنا|ثامنًا|تاسعاً|تاسعا|تاسعًا|عاشراً|عاشرا|عاشرًا';
     }
 
     /**
@@ -731,13 +758,24 @@ class TranscriptFormatter
      */
     protected static function isSubheadingText(string $plain): bool
     {
-        if (mb_strlen($plain) > 95 || str_contains($plain, "\n")) {
+        if (mb_strlen($plain) > 65 || str_contains($plain, "\n")) {
             return false;
         }
-        return (bool) preg_match(
-            '/^(?:الركيزة|الصفة|المصداق|الخطوة|الشاهد|الفرع|الأمر|الوجه|التنبيه|المسألة|الجهة|البند|النقطة|المقام)[ \t]+(?:الأول|الأولى|الثاني|الثانية|الثالث|الثالثة|الرابع|الرابعة|الخامس|الخامسة|السادس|السادسة|السابع|السابعة|الثامن|الثامنة|التاسع|التاسعة|العاشر|العاشرة|\d+)[ \t]*:?$/u',
-            $plain
-        );
+        $divPattern = self::getDivisionKeywordsPattern();
+        $ordPattern = self::getOrdinalsPattern();
+        $standaloneOrd = self::getStandaloneOrdinalsPattern();
+
+        // 1. Division noun + ordinal: "الركيزة الأولى:", "المسار الثاني:"
+        if (preg_match('/^(?:' . $divPattern . ')[ \t]+(?:' . $ordPattern . ')[ \t]*:?$/u', $plain)) {
+            return true;
+        }
+
+        // 2. Standalone ordinal: "أولاً:", "ثانياً:"
+        if (preg_match('/^(?:' . $standaloneOrd . ')[ \t]*:?$/u', $plain)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -958,15 +996,15 @@ class TranscriptFormatter
                 $coupletsHtml .= '    <span class="text-slate-900 font-bold font-scholarly w-full text-center block text-base sm:text-lg" style="color: #501549 !important; font-weight: bold !important; text-align: center !important; text-align-last: center !important;">' . self::replaceMarkersWithSymbols(e($first)) . '</span>' . "\n";
                 $coupletsHtml .= '  </div>' . "\n";
             } else {
-                $coupletsHtml .= '  <div class="couplet-line py-2.5 border-b border-dotted border-amber-200/60 leading-loose" style="display: grid !important; grid-template-columns: 1fr auto 1fr !important; align-items: center !important; gap: 0.75rem !important;">' . "\n";
-                $coupletsHtml .= '    <span class="couplet-first font-bold font-scholarly text-base sm:text-lg" style="color: #501549 !important; font-weight: bold !important; width: 100% !important; text-align: left !important; text-align-last: left !important;">' . self::replaceMarkersWithSymbols(e($first)) . '</span>' . "\n";
+                $coupletsHtml .= '  <div class="couplet-line py-2.5 border-b border-dotted border-amber-200/60 leading-loose" style="display: grid !important; grid-template-columns: 1fr auto 1fr !important; align-items: center !important; gap: 0.85rem sm:gap-4 !important;">' . "\n";
+                $coupletsHtml .= '    <span class="couplet-first font-bold font-scholarly text-base sm:text-lg" style="color: #501549 !important; font-weight: bold !important; width: 100% !important; text-align: justify !important; text-justify: kashida !important; -webkit-text-justify: kashida !important; -ms-text-justify: kashida !important; text-align-last: justify !important;">' . self::replaceMarkersWithSymbols(e($first)) . '</span>' . "\n";
                 $coupletsHtml .= '    <span class="couplet-center-icon text-gold-600 text-xs sm:text-sm shrink-0 px-2 select-none" style="color: #501549 !important;">✤</span>' . "\n";
-                $coupletsHtml .= '    <span class="couplet-second font-bold font-scholarly text-base sm:text-lg" style="color: #501549 !important; font-weight: bold !important; width: 100% !important; text-align: right !important; text-align-last: right !important;">' . self::replaceMarkersWithSymbols(e($second)) . '</span>' . "\n";
+                $coupletsHtml .= '    <span class="couplet-second font-bold font-scholarly text-base sm:text-lg" style="color: #501549 !important; font-weight: bold !important; width: 100% !important; text-align: justify !important; text-justify: kashida !important; -webkit-text-justify: kashida !important; -ms-text-justify: kashida !important; text-align-last: justify !important;">' . self::replaceMarkersWithSymbols(e($second)) . '</span>' . "\n";
                 $coupletsHtml .= '  </div>' . "\n";
             }
         }
 
-        return '<div class="lecture-poem-box couplets-container my-8 py-5 px-4 sm:px-8 bg-amber-50/40 rounded-2xl border border-amber-200/60 max-w-2xl mx-auto shadow-2xs">' . "\n"
+        return '<div class="lecture-poem-box couplets-container my-8 py-5 px-4 sm:px-8 bg-amber-50/40 rounded-2xl border border-amber-200/60 mx-auto shadow-2xs" style="width: fit-content !important; min-width: min(100%, 520px) !important; max-width: 680px !important; margin: 2rem auto !important;">' . "\n"
              . $coupletsHtml
              . '</div><!-- /lecture-poem-box -->';
     }
