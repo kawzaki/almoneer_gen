@@ -137,8 +137,9 @@ class ImageWatermarkService
                 break;
         }
 
-        // 5. Merge watermark onto target image
-        self::imagecopymergeAlpha($targetImg, $scaledWm, $destX, $destY, 0, 0, $targetWmW, $targetWmH, $opacity);
+        // 5. Merge watermark onto target image preserving full transparency
+        imagealphablending($targetImg, true);
+        imagecopy($targetImg, $scaledWm, $destX, $destY, 0, 0, $targetWmW, $targetWmH);
         imagedestroy($scaledWm);
 
         // 6. Save back to original file
