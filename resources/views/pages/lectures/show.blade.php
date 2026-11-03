@@ -350,7 +350,7 @@
         <div id="transcript-section" class="transcript-card bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
             <!-- علامة مائية مطبوعة ثابتة في خلفية كل صفحة -->
             <div class="print-watermark-container" aria-hidden="true">
-                <img src="{{ asset('images/logo_watermark_print.png') }}" class="print-watermark-img" alt="">
+                <img src="{{ asset('images/logo_watermark_print.png') }}?v=5" class="print-watermark-img" alt="">
             </div>
             <div class="no-print flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
                 <div class="flex items-center gap-3">
@@ -660,28 +660,30 @@
 
                             /* العلامة المائية الثابتة المكررة في كل صفحة لطباعة المحاضرة وتصدير PDF */
                             .print-watermark-container {
-                                display: flex !important;
+                                display: block !important;
                                 position: fixed !important;
-                                top: 0 !important;
-                                left: 0 !important;
-                                right: 0 !important;
-                                bottom: 0 !important;
-                                width: 100vw !important;
-                                height: 100vh !important;
-                                align-items: center !important;
-                                justify-content: center !important;
+                                top: 50% !important;
+                                left: 50% !important;
+                                transform: translate(-50%, -50%) !important;
+                                -webkit-transform: translate(-50%, -50%) !important;
+                                width: 300pt !important;
+                                max-width: 72% !important;
+                                height: auto !important;
                                 pointer-events: none !important;
                                 z-index: 0 !important;
                                 margin: 0 !important;
                                 padding: 0 !important;
+                                text-align: center !important;
                             }
 
                             .print-watermark-img {
-                                width: 52vw !important;
-                                max-width: 440px !important;
+                                width: 100% !important;
+                                max-width: 100% !important;
                                 height: auto !important;
+                                max-height: 260pt !important;
+                                object-fit: contain !important;
                                 display: block !important;
-                                margin: auto !important;
+                                margin: 0 auto !important;
                                 pointer-events: none !important;
                                 -webkit-print-color-adjust: exact !important;
                                 print-color-adjust: exact !important;

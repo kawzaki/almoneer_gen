@@ -492,8 +492,8 @@
 
                     <!-- Brand Link & Calligraphy -->
                     <a href="{{ route('home') }}" class="group flex items-center gap-2 sm:gap-5 min-w-0 max-w-full">
-                        <div class="h-12 sm:h-20 md:h-24 lg:h-28 w-auto flex-shrink-0 flex items-center justify-center">
-                            <img src="{{ asset('images/almoneer-logo-official.png') }}" alt="شعار شبكة المنير" class="h-12 sm:h-20 md:h-24 lg:h-28 w-auto object-contain drop-shadow-[0_4px_18px_rgba(212,170,72,0.65)] group-hover:scale-105 transition-transform">
+                        <div class="h-14 sm:h-24 md:h-28 lg:h-32 xl:h-36 w-auto flex-shrink-0 flex items-center justify-center">
+                            <img src="{{ asset('images/almoneer-logo-official.png') }}?v=4" alt="شعار شبكة المنير" class="h-14 sm:h-24 md:h-28 lg:h-32 xl:h-36 w-auto object-contain drop-shadow-[0_4px_18px_rgba(212,170,72,0.65)] group-hover:scale-105 transition-transform">
                         </div>
                         <div class="flex flex-col justify-center min-w-0">
                             <!-- Handwritten Arabic Calligraphy (Official Artwork) -->
