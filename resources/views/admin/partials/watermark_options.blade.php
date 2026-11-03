@@ -10,8 +10,10 @@
             </span>
         </label>
         <div class="flex items-center gap-2 text-[11px] text-amber-800 bg-amber-100/70 px-2.5 py-1 rounded-lg">
-            <img src="{{ asset('images/logo_new_bottom_left.png') }}" alt="شعار المنير" class="h-4 w-auto object-contain">
-            <span class="font-medium">الشعار الجديد لشبكة المنير</span>
+            <span class="bg-slate-800 px-1.5 py-0.5 rounded flex items-center justify-center">
+                <img src="{{ asset('images/logo_watermark_white.png') }}" alt="شعار المنير" class="h-3.5 w-auto object-contain">
+            </span>
+            <span class="font-medium">الشعار الأبيض لشبكة المنير</span>
         </div>
     </div>
 

@@ -156,6 +156,8 @@
      - المقالات والنشاطات (Articles / News)
      - الكتب والمؤلفات (Books)
      - ديوان الشعر (Poems)
+4. **ملف الشعار الأبيض المعتمد:**
+   - يعتمد النظام على [public/images/logo_watermark_white.png](file:///c:/wamp/www/almoneer-gen/public/images/logo_watermark_white.png) باللون الأبيض النقي مع ظل ناعم خفيف (`subtle drop shadow`) يضمن وضوح العلامة المائية وبروزها التام سواء كانت خلفية الصورة المرفوعة داكنة أو فاتحة.
 
 ---
 

@@ -5,18 +5,18 @@ namespace App\Services;
 class ImageWatermarkService
 {
     /**
-     * Default watermark file (The new Almoneer logo from شبكــــة المنير.pdf).
+     * Default watermark file (The official Almoneer logo in white).
      */
     public static function getDefaultWatermarkPath(): string
     {
         if (function_exists('public_path')) {
             try {
-                return public_path('images/logo_new_bottom_left.png');
+                return public_path('images/logo_watermark_white.png');
             } catch (\Throwable $e) {
                 // Fallback below
             }
         }
-        return dirname(__DIR__, 2) . '/public/images/logo_new_bottom_left.png';
+        return dirname(__DIR__, 2) . '/public/images/logo_watermark_white.png';
     }
 
     /**
