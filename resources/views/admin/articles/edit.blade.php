@@ -193,16 +193,39 @@
         </div>
 
         <!-- Full Content (WYSIWYG Quill Editor) -->
-        <div class="space-y-1.5">
-            <div class="flex items-center justify-between">
+        <div class="space-y-2">
+            <div class="flex flex-wrap items-center justify-between gap-2">
                 <label class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
                     <i class="fa-solid fa-pen-nib text-emerald-800"></i>
                     <span>المحتوى الكامل (محرر مرئي منسق WYSIWYG):</span>
                 </label>
-                <button type="button" onclick="toggleRawHtmlMode()" id="toggle-html-btn" class="text-[11px] text-slate-500 hover:text-emerald-800 font-semibold flex items-center gap-1">
-                    <i class="fa-solid fa-code"></i>
-                    <span>تبديل لكود HTML المصدر</span>
-                </button>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="cleanArticleWithVacum()" id="btn-clean-vacum" class="px-3 py-1 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold transition flex items-center gap-1.5 shadow-2xs border border-amber-300/70" title="تنظيف النص وتطبيق خطوط التكريم والمخمة">
+                        <i class="fa-solid fa-broom text-amber-700"></i>
+                        <span>تنظيف وتنسيق بالمخمة</span>
+                    </button>
+                    <button type="button" onclick="toggleRawHtmlMode()" id="toggle-html-btn" class="text-[11px] text-slate-500 hover:text-emerald-800 font-semibold flex items-center gap-1">
+                        <i class="fa-solid fa-code"></i>
+                        <span>تبديل لكود HTML المصدر</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Symbols Toolbar -->
+            <div class="flex flex-wrap items-center gap-1.5 p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                <span class="text-[11px] font-bold text-slate-500 ml-1">رموز التكريم:</span>
+                <button type="button" onmousedown="event.preventDefault()" onclick="insertSymbol('(ص)')" class="px-2 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-emerald-800 font-bold" title="صلى الله عليه وآله">(ص)</button>
+                <button type="button" onmousedown="event.preventDefault()" onclick="insertSymbol('(ع)')" class="px-2 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-emerald-800 font-bold" title="عليه السلام">(ع)</button>
+                <button type="button" onmousedown="event.preventDefault()" onclick="insertSymbol('(عه)')" class="px-2 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-emerald-800 font-bold" title="عليها السلام">(عه)</button>
+                <button type="button" onmousedown="event.preventDefault()" onclick="insertSymbol('(عما)')" class="px-2 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-emerald-800 font-bold" title="عليهما السلام">(عما)</button>
+                <button type="button" onmousedown="event.preventDefault()" onclick="insertSymbol('(عع)')" class="px-2 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-emerald-800 font-bold" title="عليهم السلام">(عع)</button>
+                <button type="button" onmousedown="event.preventDefault()" onclick="insertSymbol('(عج)')" class="px-2 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-emerald-800 font-bold" title="عجل الله فرجه">(عج)</button>
+                <button type="button" onmousedown="event.preventDefault()" onclick="insertSymbol('(قده)')" class="px-2 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-emerald-800 font-bold" title="قدس سره">(قده)</button>
+                <button type="button" onmousedown="event.preventDefault()" onclick="insertSymbol('(دام ظله)')" class="px-2 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-emerald-800 font-bold" title="دام ظله">(دام ظله)</button>
+                <button type="button" onmousedown="event.preventDefault()" onclick="insertSymbol('(ره)')" class="px-2 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-emerald-800 font-bold" title="رحمه الله">(ره)</button>
+                <button type="button" onmousedown="event.preventDefault()" onclick="insertSymbol('(رض)')" class="px-2 py-0.5 rounded bg-white hover:bg-emerald-50 border border-slate-200 text-emerald-800 font-bold" title="رضي الله عنه">(رض)</button>
+                <span class="h-4 w-[1px] bg-slate-300 mx-1"></span>
+                <button type="button" onmousedown="event.preventDefault()" onclick="insertSymbol('{ آية قرآنية }')" class="px-2 py-0.5 rounded bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-900 font-bold" title="آية قرآنية">{ آية }</button>
             </div>
 
             <!-- Hidden input that carries formatted HTML content -->
@@ -299,6 +322,72 @@
 
     function syncFromRawHtml(val) {
         contentInput.value = val;
+    }
+
+    // 3.1 Insert Symbol into Editor
+    function insertSymbol(sym) {
+        if (!isRawMode) {
+            var range = quill.getSelection(true) || { index: quill.getLength() };
+            quill.insertText(range.index, ' ' + sym + ' ');
+            quill.setSelection(range.index + sym.length + 2);
+        } else {
+            var el = rawHtmlEditor;
+            var start = el.selectionStart || 0;
+            var end = el.selectionEnd || 0;
+            var val = el.value;
+            el.value = val.substring(0, start) + ' ' + sym + ' ' + val.substring(end);
+            el.selectionStart = el.selectionEnd = start + sym.length + 2;
+            contentInput.value = el.value;
+        }
+    }
+
+    // 3.2 Clean & Format Article with Vacum (المخمة)
+    async function cleanArticleWithVacum() {
+        let content = isRawMode ? rawHtmlEditor.value : quill.root.innerHTML;
+        if (!content || !content.trim()) {
+            alert('يرجى كتابة أو لصق المحتوى أولاً');
+            return;
+        }
+
+        const btn = document.getElementById('btn-clean-vacum');
+        const origHtml = btn ? btn.innerHTML : '';
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جارٍ التنسيق بالمخمة...</span>';
+        }
+
+        try {
+            const response = await fetch('{{ route("admin.tools.vacum.process") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ content: content })
+            });
+            const data = await response.json();
+            if (data.success) {
+                if (isRawMode) {
+                    rawHtmlEditor.value = data.clean_text;
+                    contentInput.value = data.clean_text;
+                } else {
+                    quill.root.innerHTML = data.html;
+                    contentInput.value = data.clean_text;
+                }
+                alert('تم تنظيف وتنسيق المحتوى بنجاح وفق قواعد المخمة والرموز التكريمية!');
+            } else {
+                alert(data.message || 'حدث خطأ أثناء المعالجة');
+            }
+        } catch (err) {
+            console.error('Vacum error:', err);
+            alert('تعذر الاتصال بخادم التنسيق');
+        } finally {
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = origHtml;
+            }
+        }
     }
 
     // 4. Live Image Preview

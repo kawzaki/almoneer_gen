@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\Category;
 use App\Services\ImageWatermarkService;
+use App\Services\TranscriptFormatter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
@@ -76,12 +77,20 @@ class ArticleController extends Controller
             $type = $category->slug;
         }
 
+        $content = $request->filled('content')
+            ? TranscriptFormatter::process($request->content)['clean_text']
+            : $request->content;
+
+        $summary = $request->filled('summary')
+            ? TranscriptFormatter::cleanInlineText(strip_tags($request->summary))
+            : $request->summary;
+
         Article::create([
             'title'        => $request->title,
             'slug'         => $slug,
             'category_id'  => $request->category_id,
-            'summary'      => $request->summary,
-            'content'      => $request->content,
+            'summary'      => $summary,
+            'content'      => $content,
             'image'        => $imagePath,
             'type'         => $type,
             'tags'         => $request->tags,
@@ -144,11 +153,19 @@ class ArticleController extends Controller
             $type = $category->slug;
         }
 
+        $content = $request->filled('content')
+            ? TranscriptFormatter::process($request->content)['clean_text']
+            : $request->content;
+
+        $summary = $request->filled('summary')
+            ? TranscriptFormatter::cleanInlineText(strip_tags($request->summary))
+            : $request->summary;
+
         $article->update([
             'title'        => $request->title,
             'category_id'  => $request->category_id,
-            'summary'      => $request->summary,
-            'content'      => $request->content,
+            'summary'      => $summary,
+            'content'      => $content,
             'image'        => $imagePath,
             'type'         => $type,
             'tags'         => $request->tags,

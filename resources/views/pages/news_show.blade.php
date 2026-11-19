@@ -41,7 +41,7 @@
 
         <!-- Title -->
         <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold font-scholarly text-slate-900 leading-tight">
-            {{ $article->title }}
+            {!! \App\Services\TranscriptFormatter::replaceMarkersWithSymbols(e($article->title)) !!}
         </h1>
 
         <!-- Featured Image -->
@@ -56,13 +56,13 @@
         <!-- Summary Quote -->
         @if($article->summary)
         <div class="p-5 rounded-2xl bg-sand-50 border-r-4 border-gold-500 text-slate-700 text-sm sm:text-base leading-relaxed font-light shadow-xs">
-            {{ strip_tags($article->summary) }}
+            {!! \App\Services\TranscriptFormatter::replaceMarkersWithSymbols(e(strip_tags($article->summary))) !!}
         </div>
         @endif
 
-        <!-- Full Rich HTML Content (WYSIWYG generated) -->
-        <div class="prose prose-slate max-w-none text-sm sm:text-base leading-loose text-slate-800 space-y-4 pt-2 [&>p]:leading-relaxed [&>ul]:list-disc [&>ul]:pr-6 [&>ol]:list-decimal [&>ol]:pr-6 [&>blockquote]:border-r-4 [&>blockquote]:border-gold-500 [&>blockquote]:pr-4 [&>blockquote]:italic [&>img]:rounded-2xl [&>img]:my-4">
-            {!! $article->content !!}
+        <!-- Full Rich Scholarly Formatted Content (TranscriptFormatter / المخمة) -->
+        <div class="article-body max-w-none text-sm sm:text-base leading-loose text-slate-800 space-y-4 pt-2">
+            {!! \App\Services\TranscriptFormatter::format($article->content, '') !!}
         </div>
 
         <!-- Article Tags Section -->

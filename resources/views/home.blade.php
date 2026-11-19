@@ -376,10 +376,10 @@
                             {{ $news->category->name ?? $news->type_name }}
                         </span>
                         <h3 class="font-bold text-base text-slate-800 leading-snug hover:text-emerald-800 transition">
-                            <a href="{{ route('news.show', $news->slug) }}">{{ $news->title }}</a>
+                            <a href="{{ route('news.show', $news->slug) }}">{!! \App\Services\TranscriptFormatter::replaceMarkersWithSymbols(e($news->title)) !!}</a>
                         </h3>
                         <p class="text-xs text-slate-500 font-light leading-relaxed line-clamp-3">
-                            {{ strip_tags($news->summary) }}
+                            {!! \App\Services\TranscriptFormatter::replaceMarkersWithSymbols(e(strip_tags($news->summary))) !!}
                         </p>
                     </div>
                     <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">

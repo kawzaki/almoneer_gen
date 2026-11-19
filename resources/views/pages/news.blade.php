@@ -121,11 +121,11 @@
                     @endif
 
                     <h3 class="font-bold text-lg text-slate-900 leading-snug group-hover:text-emerald-800 transition">
-                        <a href="{{ route('news.show', $article->slug) }}">{{ $article->title }}</a>
+                        <a href="{{ route('news.show', $article->slug) }}">{!! \App\Services\TranscriptFormatter::replaceMarkersWithSymbols(e($article->title)) !!}</a>
                     </h3>
 
                     <p class="text-xs text-slate-500 font-light leading-relaxed line-clamp-3">
-                        {{ strip_tags($article->summary) }}
+                        {!! \App\Services\TranscriptFormatter::replaceMarkersWithSymbols(e(strip_tags($article->summary))) !!}
                     </p>
 
                     <!-- Article Tag Badges -->

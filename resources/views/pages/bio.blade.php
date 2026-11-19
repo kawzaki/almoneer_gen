@@ -37,41 +37,67 @@
                     السيرة الذاتية والعلمية
                 </span>
                 <h1 class="text-2xl sm:text-3xl font-bold font-scholarly text-slate-900">
-                    {{ $bioArticle->title ?? 'سماحة السيد منير بن السيد عدنان الخباز (دام عزه)' }}
+                    {!! \App\Services\TranscriptFormatter::replaceMarkersWithSymbols(e($bioArticle->title ?? 'سماحة السيد منير بن السيد عدنان الخباز (دام عزه)')) !!}
                 </h1>
-                <p class="text-xs text-slate-500">{{ !empty($bioArticle->summary) ? $bioArticle->summary : 'أستاذ البحث الخارج في الحوزة العلمية والمفكر الإسلامي' }}</p>
+                @if(!empty($bioArticle->summary))
+                    <p class="text-xs text-slate-500">{{ $bioArticle->summary }}</p>
+                @endif
             </div>
         </div>
 
         <!-- Bio Content / Timeline -->
-        <div class="prose prose-slate max-w-none text-sm sm:text-base leading-relaxed space-y-6 text-slate-700">
-            @if($bioArticle)
-                {!! $bioArticle->content !!}
+        <div class="bio-body max-w-none text-sm sm:text-base leading-relaxed space-y-6 text-slate-700">
+            @if($bioArticle && !empty(trim($bioArticle->content ?? '')))
+                {!! \App\Services\TranscriptFormatter::format($bioArticle->content, '') !!}
             @else
                 <div class="space-y-6">
                     <div>
-                        <h3 class="text-lg font-bold text-emerald-900 font-scholarly mb-2">الولادة والنشأة:</h3>
-                        <p>ولد سماحة السيد منير بن السيد عدنان الخباز في مدينة القطيف بالمنطقة الشرقية عام 1384هـ، ونشأ في بيت علم وفضل وتقوى، وتلقى تعليمه الأولي ومبادئ العلوم في مدينته قبل أن يشد الرحال إلى الحوزات العلمية العريقة.</p>
+                        <div class="lecture-heading text-lg sm:text-xl font-bold font-scholarly text-red-900 mb-2 flex items-center gap-2" style="color: #990000 !important; font-weight: bold !important;">
+                            <i class="fa-solid fa-compass text-gold-600 text-sm"></i>
+                            <span>الولادة والنشأة:</span>
+                        </div>
+                        <p class="transcript-p leading-loose text-justify text-slate-800 font-scholarly" style="line-height: 2.2 !important; text-align: justify !important; text-justify: kashida !important;">ولد سماحة السيد منير بن السيد عدنان الخباز في مدينة القطيف بالمنطقة الشرقية عام 1384 هـ، ونشأ في بيت علم وفضل وتقوى، وتلقى تعليمه الأولي ومبادئ العلوم في مدينته قبل أن يشد الرحال إلى الحوزات العلمية العريقة.</p>
                     </div>
 
                     <div>
-                        <h3 class="text-lg font-bold text-emerald-900 font-scholarly mb-2">الهجرة إلى النجف الأشرف وقم المقدسة:</h3>
-                        <p>هاجر إلى حاضرة العلم الكبرى النجف الأشرف وتتلمذ على كبار علمائها، ثم انتقل إلى الحوزة العلمية في قم المقدسة لحضور أبحاث الخارج لكبار المراجع العظام، مستفيداً من مناهجهم التحقيقية الدقيقة في الفقه والأصول والرجال.</p>
+                        <div class="lecture-heading text-lg sm:text-xl font-bold font-scholarly text-red-900 mb-2 flex items-center gap-2" style="color: #990000 !important; font-weight: bold !important;">
+                            <i class="fa-solid fa-compass text-gold-600 text-sm"></i>
+                            <span>الهجرة إلى النجف الأشرف وقم المقدسة:</span>
+                        </div>
+                        <p class="transcript-p leading-loose text-justify text-slate-800 font-scholarly" style="line-height: 2.2 !important; text-align: justify !important; text-justify: kashida !important;">هاجر إلى حاضرة العلم الكبرى النجف الأشرف وتتلمذ على كبار علمائها، ثم انتقل إلى الحوزة العلمية في قم المقدسة لحضور أبحاث الخارج لكبار المراجع العظام، مستفيداً من مناهجهم التحقيقية الدقيقة في الفقه والأصول والرجال.</p>
                     </div>
 
                     <div>
-                        <h3 class="text-lg font-bold text-emerald-900 font-scholarly mb-2">أبرز أساتذته في البحث الخارج:</h3>
-                        <ul class="list-disc list-inside space-y-1 text-slate-600 text-sm">
-                            <li>سماحة آية الله العظمى المرجع الديني الأعلى السيد علي السيستاني (دام ظله)</li>
-                            <li>سماحة آية الله العظمى السيد أبو القاسم الخوئي (قدس سره)</li>
-                            <li>سماحة آية الله العظمى الشيخ الميرزا جواد التبريزي (قدس سره)</li>
-                            <li>سماحة آية الله العظمى الشيخ الوحيد الخراساني (دام ظله)</li>
+                        <div class="lecture-heading text-lg sm:text-xl font-bold font-scholarly text-red-900 mb-2 flex items-center gap-2" style="color: #990000 !important; font-weight: bold !important;">
+                            <i class="fa-solid fa-compass text-gold-600 text-sm"></i>
+                            <span>أبرز أساتذته في البحث الخارج:</span>
+                        </div>
+                        <ul class="lecture-bullet-list space-y-2 text-slate-800 font-scholarly my-3 pr-2" style="line-height: 2 !important;">
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-emerald-700 font-bold mt-0.5">•</span>
+                                <span>سماحة آية الله العظمى المرجع الديني الأعلى السيد علي السيستاني <span class="symbol-arb3een symbol-abothar text-emerald-800" title="دام ظله">&#xF04B;</span></span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-emerald-700 font-bold mt-0.5">•</span>
+                                <span>سماحة آية الله العظمى السيد أبو القاسم الخوئي <span class="symbol-arb3een symbol-abothar text-emerald-800" title="قدس سره">&#xF042;</span></span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-emerald-700 font-bold mt-0.5">•</span>
+                                <span>سماحة آية الله العظمى الشيخ الميرزا جواد التبريزي <span class="symbol-arb3een symbol-abothar text-emerald-800" title="قدس سره">&#xF042;</span></span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-emerald-700 font-bold mt-0.5">•</span>
+                                <span>سماحة آية الله العظمى الشيخ الوحيد الخراساني <span class="symbol-arb3een symbol-abothar text-emerald-800" title="دام ظله">&#xF04B;</span></span>
+                            </li>
                         </ul>
                     </div>
 
                     <div>
-                        <h3 class="text-lg font-bold text-emerald-900 font-scholarly mb-2">المشروع الفكري والتبليغي:</h3>
-                        <p>يتميز سماحته بطرحه الفكري المعاصر الذي يمزج بين دقة التحقيق الحوزوي ومخاطبة العقل الحديث، وله جولات تبليغية سنوية واسعة في الولايات المتحدة، المملكة المتحدة، وأرجاء العالم الإسلامي، بالإضافة إلى نتاجه الزاخر في حوار الملاحدة، تفكيك الشبهات المعاصرة، وإثراء الفكر الإسلامي.</p>
+                        <div class="lecture-heading text-lg sm:text-xl font-bold font-scholarly text-red-900 mb-2 flex items-center gap-2" style="color: #990000 !important; font-weight: bold !important;">
+                            <i class="fa-solid fa-compass text-gold-600 text-sm"></i>
+                            <span>المشروع الفكري والتبليغي:</span>
+                        </div>
+                        <p class="transcript-p leading-loose text-justify text-slate-800 font-scholarly" style="line-height: 2.2 !important; text-align: justify !important; text-justify: kashida !important;">يتميز سماحته بطرحه الفكري المعاصر الذي يمزج بين دقة التحقيق الحوزوي ومخاطبة العقل الحديث، وله جولات تبليغية سنوية واسعة في الولايات المتحدة، المملكة المتحدة، وأرجاء العالم الإسلامي، بالإضافة إلى نتاجه الزاخر في حوار الملاحدة، تفكيك الشبهات المعاصرة، وإثراء الفكر الإسلامي.</p>
                     </div>
                 </div>
             @endif
