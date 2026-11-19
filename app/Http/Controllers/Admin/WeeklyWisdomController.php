@@ -25,19 +25,17 @@ class WeeklyWisdomController extends Controller
             'quote' => 'required|string',
         ]);
 
-        if ($request->boolean('is_active')) {
-            WeeklyWisdom::where('is_active', true)->update(['is_active' => false]);
-        }
-
         WeeklyWisdom::create([
-            'title'     => $request->title,
+            'title'     => $request->title ?: 'حِكَم وأقوال',
             'quote'     => $request->quote,
             'source'    => $request->source,
             'image'     => $request->image,
             'is_active' => $request->boolean('is_active', true),
         ]);
 
-        return redirect()->route('admin.wisdom.index')->with('success', 'تم حفظ كلمة الأسبوع بنجاح وتحديث الكاش!');
+        \Illuminate\Support\Facades\Cache::forget('site.wisdom.active_ids');
+
+        return redirect()->route('admin.wisdom.index')->with('success', 'تم حفظ الحكمة بنجاح وتحديث الكاش!');
     }
 
     public function edit(WeeklyWisdom $wisdom)
@@ -51,24 +49,23 @@ class WeeklyWisdomController extends Controller
             'quote' => 'required|string',
         ]);
 
-        if ($request->boolean('is_active')) {
-            WeeklyWisdom::where('id', '!=', $wisdom->id)->update(['is_active' => false]);
-        }
-
         $wisdom->update([
-            'title'     => $request->title,
+            'title'     => $request->title ?: 'حِكَم وأقوال',
             'quote'     => $request->quote,
             'source'    => $request->source,
             'image'     => $request->image,
             'is_active' => $request->boolean('is_active'),
         ]);
 
-        return redirect()->route('admin.wisdom.index')->with('success', 'تم تحديث كلمة الأسبوع بنجاح وتحديث الكاش!');
+        \Illuminate\Support\Facades\Cache::forget('site.wisdom.active_ids');
+
+        return redirect()->route('admin.wisdom.index')->with('success', 'تم تحديث الحكمة بنجاح وتحديث الكاش!');
     }
 
     public function destroy(WeeklyWisdom $wisdom)
     {
         $wisdom->delete();
-        return redirect()->route('admin.wisdom.index')->with('success', 'تم حذف كلمة الأسبوع بنجاح!');
+        \Illuminate\Support\Facades\Cache::forget('site.wisdom.active_ids');
+        return redirect()->route('admin.wisdom.index')->with('success', 'تم حذف الحكمة بنجاح!');
     }
 }

@@ -14,23 +14,23 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">عنوان النافذة:</label>
-                <input type="text" name="title" value="من حكم أمير المؤمنين (عليه السلام)" required class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+                <input type="text" name="title" value="حِكَم وأقوال" required class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
             </div>
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">المصدر / القائل:</label>
-                <input type="text" name="source" value="الإمام علي بن أبي طالب (ع)" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+                <input type="text" name="source" placeholder="مثال: الإمام علي (ع)، الإمام الصادق (ع)..." class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
             </div>
         </div>
 
         <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">نص الحكمة / الكلمة:</label>
-            <textarea name="quote" rows="4" required placeholder="عليك بالرضا في الشدة والرخاء..." class="w-full text-xs rounded-xl border-slate-200 p-3 bg-slate-50 font-scholarly text-sm"></textarea>
+            <textarea name="quote" rows="4" required placeholder="نص الحكمة أو المقولة..." class="w-full text-xs rounded-xl border-slate-200 p-3 bg-slate-50 font-scholarly text-sm"></textarea>
         </div>
 
         <div class="flex items-center gap-6 pt-2">
             <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
                 <input type="checkbox" name="is_active" value="1" checked class="rounded text-emerald-800">
-                <span>تفعيل ونشر هذه الحكمة ككلمة الأسبوع النشطة حالياً</span>
+                <span>تفعيل ونشر هذه الحكمة ضمن بنك الحكم النشطة</span>
             </label>
         </div>
 

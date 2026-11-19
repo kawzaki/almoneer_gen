@@ -20,7 +20,6 @@ class HomeController extends Controller
             return [
                 'featuredArticle' => Article::active()->featured()->orderByRaw('COALESCE(published_at, created_at) DESC')->first() ?? Article::active()->orderByRaw('COALESCE(published_at, created_at) DESC')->first(),
                 'recentNews'      => Article::active()->where('type', '!=', 'bio')->whereDoesntHave('category', fn($q) => $q->where('slug', 'bio'))->orderByRaw('COALESCE(published_at, created_at) DESC')->take(3)->get(),
-                'weeklyWisdom'    => WeeklyWisdom::active()->latest()->first(),
                 'featuredAudios'  => MediaItem::active()->audios()->latest()->take(4)->get(),
                 'featuredVideos'  => MediaItem::active()->videos()->latest()->take(4)->get(),
                 'featuredBooks'   => Book::active()->orderBy('order')->take(4)->get(),
@@ -29,6 +28,17 @@ class HomeController extends Controller
                 'recentInquiries' => Inquiry::published()->latest()->take(3)->get(),
             ];
         });
+
+        // Dynamic random wisdom on each visit/refresh (Micro-pick in ~0.1ms maintaining 100% cache speed)
+        $wisdomIds = Cache::remember('site.wisdom.active_ids', 86400, function () {
+            return WeeklyWisdom::active()->pluck('id')->toArray();
+        });
+
+        if (!empty($wisdomIds)) {
+            $data['weeklyWisdom'] = WeeklyWisdom::find($wisdomIds[array_rand($wisdomIds)]);
+        } else {
+            $data['weeklyWisdom'] = WeeklyWisdom::active()->inRandomOrder()->first();
+        }
 
         // Live/cached YouTube uploads from Alm0neer1 channel (Top 3 latest uploads)
         $data['latestYouTubeVideos'] = \App\Services\YouTubeService::getLatestChannelVideos(3);

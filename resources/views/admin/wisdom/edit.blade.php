@@ -30,7 +30,7 @@
         <div class="flex items-center gap-6 pt-2">
             <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
                 <input type="checkbox" name="is_active" value="1" {{ $wisdom->is_active ? 'checked' : '' }} class="rounded text-emerald-800">
-                <span>تفعيل ونشر ككلمة الأسبوع النشطة</span>
+                <span>تفعيل ونشر هذه الحكمة ضمن بنك الحكم النشطة</span>
             </label>
         </div>
 

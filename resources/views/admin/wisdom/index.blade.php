@@ -30,14 +30,14 @@
                 <tbody class="divide-y divide-slate-100">
                     @forelse($wisdoms as $w)
                     <tr class="hover:bg-slate-50 transition">
-                        <td class="p-3.5 sm:p-4 font-bold text-slate-800 whitespace-nowrap">{{ $w->title ?? 'كلمة الأسبوع' }}</td>
+                        <td class="p-3.5 sm:p-4 font-bold text-slate-800 whitespace-nowrap">{{ $w->title ?: 'حِكَم وأقوال' }}</td>
                         <td class="p-3.5 sm:p-4 font-semibold text-slate-700 min-w-[200px] max-w-sm truncate">"{{ $w->quote }}"</td>
-                        <td class="p-3.5 sm:p-4 text-slate-500 whitespace-nowrap">{{ $w->source }}</td>
+                        <td class="p-3.5 sm:p-4 text-slate-500 whitespace-nowrap">{{ $w->source ?: '—' }}</td>
                         <td class="p-3.5 sm:p-4 whitespace-nowrap">
                             @if($w->is_active)
-                            <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">معروضة حالياً</span>
+                            <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">نشطة</span>
                             @else
-                            <span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500">أرشيف</span>
+                            <span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500">معطلة</span>
                             @endif
                         </td>
                         <td class="p-3.5 sm:p-4 text-center whitespace-nowrap">

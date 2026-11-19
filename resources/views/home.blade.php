@@ -131,14 +131,16 @@
                 <div class="space-y-1 flex-grow">
                     <span
                         class="text-[11px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full">
-                        {{ $weeklyWisdom->title ?? 'كلمة الأسبوع' }}
+                        {{ !empty($weeklyWisdom->title) && $weeklyWisdom->title !== 'كلمة الأسبوع' ? $weeklyWisdom->title : 'حِكَم وأقوال' }}
                     </span>
                     <p class="text-sm sm:text-base font-bold font-scholarly text-slate-800 leading-relaxed pt-1">
-                        "{{ $weeklyWisdom->quote ?? 'عليك بالرضا في الشدة والرخاء' }}"
+                        "{{ $weeklyWisdom->quote ?? 'كن في الفتنة كابن اللبون، لا ظهر فيركب ولا ضرع فيحلب' }}"
                     </p>
+                    @if(!empty($weeklyWisdom->source))
                     <p class="text-xs text-slate-500">
-                        — {{ $weeklyWisdom->source ?? 'أمير المؤمنين الإمام علي (ع)' }}
+                        — {{ $weeklyWisdom->source }}
                     </p>
+                    @endif
                 </div>
             </div>
 
