@@ -65,8 +65,15 @@
             <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row items-center gap-6">
                 <!-- Current / Preview Thumbnail -->
                 <div class="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full p-1 bg-gradient-to-tr from-gold-400 via-gold-500 to-emerald-800 shadow-lg overflow-hidden border-2 border-gold-400 shrink-0">
+                    @php
+                        $adminHeroPath = $settings['site.hero_photo'] ?? $settings['site_hero_photo'] ?? null;
+                        $adminHeroExists = $adminHeroPath && file_exists(public_path($adminHeroPath)) && !is_dir(public_path($adminHeroPath));
+                        $adminHeroSrc = $adminHeroExists 
+                            ? asset($adminHeroPath) . '?v=' . filemtime(public_path($adminHeroPath))
+                            : asset('images/sayyid-muneer-portrait.png');
+                    @endphp
                     <img id="hero-photo-preview" 
-                         src="{{ !empty($settings['site.hero_photo']) ? asset($settings['site.hero_photo']) : (!empty($settings['site_hero_photo']) ? asset($settings['site_hero_photo']) : asset('images/sayyid-muneer-portrait.png')) }}" 
+                         src="{{ $adminHeroSrc }}" 
                          alt="معاينة الصورة" 
                          class="w-full h-full object-cover rounded-full bg-emerald-950">
                 </div>
@@ -102,13 +109,9 @@
 
             <!-- Texts in Hero Card -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
+                <div class="sm:col-span-2">
                     <label class="block text-xs font-semibold text-slate-700 mb-1">الاسم في البطاقة التعريفية:</label>
                     <input type="text" name="site.hero_name" value="{{ $settings['site.hero_name'] ?? $settings['site_hero_name'] ?? 'سماحة السيد منير الخباز' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">الصفة / اللقب العلمي:</label>
-                    <input type="text" name="site.hero_title" value="{{ $settings['site.hero_title'] ?? $settings['site_hero_title'] ?? 'أستاذ البحث الخارج في الحوزة العلمية' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">نص زر السيرة الذاتية:</label>
@@ -234,8 +237,8 @@
             <div>
                 <label class="block text-xs font-semibold text-slate-700 mb-1">إظهار الحديث الشريف في الفوتر:</label>
                 <select name="site.footer_show_hadith" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
-                    <option value="1" {{ ($settings['site.footer_show_hadith'] ?? '1') === '1' ? 'selected' : '' }}>نعم، إظهار الحديث الشريف في أسفل النبذة</option>
-                    <option value="0" {{ ($settings['site.footer_show_hadith'] ?? '1') === '0' ? 'selected' : '' }}>إخفاء الحديث الشريف من الفوتر</option>
+                    <option value="1" {{ ((string)($settings['site.footer_show_hadith'] ?? $settings['site_footer_show_hadith'] ?? '1')) === '1' ? 'selected' : '' }}>نعم، إظهار الحديث الشريف في أسفل النبذة</option>
+                    <option value="0" {{ ((string)($settings['site.footer_show_hadith'] ?? $settings['site_footer_show_hadith'] ?? '1')) === '0' ? 'selected' : '' }}>إخفاء الحديث الشريف من الفوتر</option>
                 </select>
             </div>
         </div>

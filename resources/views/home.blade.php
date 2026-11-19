@@ -83,7 +83,14 @@
                                     class="relative w-full h-full rounded-full p-1.5 bg-gradient-to-tr from-gold-300 via-gold-500 to-emerald-800 shadow-2xl overflow-hidden border-2 border-gold-400">
                                     <div
                                         class="w-full h-full rounded-full overflow-hidden bg-gradient-to-b from-[#083b45] to-[#041f25]">
-                                        <img src="{{ !empty($siteSettings['site.hero_photo']) ? asset($siteSettings['site.hero_photo']) : (!empty($siteSettings['site_hero_photo']) ? asset($siteSettings['site_hero_photo']) : asset('images/sayyid-muneer-portrait.png')) }}"
+                                        @php
+                                            $heroPhotoPath = $siteSettings['site.hero_photo'] ?? $siteSettings['site_hero_photo'] ?? $siteSettings['site.hero.photo'] ?? null;
+                                            $heroPhotoExists = $heroPhotoPath && file_exists(public_path($heroPhotoPath)) && !is_dir(public_path($heroPhotoPath));
+                                            $heroPhotoSrc = $heroPhotoExists 
+                                                ? asset($heroPhotoPath) . '?v=' . filemtime(public_path($heroPhotoPath))
+                                                : asset('images/sayyid-muneer-portrait.png');
+                                        @endphp
+                                        <img src="{{ $heroPhotoSrc }}"
                                             alt="{{ $siteSettings['site.hero_name'] ?? $siteSettings['site_hero_name'] ?? 'سماحة السيد منير الخباز' }}"
                                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
                                     </div>
@@ -94,9 +101,6 @@
                                 <h3 class="text-xl sm:text-2xl font-bold font-scholarly text-gold-300 drop-shadow">
                                     {{ $siteSettings['site.hero_name'] ?? $siteSettings['site_hero_name'] ?? 'سماحة السيد منير الخباز' }}
                                 </h3>
-                                <p class="text-xs text-slate-200 font-light">
-                                    {{ $siteSettings['site.hero_title'] ?? $siteSettings['site_hero_title'] ?? 'أستاذ البحث الخارج في الحوزة العلمية' }}
-                                </p>
                             </div>
 
                             <div class="pt-2">

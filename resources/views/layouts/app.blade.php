@@ -683,10 +683,13 @@
                     <p class="text-sm leading-relaxed text-slate-300 font-light">
                         {{ $siteSettings['site.footer_about'] ?? 'البوابة العامة لنشر المحاضرات الفكرية، ديوان الشعر، المؤلفات، والندوات، مع الربط المباشر ببوابة الدروس الحوزوية والبحث الخارج.' }}
                     </p>
-                    @if(($siteSettings['site.footer_show_hadith'] ?? '1') !== '0')
+                    @php
+                        $showFooterHadith = (string)($siteSettings['site.footer_show_hadith'] ?? $siteSettings['site_footer_show_hadith'] ?? $siteSettings['sitefootershowhadith'] ?? '1');
+                    @endphp
+                    @if($showFooterHadith === '1')
                     <div class="pt-2 text-xs text-gold-400 font-medium flex items-center gap-2">
                         <i class="fa-solid fa-quote-right"></i>
-                        <span>{{ $siteSettings['site.hadith'] ?? 'لا يزال المرء عالماً ما طلب العلم، فإذا ظن أنه قد علم فقد جهل' }}</span>
+                        <span>{{ $siteSettings['site.hadith'] ?? $siteSettings['site_hadith'] ?? 'لا يزال المرء عالماً ما طلب العلم، فإذا ظن أنه قد علم فقد جهل' }}</span>
                     </div>
                     @endif
                 </div>

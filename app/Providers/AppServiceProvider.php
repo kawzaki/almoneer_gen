@@ -69,6 +69,8 @@ class AppServiceProvider extends ServiceProvider
                         $normalized[$k] = $v;
                         $normalized[str_replace('_', '.', $k)] = $v;
                         $normalized[str_replace('.', '_', $k)] = $v;
+                        $clean = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $k));
+                        $normalized[$clean] = $v;
                     }
                     return $normalized;
                 } catch (\Throwable $e) {

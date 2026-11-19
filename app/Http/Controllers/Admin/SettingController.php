@@ -26,6 +26,10 @@ class SettingController extends Controller
     {
         $data = $request->except(['_token', 'site_hero_photo_file', 'remove_hero_photo']);
 
+        // Fundamentally remove academic title from hero settings
+        unset($data['site.hero_title'], $data['site_hero_title'], $data['site.hero.title']);
+        Setting::whereIn('key', ['site.hero_title', 'site_hero_title', 'site.hero.title'])->delete();
+
         // Handle Hero Portrait Photo Upload
         if ($request->hasFile('site_hero_photo_file')) {
             $file = $request->file('site_hero_photo_file');
@@ -43,13 +47,18 @@ class SettingController extends Controller
                 @File::delete(public_path($oldPhoto));
             }
 
-            Setting::set('site.hero_photo', 'uploads/settings/' . $filename);
+            $newRelativePath = 'uploads/settings/' . $filename;
+            Setting::set('site.hero_photo', $newRelativePath);
+            Setting::set('site_hero_photo', $newRelativePath);
+            Setting::set('site.hero.photo', $newRelativePath);
         } elseif ($request->input('remove_hero_photo') == '1') {
             $oldPhoto = Setting::get('site.hero_photo');
             if ($oldPhoto && File::exists(public_path($oldPhoto))) {
                 @File::delete(public_path($oldPhoto));
             }
             Setting::set('site.hero_photo', null);
+            Setting::set('site_hero_photo', null);
+            Setting::set('site.hero.photo', null);
         }
 
         // Build a canonical lookup map of existing keys in database
@@ -71,9 +80,18 @@ class SettingController extends Controller
             }
         }
 
-        // Flush cached settings and home payload
+        // Ensure footer hadith setting is explicitly synchronized in both naming formats
+        if (isset($data['site.footer_show_hadith'])) {
+            Setting::set('site.footer_show_hadith', (string)$data['site.footer_show_hadith']);
+            Setting::set('site_footer_show_hadith', (string)$data['site.footer_show_hadith']);
+        }
+
+        // Flush cached settings, home payload, and views
         Cache::forget('site.settings');
         Cache::forget('site.home.payload');
+        try {
+            \Artisan::call('view:clear');
+        } catch (\Throwable $e) {}
 
         return redirect()->back()->with('success', 'تم حفظ وتحديث كافة الإعدادات والصور وتفريغ كاش الموقع تلقائياً!');
     }
