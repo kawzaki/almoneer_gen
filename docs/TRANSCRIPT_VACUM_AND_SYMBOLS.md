@@ -23,7 +23,7 @@
 | **عليهم السلام** | `(عع)`، `(عم)`، `(عليهم السلام)`، `(سلام الله عليهم)` | `(عع)` | **`U+F037`** (`&#xF037;`) | `<span class="symbol-arb3een" title="عليهم السلام">&#xF037;</span>` |
 | **عجل الله فرجه** | `(عج)`، `(عجل الله فرجه)`، `(عجل الله تعالى فرجه)`، `(عجل الله فرجه الشريف)` | `(عج)` | **`U+F049`** (`&#xF049;`) | `<span class="symbol-arb3een" title="عجل الله تعالى فرجه الشريف">&#xF049;</span>` |
 | **قدس سره** | `(قده)`، `(قدس سره)`، `(قدس)`، `(قدس سره الشريف)` | `(قده)` | **`U+F042`** (`&#xF042;`) | `<span class="symbol-arb3een" title="قدس سره">&#xF042;</span>` |
-| **دام ظله** | `(دام ظله)`، `(دام ظله الوارف)`، `(دام ظله العالي)`، `(دامت بركاته)` | `(دام ظله)` | **`U+F04B`** (`&#xF04B;`) | `<span class="symbol-arb3een" title="دام ظله">&#xF04B;</span>` |
+| **دام ظله** | `(دام ظله)`، `(دام ظله الوارف)`، `(دام ظله العالي)`، `(دامت بركاته)`، `(دام عطاؤه)`، `(دام فضله)` | `(دام ظله)` | **`U+F04B`** (`&#xF04B;`) | `<span class="symbol-arb3een" title="دام ظله">&#xF04B;</span>` |
 | **رحمه الله** | `(ره)`، `(رحمه الله)`، `(رحمة الله عليه)` | `(ره)` | **`U+F045`** (`&#xF045;`) | `<span class="symbol-arb3een" title="رحمه الله">&#xF045;</span>` |
 | **رضي الله عنه** | `(رض)`، `(رضي الله عنه)`، `(رضوان الله عليه)` | `(رض)` | **`U+F050`** (`&#xF050;`) | `<span class="symbol-arb3een" title="رضي الله عنه">&#xF050;</span>` |
 | **طاب ثراه** | `(طاب ثراه)` | `(طاب ثراه)` | **`U+F04F`** (`&#xF04F;`) | `<span class="symbol-arb3een" title="طاب ثراه">&#xF04F;</span>` |
@@ -45,7 +45,10 @@
 2. **لوحة التحكم ومحرر النصوص:** [admin.blade.php](file:///c:/wamp/www/almoneer-gen/resources/views/layouts/admin.blade.php)
 3. **أداة المخمة:** [vacum.blade.php](file:///c:/wamp/www/almoneer-gen/resources/views/admin/tools/vacum.blade.php)
 4. **محرر المحاضرات:** [edit.blade.php](file:///c:/wamp/www/almoneer-gen/resources/views/admin/media/edit.blade.php) و [create.blade.php](file:///c:/wamp/www/almoneer-gen/resources/views/admin/media/create.blade.php)
-5. **صفحة عرض وطباعة المحاضرة:** [show.blade.php](file:///c:/wamp/www/almoneer-gen/resources/views/pages/lectures/show.blade.php)
+5. **محرر الأخبار والنشاطات:** [edit.blade.php](file:///c:/wamp/www/almoneer-gen/resources/views/admin/articles/edit.blade.php) و [create.blade.php](file:///c:/wamp/www/almoneer-gen/resources/views/admin/articles/create.blade.php)
+6. **صفحة عرض وطباعة المحاضرة:** [show.blade.php](file:///c:/wamp/www/almoneer-gen/resources/views/pages/lectures/show.blade.php)
+7. **صفحة تفاصيل الأخبار والبيانات:** [news_show.blade.php](file:///c:/wamp/www/almoneer-gen/resources/views/pages/news_show.blade.php)
+8. **صفحة السيرة الذاتية المفصلة:** [bio.blade.php](file:///c:/wamp/www/almoneer-gen/resources/views/pages/bio.blade.php)
 
 ---
 
@@ -168,3 +171,16 @@
 2. **التباين والتكبير في الهيدر:**
    - تم ضبط التكبير في [app.blade.php](file:///c:/wamp/www/almoneer-gen/resources/views/layouts/app.blade.php) ليعطي وضوحاً فائقاً أمام زخرفة الترويسة الزمردية: `h-14 sm:h-24 md:h-28 lg:h-32 xl:h-36`.
    - يتم استدعاء الشعار بمعامل كاش فوري `?v=4` لمنع بقاء النسخ القديمة في متصفحات الزوار.
+
+---
+
+## 10. تعميم المخمة وخط الأربعين على الأخبار والسيرة الذاتية (News & Bio Integration)
+
+1. **العرض المباشر في واجهات الزوار:**
+   - **تفاصيل الأخبار والبيانات (`news_show.blade.php`):** يتم تغليف محتوى المقال بدالة `{!! \App\Services\TranscriptFormatter::format($article->content, '') !!}` لضمان إخراج الآيات بالخط العثماني، ضبط محاذاة الكشيدة، تلوين المحاور، واستبدال الرموز التكريمية.
+   - **عناوين وبطاقات الأخبار (`home.blade.php` و `news.blade.php`):** تطبيق `TranscriptFormatter::replaceMarkersWithSymbols()` لعرض الرموز المعتمدة بنقوش خط الأربعين داخل بطاقات الأخبار.
+   - **السيرة الذاتية (`bio.blade.php`):** تمرير أقسام السيرة المفصلة ومحطات النشاط العلمي والمؤلفات عبر `TranscriptFormatter` وتنسيق نقوش الأئمة والشخصيات العلمية.
+2. **دمج المخمة في محرر الأخبار والمقالات في لوحة التحكم (`Admin/articles`):**
+   - إضافة زر **«تنظيف وتنسيق بالمخمة»** في نموذجي الإضافة والتعديل (`create.blade.php` و `edit.blade.php`).
+   - إضافة شريط أدوات مرئي لإدراج رموز خط الأربعين بنقرة واحدة داخل حقل تحرير الخبر.
+   - معالجة تلقائية في `ArticleController::store()` و `update()` عبر `TranscriptFormatter::process()['clean_text']` لضمان نظافة المحتوى المدخل قبل حفظه.
