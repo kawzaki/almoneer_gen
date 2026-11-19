@@ -198,14 +198,52 @@
             </div>
         </div>
 
-        <!-- معرض الصور الحالية في الألبوم واختيار الغلاف -->
+        <!-- معرض الصور الحالية في الألبوم واختيار الغلاف وحذف الصور المتعددة -->
         <div class="space-y-4 pt-4 border-t border-slate-100" id="albumPhotosSection">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-                <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-images text-emerald-700"></i>
-                    <span>2. صور الألبوم الحالية ({{ $items->count() }} صورة)</span>
-                </h3>
-                <span class="text-[11px] text-slate-500">انقر على «تعيين كغلاف» أو على أي صورة لاختيارها كغلاف رئيسي للألبوم</span>
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-images text-emerald-700"></i>
+                        <span>2. صور الألبوم الحالية (<span id="photosTotalCount">{{ $items->count() }}</span> صورة)</span>
+                    </h3>
+                </div>
+
+                @if($items->count() > 0)
+                <div class="flex flex-wrap items-center gap-2">
+                    <button type="button" onclick="selectAllPhotos(true)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition flex items-center gap-1.5" title="تحديد جميع صور الألبوم">
+                        <i class="fa-regular fa-square-check text-emerald-700"></i>
+                        <span>تحديد الكل</span>
+                    </button>
+                    <button type="button" onclick="selectAllPhotos(false)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition flex items-center gap-1.5" title="إلغاء تحديد كافة الصور">
+                        <i class="fa-regular fa-square text-slate-400"></i>
+                        <span>إلغاء التحديد</span>
+                    </button>
+                    <button type="button" onclick="invertPhotoSelection()" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition flex items-center gap-1.5" title="عكس التحديد">
+                        <i class="fa-solid fa-arrows-rotate text-slate-500"></i>
+                        <span>عكس التحديد</span>
+                    </button>
+                </div>
+                @endif
+            </div>
+
+            <!-- شريط العمليات الجماعية للصور المحددة (يظهر فور تحديد أي صورة) -->
+            <div id="bulkDeleteBar" class="hidden p-3.5 bg-red-50 border-2 border-red-200 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-sm transition-all duration-300">
+                <div class="flex items-center gap-2.5 text-xs text-red-900 font-bold">
+                    <span class="w-7 h-7 rounded-lg bg-red-600 text-white flex items-center justify-center text-xs shadow-xs">
+                        <i class="fa-solid fa-check"></i>
+                    </span>
+                    <span>تم تحديد <span id="selectedPhotosCount" class="text-sm font-extrabold text-red-700">0</span> صورة للحذف</span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="selectAllPhotos(false)" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-xl text-xs font-semibold transition">
+                        إلغاء التحديد
+                    </button>
+                    <button type="button" onclick="executeBulkDeletePhotos()" id="btnBulkDelete" class="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-trash-can"></i>
+                        <span>حذف الصور المحددة نهائياً</span>
+                    </button>
+                </div>
             </div>
 
             @if($items->count() > 0)
@@ -215,8 +253,15 @@
                             $isCurrentCover = ($album->cover_image === $item->image_path) || ($album->cover_image === asset($item->image_path)) || (str_ends_with($album->cover_image ?? '', basename($item->image_path)));
                         @endphp
                         <div class="relative group bg-white rounded-xl overflow-hidden border-2 {{ $isCurrentCover ? 'cover-active-card' : 'border-slate-200 hover:border-emerald-400' }} transition-all flex flex-col justify-between shadow-xs cover-picker-item" 
-                            data-path="{{ $item->image_path }}" data-url="{{ $item->url }}">
+                            id="photo-card-{{ $item->id }}" data-id="{{ $item->id }}" data-path="{{ $item->image_path }}" data-url="{{ $item->url }}">
                             
+                            <!-- مربع اختيار الحذف المتعدد (Checkbox) -->
+                            <div class="absolute top-2 right-2 z-20">
+                                <label class="relative flex items-center justify-center w-6 h-6 rounded-lg bg-white/95 hover:bg-white border border-slate-300 shadow-sm cursor-pointer transition select-none group-hover:scale-110" onclick="event.stopPropagation()">
+                                    <input type="checkbox" value="{{ $item->id }}" class="photo-select-checkbox rounded text-red-600 focus:ring-red-500 w-4 h-4 cursor-pointer" onchange="onPhotoCheckboxChange(this, {{ $item->id }})">
+                                </label>
+                            </div>
+
                             <div class="h-28 bg-slate-100 overflow-hidden cursor-pointer relative" onclick="selectAsCover('{{ $item->image_path }}', '{{ $item->url }}', this)">
                                 <img src="{{ $item->url }}" alt="{{ $item->caption }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                                 
@@ -234,7 +279,7 @@
                                     {{ $isCurrentCover ? '★ الغلاف' : 'تعيين كغلاف' }}
                                 </button>
                                 
-                                <button type="button" onclick="deletePhoto({{ $item->id }}, this)" class="text-red-500 hover:text-red-700 p-1 hover:bg-red-50 rounded transition" title="حذف الصورة">
+                                <button type="button" onclick="deletePhoto({{ $item->id }}, this)" class="text-red-500 hover:text-red-700 p-1 hover:bg-red-50 rounded transition" title="حذف هذه الصورة فقط">
                                     <i class="fa-solid fa-trash-can"></i>
                                 </button>
                             </div>
@@ -487,6 +532,123 @@
                     badge.className = 'text-[11px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800';
                 };
                 reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Multi-select & Bulk Delete photos
+        function onPhotoCheckboxChange(cb, itemId) {
+            const card = document.getElementById('photo-card-' + itemId);
+            if (cb.checked) {
+                card?.classList.add('ring-2', 'ring-red-500', 'border-red-400');
+            } else {
+                card?.classList.remove('ring-2', 'ring-red-500', 'border-red-400');
+            }
+            updateBulkBar();
+        }
+
+        function selectAllPhotos(checked) {
+            document.querySelectorAll('.photo-select-checkbox').forEach(cb => {
+                cb.checked = checked;
+                const itemId = cb.value;
+                const card = document.getElementById('photo-card-' + itemId);
+                if (checked) {
+                    card?.classList.add('ring-2', 'ring-red-500', 'border-red-400');
+                } else {
+                    card?.classList.remove('ring-2', 'ring-red-500', 'border-red-400');
+                }
+            });
+            updateBulkBar();
+        }
+
+        function invertPhotoSelection() {
+            document.querySelectorAll('.photo-select-checkbox').forEach(cb => {
+                cb.checked = !cb.checked;
+                const itemId = cb.value;
+                const card = document.getElementById('photo-card-' + itemId);
+                if (cb.checked) {
+                    card?.classList.add('ring-2', 'ring-red-500', 'border-red-400');
+                } else {
+                    card?.classList.remove('ring-2', 'ring-red-500', 'border-red-400');
+                }
+            });
+            updateBulkBar();
+        }
+
+        function updateBulkBar() {
+            const checked = document.querySelectorAll('.photo-select-checkbox:checked');
+            const count = checked.length;
+            const bar = document.getElementById('bulkDeleteBar');
+            const countSpan = document.getElementById('selectedPhotosCount');
+            if (countSpan) countSpan.textContent = count;
+            if (bar) {
+                if (count > 0) {
+                    bar.classList.remove('hidden');
+                } else {
+                    bar.classList.add('hidden');
+                }
+            }
+        }
+
+        async function executeBulkDeletePhotos() {
+            const checkedBoxes = Array.from(document.querySelectorAll('.photo-select-checkbox:checked'));
+            const ids = checkedBoxes.map(cb => parseInt(cb.value)).filter(id => !isNaN(id));
+            if (ids.length === 0) {
+                alert('يرجى تحديد صورة واحدة على الأقل للحذف');
+                return;
+            }
+
+            if (!confirm(`هل أنت متأكد من حذف ${ids.length} صورة نهائياً من الألبوم؟ لا يمكن التراجع عن هذا الإجراء.`)) {
+                return;
+            }
+
+            const btn = document.getElementById('btnBulkDelete');
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جارٍ الحذف...</span>';
+            }
+
+            try {
+                const response = await fetch('{{ route("admin.gallery.items.bulk-delete") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ ids: ids })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    ids.forEach(id => {
+                        const card = document.getElementById('photo-card-' + id);
+                        if (card) {
+                            card.style.opacity = '0';
+                            setTimeout(() => card.remove(), 250);
+                        }
+                    });
+
+                    // Update total count
+                    const totalSpan = document.getElementById('photosTotalCount');
+                    if (totalSpan) {
+                        const currentTotal = parseInt(totalSpan.textContent) || 0;
+                        totalSpan.textContent = Math.max(0, currentTotal - ids.length);
+                    }
+
+                    showToast(data.message || `تم حذف ${ids.length} صورة بنجاح`);
+                    setTimeout(() => updateBulkBar(), 300);
+                } else {
+                    alert(data.message || 'حدث خطأ أثناء حذف الصور');
+                }
+            } catch (err) {
+                console.error('Bulk delete error:', err);
+                alert('تعذر الاتصال بالخادم لحذف الصور');
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = origHtml;
+                }
             }
         }
 

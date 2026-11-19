@@ -45,11 +45,34 @@
     </div>
     @endif
 
+    <!-- شريط العمليات الجماعية للألبومات المحددة -->
+    <div id="bulkAlbumsBar" class="hidden p-3.5 bg-red-50 border-2 border-red-200 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-sm transition-all duration-300">
+        <div class="flex items-center gap-2.5 text-xs text-red-900 font-bold">
+            <span class="w-7 h-7 rounded-lg bg-red-600 text-white flex items-center justify-center text-xs shadow-xs">
+                <i class="fa-solid fa-check"></i>
+            </span>
+            <span>تم تحديد <span id="selectedAlbumsCount" class="text-sm font-extrabold text-red-700">0</span> ألبوم</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <button type="button" onclick="selectAllAlbums(false)" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-xl text-xs font-semibold transition">
+                إلغاء التحديد
+            </button>
+            <button type="button" onclick="executeBulkDeleteAlbums()" id="btnBulkDeleteAlbums" class="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center gap-1.5">
+                <i class="fa-solid fa-trash-can"></i>
+                <span>حذف الألبومات المحددة نهائياً</span>
+            </button>
+        </div>
+    </div>
+
     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
         <div class="overflow-x-auto w-full">
             <table class="w-full text-right text-xs">
                 <thead class="bg-slate-50 text-slate-600 border-b border-slate-200 whitespace-nowrap">
                     <tr>
+                        <th class="p-3.5 sm:p-4 w-10 text-center">
+                            <input type="checkbox" id="masterAlbumCheckbox" onchange="selectAllAlbums(this.checked)" class="rounded text-emerald-800 focus:ring-emerald-800 w-4 h-4 cursor-pointer" title="تحديد / إلغاء تحديد الكل">
+                        </th>
                         <th class="p-3.5 sm:p-4 font-bold w-20">الغلاف</th>
                         <th class="p-3.5 sm:p-4 font-bold">عنوان الألبوم</th>
                         <th class="p-3.5 sm:p-4 font-bold">التصنيف الأب</th>
@@ -61,7 +84,10 @@
                 </thead>
             <tbody class="divide-y divide-slate-100">
                 @forelse($albums as $album)
-                <tr class="hover:bg-slate-50 transition">
+                <tr class="hover:bg-slate-50 transition" id="album-row-{{ $album->id }}">
+                    <td class="p-3 text-center">
+                        <input type="checkbox" value="{{ $album->id }}" class="album-checkbox rounded text-emerald-800 focus:ring-emerald-800 w-4 h-4 cursor-pointer" onchange="onAlbumCheckboxChange(this, {{ $album->id }})">
+                    </td>
                     <td class="p-3">
                         <div class="w-14 h-10 rounded-lg overflow-hidden bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400">
                             @if($album->cover_url)
@@ -126,7 +152,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" class="p-8 text-center text-slate-400">
+                    <td colspan="8" class="p-8 text-center text-slate-400">
                         <div class="space-y-2">
                             <i class="fa-solid fa-images text-2xl text-slate-300"></i>
                             <p>لا توجد ألبومات صور مطابقة.</p>
@@ -142,3 +168,104 @@
     <div>{{ $albums->links() }}</div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function onAlbumCheckboxChange(cb, albumId) {
+        const row = document.getElementById('album-row-' + albumId);
+        if (cb.checked) {
+            row?.classList.add('bg-red-50/50');
+        } else {
+            row?.classList.remove('bg-red-50/50');
+        }
+        updateAlbumBulkBar();
+    }
+
+    function selectAllAlbums(checked) {
+        const master = document.getElementById('masterAlbumCheckbox');
+        if (master) master.checked = checked;
+
+        document.querySelectorAll('.album-checkbox').forEach(cb => {
+            cb.checked = checked;
+            const albumId = cb.value;
+            const row = document.getElementById('album-row-' + albumId);
+            if (checked) {
+                row?.classList.add('bg-red-50/50');
+            } else {
+                row?.classList.remove('bg-red-50/50');
+            }
+        });
+        updateAlbumBulkBar();
+    }
+
+    function updateAlbumBulkBar() {
+        const checked = document.querySelectorAll('.album-checkbox:checked');
+        const count = checked.length;
+        const bar = document.getElementById('bulkAlbumsBar');
+        const countSpan = document.getElementById('selectedAlbumsCount');
+        if (countSpan) countSpan.textContent = count;
+        if (bar) {
+            if (count > 0) {
+                bar.classList.remove('hidden');
+            } else {
+                bar.classList.add('hidden');
+            }
+        }
+    }
+
+    async function executeBulkDeleteAlbums() {
+        const checkedBoxes = Array.from(document.querySelectorAll('.album-checkbox:checked'));
+        const ids = checkedBoxes.map(cb => parseInt(cb.value)).filter(id => !isNaN(id));
+        if (ids.length === 0) {
+            alert('يرجى تحديد ألبوم واحد على الأقل للحذف');
+            return;
+        }
+
+        if (!confirm(`هل أنت متأكد من حذف ${ids.length} ألبوم نهائياً مع كافة الصور التابعة لها؟ لا يمكن التراجع عن هذا الإجراء.`)) {
+            return;
+        }
+
+        const btn = document.getElementById('btnBulkDeleteAlbums');
+        const origHtml = btn ? btn.innerHTML : '';
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جارٍ الحذف...</span>';
+        }
+
+        try {
+            const response = await fetch('{{ route("admin.gallery.bulk-delete") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ ids: ids })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                ids.forEach(id => {
+                    const row = document.getElementById('album-row-' + id);
+                    if (row) {
+                        row.style.opacity = '0';
+                        setTimeout(() => row.remove(), 250);
+                    }
+                });
+                alert(data.message || `تم حذف ${ids.length} ألبوم بنجاح`);
+                setTimeout(() => updateAlbumBulkBar(), 300);
+            } else {
+                alert(data.message || 'حدث خطأ أثناء حذف الألبومات');
+            }
+        } catch (err) {
+            console.error('Bulk delete error:', err);
+            alert('تعذر الاتصال بالخادم لحذف الألبومات');
+        } finally {
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = origHtml;
+            }
+        }
+    }
+</script>
+@endpush

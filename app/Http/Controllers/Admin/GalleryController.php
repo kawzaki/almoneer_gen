@@ -310,6 +310,69 @@ class GalleryController extends Controller
     }
 
     /**
+     * Delete multiple gallery photo items in bulk
+     */
+    public function bulkDestroyItems(Request $request)
+    {
+        $request->validate([
+            'ids'   => 'required|array|min:1',
+            'ids.*' => 'integer|exists:gallery_items,id',
+        ]);
+
+        $items = GalleryItem::whereIn('id', $request->ids)->get();
+        $count = $items->count();
+
+        foreach ($items as $item) {
+            $item->delete(); // triggers booted deleting hook to clean up physical file
+        }
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success'       => true,
+                'message'       => "تم حذف {$count} صورة بنجاح",
+                'deleted_count' => $count,
+                'deleted_ids'   => $request->ids,
+            ]);
+        }
+
+        return redirect()->back()->with('success', "تم حذف {$count} صورة بنجاح");
+    }
+
+    /**
+     * Delete multiple gallery albums in bulk
+     */
+    public function bulkDestroy(Request $request)
+    {
+        $request->validate([
+            'ids'   => 'required|array|min:1',
+            'ids.*' => 'integer|exists:gallery_albums,id',
+        ]);
+
+        $albums = GalleryAlbum::whereIn('id', $request->ids)->get();
+        $count = $albums->count();
+
+        foreach ($albums as $album) {
+            $albumDir = public_path("uploads/gallery/{$album->id}");
+            if (File::exists($albumDir)) {
+                File::deleteDirectory($albumDir);
+            }
+            $album->items()->delete();
+            $album->delete();
+        }
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success'       => true,
+                'message'       => "تم حذف {$count} ألبوم بنجاح",
+                'deleted_count' => $count,
+                'deleted_ids'   => $request->ids,
+            ]);
+        }
+
+        return redirect()->route('admin.gallery.index')->with('success', "تم حذف {$count} ألبوم بنجاح");
+    }
+
+    /**
      * Delete an individual gallery photo item
      */
     public function destroyItem($id)

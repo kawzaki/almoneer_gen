@@ -120,7 +120,9 @@ Route::prefix('admin')->middleware(['admin'])->name('admin.')->group(function ()
     Route::resource('books', \App\Http\Controllers\Admin\BookController::class);
     Route::post('/gallery/upload', [\App\Http\Controllers\Admin\GalleryController::class, 'upload'])->name('gallery.upload');
     Route::delete('/gallery/upload', [\App\Http\Controllers\Admin\GalleryController::class, 'revertUpload'])->name('gallery.upload.revert');
+    Route::post('/gallery/items/bulk-delete', [\App\Http\Controllers\Admin\GalleryController::class, 'bulkDestroyItems'])->name('gallery.items.bulk-delete');
     Route::delete('/gallery/items/{id}', [\App\Http\Controllers\Admin\GalleryController::class, 'destroyItem'])->name('gallery.items.destroy');
+    Route::post('/gallery/bulk-delete', [\App\Http\Controllers\Admin\GalleryController::class, 'bulkDestroy'])->name('gallery.bulk-delete');
     Route::post('/gallery/{gallery}/cover', [\App\Http\Controllers\Admin\GalleryController::class, 'setCover'])->name('gallery.cover.set');
     Route::resource('gallery', \App\Http\Controllers\Admin\GalleryController::class);
     Route::resource('inquiries', \App\Http\Controllers\Admin\InquiryController::class);
