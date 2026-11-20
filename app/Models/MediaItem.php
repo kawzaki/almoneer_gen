@@ -179,4 +179,26 @@ class MediaItem extends Model
         }
         return route('lectures.short', ['id' => $this->id]);
     }
+
+    /**
+     * Get formatted night label (e.g. "الليلة 1", "الليلة 2")
+     *
+     * @return string|null
+     */
+    public function getNightLabelAttribute(): ?string
+    {
+        if ($this->lecture_number) {
+            return 'الليلة ' . $this->lecture_number;
+        }
+
+        if (preg_match('/(?:الليلة|محاضرة|المحاضرة)\s*(\d+)/u', $this->title, $m)) {
+            return 'الليلة ' . (int)$m[1];
+        }
+
+        if (preg_match('/\b14\d\d-\d{2}-(\d{1,2})\b/', $this->title, $m) || preg_match('/\b14\d\d-\d{2}-(\d{1,2})\b/', $this->recording_date ?? '', $m)) {
+            return 'الليلة ' . (int)$m[1];
+        }
+
+        return null;
+    }
 }

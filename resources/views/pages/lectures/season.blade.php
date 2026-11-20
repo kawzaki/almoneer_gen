@@ -145,12 +145,14 @@
                             <i class="fa-solid {{ $lec->hasVideo() ? 'fa-play' : 'fa-arrow-left' }}"></i>
                         </div>
                     </a>
+                    @if(!empty($lec->duration))
                     <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/80 text-white text-[11px] font-mono">
-                        {{ $lec->duration ?? '50 د' }}
+                        {{ $lec->duration }}
                     </span>
-                    @if($lec->lecture_number)
+                    @endif
+                    @if($lec->night_label)
                     <span class="absolute top-2 right-2 px-2.5 py-1 rounded-full bg-gold-500 text-emerald-950 text-[11px] font-bold shadow">
-                        الليلة {{ $lec->lecture_number }}
+                        {{ $lec->night_label }}
                     </span>
                     @endif
                     @if(!$lec->hasVideo())
@@ -238,9 +240,11 @@
                 <div class="relative w-28 sm:w-36 aspect-video rounded-xl overflow-hidden bg-slate-900 shrink-0">
                     <img src="{{ $lec->display_thumbnail }}" 
                          alt="{{ $lec->title }}" class="w-full h-full object-cover">
+                    @if(!empty($lec->duration))
                     <span class="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-black/80 text-white text-[9px] font-mono">
-                        {{ $lec->duration ?? '50 د' }}
+                        {{ $lec->duration }}
                     </span>
+                    @endif
                     @if(!$lec->hasVideo())
                     <span class="absolute top-1 left-1 px-1.5 py-0.2 rounded bg-slate-900/90 text-amber-300 text-[8px] font-semibold">
                         قريباً
@@ -250,9 +254,9 @@
 
                 <div class="space-y-1.5 flex-1 min-w-0">
                     <div class="flex items-center gap-2 text-xs">
-                        @if($lec->lecture_number)
+                        @if($lec->night_label)
                         <span class="px-2 py-0.5 rounded-full bg-gold-500 text-emerald-950 font-bold text-[10px]">
-                            الليلة {{ $lec->lecture_number }}
+                            {{ $lec->night_label }}
                         </span>
                         @endif
                         @if(!empty($lec->recording_date))

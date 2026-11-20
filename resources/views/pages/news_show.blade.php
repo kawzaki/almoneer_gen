@@ -89,9 +89,9 @@
                 <span>← العودة لجميع الأخبار والنشاطات</span>
             </a>
             <div class="flex items-center gap-3">
-                <button onclick="navigator.clipboard.writeText(window.location.href); alert('تم نسخ رابط الخبر بنجاح!')" class="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold flex items-center gap-1.5 transition">
-                    <i class="fa-solid fa-link"></i>
-                    <span>نسخ الرابط</span>
+                <button onclick="navigator.clipboard.writeText('{{ url('/n/' . $article->id) }}'); alert('تم نسخ رابط الخبر المختصر بنجاح!\n{{ url('/n/' . $article->id) }}')" class="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold flex items-center gap-1.5 transition cursor-pointer" title="{{ url('/n/' . $article->id) }}">
+                    <i class="fa-solid fa-link text-emerald-700"></i>
+                    <span>نسخ الرابط المختصر</span>
                 </button>
             </div>
         </div>

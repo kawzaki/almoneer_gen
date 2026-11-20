@@ -12,7 +12,8 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
 
-            <!-- Contact Form (7 cols) -->
+            <!-- Contact Form or Official Notice (7 cols) -->
+            @if(!empty($siteSettings['site.contact_form_enabled']) && $siteSettings['site.contact_form_enabled'] == '1')
             <div class="lg:col-span-7 bg-white rounded-3xl p-8 border border-slate-200 shadow-sm space-y-6">
                 <h3 class="text-base font-bold text-slate-800 pb-3 border-b border-slate-100 flex items-center gap-2">
                     <i class="fa-solid fa-envelope-open-text text-emerald-800"></i>
@@ -61,6 +62,54 @@
                     </button>
                 </form>
             </div>
+            @else
+            <!-- Direct Messaging Disabled Notice (Per Official Directive) -->
+            <div class="lg:col-span-7 bg-white rounded-3xl p-8 sm:p-10 border border-slate-200 shadow-sm space-y-6 flex flex-col justify-between">
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 pb-4 border-b border-slate-100">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center text-xl shadow-xs">
+                            <i class="fa-solid fa-envelope-circle-check"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold font-scholarly text-slate-900">المراسلة والاستفسارات</h3>
+                            <p class="text-xs text-slate-500">القنوات الرسمية المعتمدة للتواصل مع إدارة شبكة ومكتب سماحة السيد</p>
+                        </div>
+                    </div>
+
+                    <div class="p-5 sm:p-6 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3 text-xs sm:text-sm text-slate-700 leading-relaxed">
+                        <div class="flex items-center gap-2 text-amber-800 font-bold text-xs">
+                            <i class="fa-solid fa-circle-info text-amber-600"></i>
+                            <span>تنويه حول نموذج المراسلة المباشرة:</span>
+                        </div>
+                        <p class="text-slate-600">
+                            نحيطكم علماً بأن استقبال الرسائل عبر النموذج الإلكتروني متوقف حالياً. وحرصاً على سرعة المتابعة ودقة التوجيه، يرجى توجيه كافة المراسلات والطلبات العامة عبر البريد الإلكتروني الرسمي المعتمد:
+                        </p>
+                        <div class="pt-2">
+                            <a href="mailto:{{ $siteSettings['site.email'] ?? 'info@almoneer.org' }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-gold-300 font-mono text-sm font-bold shadow transition">
+                                <i class="fa-solid fa-paper-plane text-xs"></i>
+                                <span>{{ $siteSettings['site.email'] ?? 'info@almoneer.org' }}</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 pt-2 text-xs text-slate-600">
+                        <div class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-circle-check text-emerald-600 mt-0.5 shrink-0"></i>
+                            <span><strong>الاستفتاءات والمسائل الفقهية:</strong> يرجى التوجه إلى قسم <a href="{{ route('inquiries.index') }}" class="text-emerald-800 font-bold hover:underline">«الاستفتاءات الفقهية»</a> المخصص بالموقع.</span>
+                        </div>
+                        <div class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-circle-check text-emerald-600 mt-0.5 shrink-0"></i>
+                            <span><strong>المراجعات الحضورية:</strong> نتشرف باستقبالكم عبر مكاتب التمثيل الرسمية الموضحة في بيانات العناوين.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-6 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                    <span>شبكة المنير — سماحة السيد منير الخباز</span>
+                    <span>نسألكم الدعاء</span>
+                </div>
+            </div>
+            @endif
 
             <!-- Contact Info (5 cols) -->
             <div class="lg:col-span-5 space-y-6">

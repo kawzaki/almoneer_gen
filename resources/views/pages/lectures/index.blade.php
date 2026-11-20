@@ -374,13 +374,19 @@
                                 </a>
 
                                 <!-- Duration Badge -->
+                                @if(!empty($lec->duration))
                                 <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/80 text-white text-[11px] font-mono">
-                                    {{ $lec->duration ?? '50 د' }}
+                                    {{ $lec->duration }}
                                 </span>
+                                @endif
 
                                 <!-- Season Pill Badge -->
-                                <span class="absolute top-2 right-2 px-2.5 py-1 rounded-full bg-emerald-950/80 text-gold-300 text-[11px] font-bold border border-gold-400/20 backdrop-blur-sm">
-                                    {{ $lec->season ?? 'محاضرة عامة' }} {{ $lec->hijri_year ? $lec->hijri_year . 'هـ' : '' }}
+                                <span class="absolute top-2 right-2 px-2.5 py-1 rounded-full bg-emerald-950/85 text-gold-300 text-[11px] font-bold border border-gold-400/20 backdrop-blur-sm shadow-md flex items-center gap-1.5">
+                                    <span>{{ $lec->season ?? 'محاضرة عامة' }} {{ $lec->hijri_year ? $lec->hijri_year . 'هـ' : '' }}</span>
+                                    @if($lec->night_label)
+                                        <span class="w-1 h-1 rounded-full bg-gold-400"></span>
+                                        <span class="text-amber-300 font-extrabold">{{ $lec->night_label }}</span>
+                                    @endif
                                 </span>
 
                                 @if(!$lec->hasVideo())
@@ -393,9 +399,14 @@
                             <!-- Info Area -->
                             <div class="p-5 space-y-3">
                                 <div class="flex items-center justify-between text-xs text-slate-400">
-                                    <span class="text-emerald-800 font-semibold flex items-center gap-1">
+                                    <span class="text-emerald-800 font-semibold flex items-center gap-1.5">
                                         <i class="fa-solid fa-calendar text-[10px]"></i>
                                         <span>{{ $lec->season_year ?? ($lec->hijri_year ? 'موسم ' . $lec->hijri_year . 'هـ' : 'الموسم العام') }}</span>
+                                        @if($lec->night_label)
+                                            <span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-900 text-[10px] font-bold">
+                                                {{ $lec->night_label }}
+                                            </span>
+                                        @endif
                                     </span>
                                     <span><i class="fa-solid fa-eye ml-1 text-slate-400"></i>
                                         {{ number_format($lec->views_count) }}</span>
@@ -485,6 +496,11 @@
                             <div class="space-y-1">
                                 <div class="flex items-center gap-2 text-xs text-slate-400">
                                     <span class="text-emerald-800 font-semibold">{{ $lec->season_year ?? ($lec->hijri_year ? 'موسم ' . $lec->hijri_year . 'هـ' : 'الموسم العام') }}</span>
+                                    @if($lec->night_label)
+                                        <span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-900 text-[10px] font-bold">
+                                            {{ $lec->night_label }}
+                                        </span>
+                                    @endif
                                     <span>•</span>
                                     <span><i class="fa-solid fa-eye ml-1 text-slate-400"></i>{{ number_format($lec->views_count) }}</span>
                                 </div>

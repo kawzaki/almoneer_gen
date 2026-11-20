@@ -115,6 +115,7 @@ Route::prefix('admin')->middleware(['admin'])->name('admin.')->group(function ()
     // 4. إدارة المحتوى والتصنيفات (Content & Category Management)
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
     Route::resource('articles', \App\Http\Controllers\Admin\ArticleController::class);
+    Route::post('media/fetch-duration', [\App\Http\Controllers\Admin\MediaController::class, 'fetchDurationAjax'])->name('media.fetch-duration');
     Route::resource('media', \App\Http\Controllers\Admin\MediaController::class);
     Route::resource('poems', \App\Http\Controllers\Admin\PoemController::class);
     Route::resource('books', \App\Http\Controllers\Admin\BookController::class);

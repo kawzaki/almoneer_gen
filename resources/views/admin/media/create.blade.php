@@ -197,8 +197,14 @@
                 <input type="text" name="recording_date" value="{{ old('recording_date') }}" placeholder="مثال: 15 رجب 1440هـ أو 2019/03/22" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
             </div>
             <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">المدة (مثال: 45:10):</label>
-                <input type="text" name="duration" value="{{ old('duration') }}" placeholder="45:10" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 text-center font-mono">
+                <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                    <span>المدة (مثال: 52:40):</span>
+                    <button type="button" id="btn-fetch-duration" class="text-emerald-700 hover:text-emerald-900 font-bold text-[10px] flex items-center gap-1 transition" title="جلب المدة تلقائياً من رابط يوتيوب أو ساوندكلاود">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>جلب تلقائي</span>
+                    </button>
+                </label>
+                <input type="text" name="duration" id="input-duration" value="{{ old('duration') }}" placeholder="يُجلب تلقائياً إن تُرِك فارغاً" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50 text-center font-mono">
             </div>
         </div>
 
@@ -970,5 +976,50 @@
             btn.disabled = false;
         }
     }
+
+    // Fetch duration automatically from YouTube or SoundCloud
+    document.getElementById('btn-fetch-duration')?.addEventListener('click', async function() {
+        const btn = this;
+        const origHtml = btn.innerHTML;
+        const mediaUrl = document.querySelector('input[name="media_url"]')?.value || '';
+        const soundcloudUrl = document.querySelector('input[name="soundcloud_url"]')?.value || '';
+        const durationInput = document.getElementById('input-duration');
+
+        if (!mediaUrl.trim() && !soundcloudUrl.trim()) {
+            alert('يرجى إدخال رابط يوتيوب أو رابط ساوندكلاود أولاً لجلب المدة منه.');
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري الجلب...</span>';
+
+        try {
+            const resp = await fetch('{{ route("admin.media.fetch-duration") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ media_url: mediaUrl, soundcloud_url: soundcloudUrl })
+            });
+            const data = await resp.json();
+            if (data.success && data.duration) {
+                if (durationInput) durationInput.value = data.duration;
+                btn.innerHTML = '<i class="fa-solid fa-check text-emerald-600"></i> <span>تم!</span>';
+            } else {
+                alert(data.message || 'تعذر استخراج المدة من الرابط.');
+                btn.innerHTML = origHtml;
+            }
+        } catch (e) {
+            alert('حدث خطأ أثناء محاولة جلب المدة.');
+            btn.innerHTML = origHtml;
+        }
+
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.innerHTML = origHtml;
+        }, 2000);
+    });
 </script>
 @endpush

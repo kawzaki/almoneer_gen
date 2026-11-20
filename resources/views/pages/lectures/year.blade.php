@@ -107,9 +107,11 @@
                                 <i class="fa-solid fa-play"></i>
                             </div>
                         </a>
-                        <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/80 text-white text-[11px] font-mono">
-                            {{ $lec->duration ?? '50 د' }}
-                        </span>
+                        @if(!empty($lec->duration))
+                            <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/80 text-white text-[11px] font-mono">
+                                {{ $lec->duration }}
+                            </span>
+                            @endif
                         <span class="absolute top-2 right-2 px-2.5 py-1 rounded-full bg-emerald-950/80 text-gold-300 text-[11px] font-bold shadow">
                             {{ (!empty($lec->season_year) && $lec->season_year !== 'الموسم العام') ? $lec->season_year : $lec->season }}
                         </span>

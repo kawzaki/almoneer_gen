@@ -84,6 +84,11 @@ class MediaController extends Controller
             $pdfPath = 'uploads/pdf/' . $filename;
         }
 
+        $duration = $request->duration;
+        if (empty($duration)) {
+            $duration = \App\Services\MediaDurationService::fetchDuration($request->media_url, $request->soundcloud_url);
+        }
+
         MediaItem::create([
             'title'          => $request->title,
             'slug'           => $slug,
@@ -93,7 +98,7 @@ class MediaController extends Controller
             'soundcloud_url' => $request->soundcloud_url,
             'audio_file'     => $audioPath,
             'thumbnail'      => $request->thumbnail,
-            'duration'       => $request->duration,
+            'duration'       => $duration,
             'recording_date' => $request->recording_date,
             'season_year'    => $request->season_year,
             'hijri_year'     => $year,
@@ -130,6 +135,14 @@ class MediaController extends Controller
             'lecture_number' => 'nullable|integer|min:1|max:999',
         ]);
 
+        $duration = $request->duration;
+        if (empty($duration)) {
+            $duration = \App\Services\MediaDurationService::fetchDuration(
+                $request->media_url ?? $medium->media_url,
+                $request->soundcloud_url ?? $medium->soundcloud_url
+            );
+        }
+
         $updateData = [
             'title'          => $request->title,
             'category_id'    => $request->category_id,
@@ -137,7 +150,7 @@ class MediaController extends Controller
             'media_url'      => $request->media_url,
             'soundcloud_url' => $request->soundcloud_url,
             'thumbnail'      => $request->thumbnail,
-            'duration'       => $request->duration,
+            'duration'       => $duration,
             'season_year'    => $request->season_year,
             'description'    => $request->description,
             'tags'           => $request->tags,
@@ -261,5 +274,26 @@ class MediaController extends Controller
     {
         $medium->delete();
         return redirect()->route('admin.media.index')->with('success', 'تم حذف المادة الإعلامية بنجاح!');
+    }
+
+    public function fetchDurationAjax(Request $request)
+    {
+        $duration = \App\Services\MediaDurationService::fetchDuration(
+            $request->input('media_url'),
+            $request->input('soundcloud_url')
+        );
+
+        if ($duration) {
+            return response()->json([
+                'success'  => true,
+                'duration' => $duration,
+                'message'  => "تم جلب المدة تلقائياً: {$duration}",
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'تعذر جلب المدة تلقائياً. يمكنك إدخالها يدوياً أو تركها فارغة.',
+        ], 422);
     }
 }

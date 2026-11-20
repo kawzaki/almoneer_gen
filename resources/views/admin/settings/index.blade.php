@@ -49,6 +49,19 @@
                     <input type="text" name="site.address" value="{{ $settings['site.address'] ?? 'النجف الأشرف / القطيف' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
                 </div>
             </div>
+
+            <!-- Direct Contact Form Toggle -->
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                <div>
+                    <span class="block text-xs font-bold text-slate-800">نموذج المراسلة المباشرة (صفحة تواصل):</span>
+                    <span class="text-[11px] text-slate-500">تفعيل أو تعطيل استقبال الرسائل عبر النموذج الإلكتروني في صفحة تواصل (معطل افتراضياً).</span>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="hidden" name="site.contact_form_enabled" value="0">
+                    <input type="checkbox" name="site.contact_form_enabled" value="1" class="sr-only peer" {{ ($settings['site.contact_form_enabled'] ?? '0') == '1' ? 'checked' : '' }}>
+                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-700"></div>
+                </label>
+            </div>
         </div>
 
         <!-- 2. Homepage Hero Portrait Card & Identity -->
