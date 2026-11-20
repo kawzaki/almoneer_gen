@@ -50,3 +50,10 @@ if (!function_exists('arabic_plural')) {
         return ArabicNumber::format($count, $singular, $dual, $plural3to10, $accusative11to99, $hundreds, $includeNumber);
     }
 }
+
+if (!function_exists('setting')) {
+    function setting(string $key, $default = null)
+    {
+        return \App\Models\Setting::get($key, $default);
+    }
+}

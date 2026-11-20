@@ -86,6 +86,12 @@ class SettingController extends Controller
             Setting::set('site_footer_show_hadith', (string)$data['site.footer_show_hadith']);
         }
 
+        // Ensure maintenance mode setting is explicitly synchronized in both naming formats
+        if (isset($data['site.maintenance_mode'])) {
+            Setting::set('site.maintenance_mode', (string)$data['site.maintenance_mode']);
+            Setting::set('site_maintenance_mode', (string)$data['site.maintenance_mode']);
+        }
+
         // Flush cached settings, home payload, and views
         Cache::forget('site.settings');
         Cache::forget('site.home.payload');

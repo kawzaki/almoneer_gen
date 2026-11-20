@@ -826,7 +826,7 @@
             <!-- Print Header (Visible ONLY on print) -->
             <div class="print-header-banner hidden">
                 <div style="text-align: center; margin-bottom: 12px;">
-                    <img src="{{ asset('images/calligraphy-mowqe-sayyid-dark.png') }}?v=1" alt="موقع سماحة السيد منير الخباز" style="height: 65px; margin: 0 auto; display: inline-block;">
+                    <img src="{{ asset('images/calligraphy-mowqe-sayyid-dark.png') }}?v=2" alt="موقع سماحة السيد منير الخباز" style="height: 65px; margin: 0 auto; display: inline-block;">
                 </div>
                 <div style="font-size: 11pt; color: #475569; margin-bottom: 6px; font-family: 'Traditional Arabic', serif;">
                     المحاضرات المكتوبة » موسم {{ $resolvedSeasonName }} {{ $resolvedYear }}هـ

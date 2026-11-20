@@ -12,6 +12,52 @@
     <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
 
+        <!-- 0. Site Status & Maintenance Mode -->
+        <div class="bg-white rounded-2xl p-6 border {{ ($settings['site.maintenance_mode'] ?? '0') == '1' ? 'border-amber-400 bg-amber-50/20' : 'border-slate-200' }} shadow-sm space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 class="font-bold text-sm text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-power-off text-amber-500"></i>
+                    <span>حالة الموقع ووضع الصيانة (إغلاق الموقع مؤقتاً)</span>
+                </h3>
+                @if(($settings['site.maintenance_mode'] ?? '0') == '1')
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                        <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                        الموقع مغلق حالياً (وضع الصيانة مفعل)
+                    </span>
+                @else
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        الموقع متاح للزوار
+                    </span>
+                @endif
+            </div>
+
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200/80">
+                <div class="space-y-1">
+                    <div class="text-xs font-bold text-slate-800">تفعيل وضع الصيانة / إغلاق الموقع للعموم:</div>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">
+                        عند تفعيل هذا الخيار، سيتم عرض صفحة صيانة مخصصة لجميع الزوار مع عنوان ورسالة توضيحية، بينما يمكن للمشرفين والمديرين تسجيل الدخول والتصفح بصورة اعتيادية.
+                    </p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                    <input type="hidden" name="site.maintenance_mode" value="0">
+                    <input type="checkbox" name="site.maintenance_mode" value="1" class="sr-only peer" {{ ($settings['site.maintenance_mode'] ?? '0') == '1' ? 'checked' : '' }}>
+                    <div class="w-12 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
+                </label>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">عنوان رسالة الصيانة:</label>
+                    <input type="text" name="site.maintenance_title" value="{{ $settings['site.maintenance_title'] ?? 'الموقع تحت أعمال الصيانة والتحديث' }}" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">نص رسالة التوضيح للزوار:</label>
+                    <textarea name="site.maintenance_message" rows="2" class="w-full text-xs rounded-xl border-slate-200 p-2.5 bg-slate-50">{{ $settings['site.maintenance_message'] ?? 'نعمل حالياً على تطوير وتحديث الموقع لخدمتكم بشكل أفضل، سنعود قريباً إن شاء الله تعالى.' }}</textarea>
+                </div>
+            </div>
+        </div>
+
         <!-- 1. General Info -->
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
             <h3 class="font-bold text-sm text-slate-800 pb-3 border-b border-slate-100 flex items-center gap-2">

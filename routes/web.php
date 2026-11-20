@@ -116,6 +116,7 @@ Route::prefix('admin')->middleware(['admin'])->name('admin.')->group(function ()
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
     Route::resource('articles', \App\Http\Controllers\Admin\ArticleController::class);
     Route::post('media/fetch-duration', [\App\Http\Controllers\Admin\MediaController::class, 'fetchDurationAjax'])->name('media.fetch-duration');
+    Route::post('media/bulk-delete', [\App\Http\Controllers\Admin\MediaController::class, 'bulkDestroy'])->name('media.bulk-delete');
     Route::resource('media', \App\Http\Controllers\Admin\MediaController::class);
     Route::resource('poems', \App\Http\Controllers\Admin\PoemController::class);
     Route::resource('books', \App\Http\Controllers\Admin\BookController::class);
@@ -130,6 +131,7 @@ Route::prefix('admin')->middleware(['admin'])->name('admin.')->group(function ()
     Route::resource('wisdom', \App\Http\Controllers\Admin\WeeklyWisdomController::class);
     
     // 5. أدوات التحرير والإعدادات والرقابة
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
     Route::get('/vacum', [\App\Http\Controllers\Admin\ToolController::class, 'vacum'])->name('tools.vacum');
     Route::post('/vacum/process', [\App\Http\Controllers\Admin\ToolController::class, 'processVacum'])->name('tools.vacum.process');
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');

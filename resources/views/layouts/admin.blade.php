@@ -208,6 +208,12 @@
             <div class="pt-3 pb-1 text-[11px] font-bold text-gold-400/80 px-3 uppercase tracking-wider">النظام والرقابة
             </div>
 
+            <a href="{{ route('admin.users.index') }}"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.users.*') ? 'bg-gold-500 text-emerald-950 font-bold shadow-sm' : 'text-slate-300 hover:bg-emerald-900' }}">
+                <i class="fa-solid fa-users-gear w-5 text-center"></i>
+                <span>إدارة المستخدمين</span>
+            </a>
+
             <a href="{{ route('admin.settings.index') }}"
                 class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('admin.settings.*') ? 'bg-gold-500 text-emerald-950 font-bold shadow-sm' : 'text-slate-300 hover:bg-emerald-900' }}">
                 <i class="fa-solid fa-sliders w-5 text-center"></i>

@@ -439,6 +439,14 @@
 </head>
 <body class="theme-{{ $activeTheme }} min-h-screen flex flex-col antialiased selection:bg-gold-500 selection:text-white">
 
+    @if(((string) setting('site.maintenance_mode', '0') === '1' || (string) setting('site_maintenance_mode', '0') === '1') && auth()->check())
+    <div class="no-print bg-amber-500 text-slate-950 font-bold text-xs py-2 px-4 shadow text-center flex items-center justify-center gap-3">
+        <i class="fa-solid fa-triangle-exclamation text-slate-900 text-sm"></i>
+        <span>تنبيه: وضع الصيانة مفعّل حالياً والموقع مغلق أمام الزوار. تتصفح الموقع الآن بصفتك مشرفاً.</span>
+        <a href="{{ route('admin.settings.index') }}" class="underline text-slate-950 hover:text-white transition text-[11px] bg-black/10 px-2 py-0.5 rounded">لوحة الإعدادات</a>
+    </div>
+    @endif
+
     <!-- 1. Top Cross-Portal Switcher Bar (Connecting with Hawza Portal on Port 8000) -->
     <div class="no-print bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-950 text-gold-300 text-xs border-b border-gold-500/30 py-1.5 px-4 shadow-sm">
         <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">

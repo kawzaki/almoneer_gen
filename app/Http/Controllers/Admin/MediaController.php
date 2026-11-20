@@ -10,10 +10,49 @@ use Illuminate\Support\Str;
 
 class MediaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $items = MediaItem::with('category')->latest()->paginate(15);
-        return view('admin.media.index', compact('items'));
+        $query = MediaItem::with('category');
+
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where('title', 'like', "%{$search}%");
+        }
+
+        if ($request->filled('hijri_year')) {
+            $year = trim($request->hijri_year);
+            $query->where(function ($q) use ($year) {
+                $q->where('hijri_year', $year)
+                  ->orWhere('season_year', 'like', "%{$year}%");
+            });
+        }
+
+        if ($request->filled('season_slug')) {
+            $season = trim($request->season_slug);
+            $query->where('season_slug', $season);
+        }
+
+        if ($request->filled('type')) {
+            $type = trim($request->type);
+            $query->where('type', $type);
+        }
+
+        $items = $query->latest('id')->paginate(20)->withQueryString();
+
+        $availableYears = MediaItem::whereNotNull('hijri_year')
+            ->where('hijri_year', '!=', '')
+            ->distinct()
+            ->orderByDesc('hijri_year')
+            ->pluck('hijri_year');
+
+        $availableSeasons = [
+            'muharram' => 'محرم الحرام',
+            'safar'    => 'صفر الخير',
+            'ramadan'  => 'شهر رمضان',
+            'general'  => 'محاضرات عامة',
+        ];
+
+        return view('admin.media.index', compact('items', 'availableYears', 'availableSeasons'));
     }
 
     public function create()
@@ -274,6 +313,30 @@ class MediaController extends Controller
     {
         $medium->delete();
         return redirect()->route('admin.media.index')->with('success', 'تم حذف المادة الإعلامية بنجاح!');
+    }
+
+    public function bulkDestroy(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:media_items,id',
+        ]);
+
+        $items = MediaItem::whereIn('id', $validated['ids'])->get();
+        $count = 0;
+        foreach ($items as $item) {
+            if ($item->audio_file && \Illuminate\Support\Facades\File::exists(public_path($item->audio_file))) {
+                @\Illuminate\Support\Facades\File::delete(public_path($item->audio_file));
+            }
+            if ($item->pdf_file && \Illuminate\Support\Facades\File::exists(public_path($item->pdf_file))) {
+                @\Illuminate\Support\Facades\File::delete(public_path($item->pdf_file));
+            }
+            $item->delete();
+            $count++;
+        }
+
+        return redirect()->route('admin.media.index', $request->query())
+            ->with('success', "تم حذف {$count} من المواد الإعلامية بنجاح.");
     }
 
     public function fetchDurationAjax(Request $request)
