@@ -7,7 +7,7 @@
 
         <div class="max-w-3xl mx-auto text-center space-y-3 pb-10">
             <span class="text-xs font-bold text-gold-600 uppercase tracking-wider">الاتصال والتواصل</span>
-            <h1 class="text-3xl font-bold font-scholarly text-slate-900">تواصل مع مكتب سماحة السيد (دام عطاؤه)</h1>
+            <h1 class="text-3xl font-bold font-scholarly text-slate-900">تواصل مع سماحة السيد (دام عطاؤه)</h1>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
