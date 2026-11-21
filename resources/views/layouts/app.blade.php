@@ -501,18 +501,18 @@
 
                     <!-- Brand Link & Calligraphy -->
                     <a href="{{ route('home') }}" class="group flex items-center gap-2 sm:gap-5 min-w-0 max-w-full">
-                        <div class="h-14 sm:h-24 md:h-28 lg:h-32 xl:h-36 w-auto flex-shrink-0 flex items-center justify-center">
-                            <img src="{{ asset('images/almoneer-logo-official.png') }}?v=4" alt="شعار شبكة المنير" class="h-14 sm:h-24 md:h-28 lg:h-32 xl:h-36 w-auto object-contain drop-shadow-[0_4px_18px_rgba(212,170,72,0.65)] group-hover:scale-105 transition-transform">
+                        <div class="h-11 sm:h-18 md:h-22 lg:h-24 xl:h-[105px] w-auto flex-shrink-0 flex items-center justify-center">
+                            <img src="{{ asset('images/almoneer-logo-official.png') }}?v=5" alt="شعار شبكة المنير" class="h-11 sm:h-18 md:h-22 lg:h-24 xl:h-[105px] w-auto object-contain drop-shadow-[0_4px_14px_rgba(0,0,0,0.6)] group-hover:scale-105 transition-transform">
                         </div>
                         <div class="flex flex-col justify-center min-w-0">
                             <!-- Handwritten Arabic Calligraphy (Official Artwork) -->
-                            <div class="flex flex-col items-start gap-1 sm:gap-2">
+                            <div class="flex flex-col items-start gap-1 sm:gap-1.5">
                                 <img src="{{ asset('images/calligraphy-sayyid-muneer-gold.png') }}" 
                                      alt="{{ $siteSettings['site.title'] ?? 'سماحة السيد منير الخباز' }}" 
-                                     class="h-8 sm:h-14 md:h-18 lg:h-22 w-auto max-w-full object-contain drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)] group-hover:brightness-110 transition">
+                                     class="h-7 sm:h-12 md:h-16 lg:h-18 xl:h-[76px] w-auto max-w-full object-contain drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)] group-hover:brightness-110 transition">
                                 <img src="{{ asset('images/calligraphy-markaz-light.png') }}" 
                                      alt="{{ $siteSettings['site.subtitle'] ?? 'موقع يُعنى بمجمع النتاج الفقهي والفكري والنشاط التبليغي' }}" 
-                                     class="h-3 sm:h-5 md:h-6.5 lg:h-8 w-auto max-w-full object-contain opacity-95 group-hover:opacity-100 transition drop-shadow-[0_2px_8px_rgba(0,0,0,0.55)]">
+                                     class="h-3 sm:h-4.5 md:h-5.5 lg:h-6 xl:h-[24px] w-auto max-w-full object-contain opacity-95 group-hover:opacity-100 transition drop-shadow-[0_2px_8px_rgba(0,0,0,0.55)]">
                             </div>
                             <h1 class="sr-only">{{ $siteSettings['site.title'] ?? 'سماحة السيد منير الخباز' }} - {{ $siteSettings['site.subtitle'] ?? 'موقع يُعنى بمجمع النتاج الفقهي والفكري والنشاط التبليغي' }}</h1>
                         </div>
