@@ -425,7 +425,8 @@
             [class*="no-print"],
             .hawza-link,
             [class*="theme-switch"],
-            [class*="switcher"] {
+            [class*="switcher"],
+            [class*="bg-red-"] {
                 display: none !important;
             }
             body {
@@ -611,7 +612,7 @@
 
     <!-- Live Stream Alert Bar (if active) -->
     @if(($siteSettings['livestream.is_live'] ?? $siteSettings['livestream_is_live'] ?? '0') === '1')
-    <div class="bg-red-700 text-white py-2.5 px-4 shadow-md text-sm font-medium z-40 relative">
+    <div class="no-print bg-red-700 text-white py-2.5 px-4 shadow-md text-sm font-medium z-40 relative">
         <div class="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-2">
             <div class="flex items-center gap-2.5">
                 <span class="relative flex h-3 w-3">
@@ -630,7 +631,7 @@
 
     <!-- Alert Notifications -->
     @if(session('success'))
-    <div class="max-w-7xl mx-auto px-4 mt-4 w-full">
+    <div class="no-print max-w-7xl mx-auto px-4 mt-4 w-full">
         <div class="p-4 rounded-xl bg-emerald-100 border border-emerald-300 text-emerald-900 text-sm flex items-center justify-between shadow-sm">
             <div class="flex items-center gap-2">
                 <i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>
