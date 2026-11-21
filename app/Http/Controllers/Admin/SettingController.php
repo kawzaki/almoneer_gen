@@ -81,15 +81,24 @@ class SettingController extends Controller
         }
 
         // Ensure footer hadith setting is explicitly synchronized in both naming formats
-        if (isset($data['site.footer_show_hadith'])) {
-            Setting::set('site.footer_show_hadith', (string)$data['site.footer_show_hadith']);
-            Setting::set('site_footer_show_hadith', (string)$data['site.footer_show_hadith']);
+        $hadithVal = $data['site_footer_show_hadith'] ?? $data['site.footer_show_hadith'] ?? null;
+        if ($hadithVal !== null) {
+            Setting::set('site.footer_show_hadith', (string)$hadithVal);
+            Setting::set('site_footer_show_hadith', (string)$hadithVal);
         }
 
         // Ensure maintenance mode setting is explicitly synchronized in both naming formats
-        if (isset($data['site.maintenance_mode'])) {
-            Setting::set('site.maintenance_mode', (string)$data['site.maintenance_mode']);
-            Setting::set('site_maintenance_mode', (string)$data['site.maintenance_mode']);
+        $maintVal = $data['site_maintenance_mode'] ?? $data['site.maintenance_mode'] ?? null;
+        if ($maintVal !== null) {
+            Setting::set('site.maintenance_mode', (string)$maintVal);
+            Setting::set('site_maintenance_mode', (string)$maintVal);
+        }
+
+        // Ensure contact form setting is explicitly synchronized in both naming formats
+        $contactVal = $data['site_contact_form_enabled'] ?? $data['site.contact_form_enabled'] ?? null;
+        if ($contactVal !== null) {
+            Setting::set('site.contact_form_enabled', (string)$contactVal);
+            Setting::set('site_contact_form_enabled', (string)$contactVal);
         }
 
         // Flush cached settings, home payload, and views

@@ -13,23 +13,25 @@
         @csrf
 
         <!-- 0. Site Status & Maintenance Mode -->
-        <div class="bg-white rounded-2xl p-6 border {{ ($settings['site.maintenance_mode'] ?? '0') == '1' ? 'border-amber-400 bg-amber-50/20' : 'border-slate-200' }} shadow-sm space-y-4">
+        <div id="maintenance_card" class="bg-white rounded-2xl p-6 border {{ ($settings['site.maintenance_mode'] ?? '0') == '1' ? 'border-amber-400 bg-amber-50/20' : 'border-slate-200' }} shadow-sm space-y-4">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                 <h3 class="font-bold text-sm text-slate-800 flex items-center gap-2">
                     <i class="fa-solid fa-power-off text-amber-500"></i>
                     <span>حالة الموقع ووضع الصيانة (إغلاق الموقع مؤقتاً)</span>
                 </h3>
-                @if(($settings['site.maintenance_mode'] ?? '0') == '1')
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
-                        <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                        الموقع مغلق حالياً (وضع الصيانة مفعل)
-                    </span>
-                @else
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                        الموقع متاح للزوار
-                    </span>
-                @endif
+                <span id="maintenance_badge">
+                    @if(($settings['site.maintenance_mode'] ?? '0') == '1')
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                            <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                            الموقع مغلق حالياً (وضع الصيانة مفعل)
+                        </span>
+                    @else
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            الموقع متاح للزوار
+                        </span>
+                    @endif
+                </span>
             </div>
 
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200/80">
@@ -39,11 +41,16 @@
                         عند تفعيل هذا الخيار، سيتم عرض صفحة صيانة مخصصة لجميع الزوار مع عنوان ورسالة توضيحية، بينما يمكن للمشرفين والمديرين تسجيل الدخول والتصفح بصورة اعتيادية.
                     </p>
                 </div>
-                <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                    <input type="hidden" name="site.maintenance_mode" value="0">
-                    <input type="checkbox" name="site.maintenance_mode" value="1" class="sr-only peer" {{ ($settings['site.maintenance_mode'] ?? '0') == '1' ? 'checked' : '' }}>
-                    <div class="w-12 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
-                </label>
+                <div class="flex items-center gap-3 shrink-0">
+                    <span id="label_maintenance_mode" class="text-xs font-bold {{ ($settings['site.maintenance_mode'] ?? '0') == '1' ? 'text-amber-600' : 'text-slate-500' }}">
+                        {{ ($settings['site.maintenance_mode'] ?? '0') == '1' ? 'مفعل (الموقع مغلق)' : 'معطل (الموقع مفتوح)' }}
+                    </span>
+                    <label dir="ltr" class="relative inline-flex items-center cursor-pointer select-none">
+                        <input type="hidden" name="site.maintenance_mode" value="0">
+                        <input type="checkbox" id="toggle_maintenance_mode" name="site.maintenance_mode" value="1" class="sr-only peer" {{ ($settings['site.maintenance_mode'] ?? '0') == '1' ? 'checked' : '' }}>
+                        <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
+                    </label>
+                </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -97,16 +104,21 @@
             </div>
 
             <!-- Direct Contact Form Toggle -->
-            <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-4">
                 <div>
                     <span class="block text-xs font-bold text-slate-800">نموذج المراسلة المباشرة (صفحة تواصل):</span>
                     <span class="text-[11px] text-slate-500">تفعيل أو تعطيل استقبال الرسائل عبر النموذج الإلكتروني في صفحة تواصل (معطل افتراضياً).</span>
                 </div>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="hidden" name="site.contact_form_enabled" value="0">
-                    <input type="checkbox" name="site.contact_form_enabled" value="1" class="sr-only peer" {{ ($settings['site.contact_form_enabled'] ?? '0') == '1' ? 'checked' : '' }}>
-                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-700"></div>
-                </label>
+                <div class="flex items-center gap-3 shrink-0">
+                    <span id="label_contact_form" class="text-xs font-bold {{ ($settings['site.contact_form_enabled'] ?? '0') == '1' ? 'text-emerald-700' : 'text-slate-400' }}">
+                        {{ ($settings['site.contact_form_enabled'] ?? '0') == '1' ? 'مفعل (النموذج متاح)' : 'معطل (النموذج مغلق)' }}
+                    </span>
+                    <label dir="ltr" class="relative inline-flex items-center cursor-pointer select-none">
+                        <input type="hidden" name="site.contact_form_enabled" value="0">
+                        <input type="checkbox" id="toggle_contact_form" name="site.contact_form_enabled" value="1" class="sr-only peer" {{ ($settings['site.contact_form_enabled'] ?? '0') == '1' ? 'checked' : '' }}>
+                        <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                    </label>
+                </div>
             </div>
         </div>
 
@@ -329,6 +341,53 @@
                 nameEl.classList.remove('hidden');
             }
         }
+    }
+
+    // Dynamic UI feedback for Maintenance Mode toggle
+    const toggleMaint = document.getElementById('toggle_maintenance_mode');
+    const lblMaint = document.getElementById('label_maintenance_mode');
+    const badgeMaint = document.getElementById('maintenance_badge');
+    const cardMaint = document.getElementById('maintenance_card');
+
+    if (toggleMaint && lblMaint) {
+        toggleMaint.addEventListener('change', function() {
+            if (this.checked) {
+                lblMaint.textContent = 'مفعل (الموقع مغلق)';
+                lblMaint.className = 'text-xs font-bold text-amber-600';
+                if (badgeMaint) {
+                    badgeMaint.innerHTML = '<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300"><span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>الموقع سيصبح مغلقاً بعد الحفظ</span>';
+                }
+                if (cardMaint) {
+                    cardMaint.classList.add('border-amber-400', 'bg-amber-50/20');
+                    cardMaint.classList.remove('border-slate-200');
+                }
+            } else {
+                lblMaint.textContent = 'معطل (الموقع مفتوح)';
+                lblMaint.className = 'text-xs font-bold text-slate-500';
+                if (badgeMaint) {
+                    badgeMaint.innerHTML = '<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>الموقع متاح للزوار</span>';
+                }
+                if (cardMaint) {
+                    cardMaint.classList.remove('border-amber-400', 'bg-amber-50/20');
+                    cardMaint.classList.add('border-slate-200');
+                }
+            }
+        });
+    }
+
+    // Dynamic UI feedback for Contact Form toggle
+    const toggleContact = document.getElementById('toggle_contact_form');
+    const lblContact = document.getElementById('label_contact_form');
+    if (toggleContact && lblContact) {
+        toggleContact.addEventListener('change', function() {
+            if (this.checked) {
+                lblContact.textContent = 'مفعل (النموذج متاح)';
+                lblContact.className = 'text-xs font-bold text-emerald-700';
+            } else {
+                lblContact.textContent = 'معطل (النموذج مغلق)';
+                lblContact.className = 'text-xs font-bold text-slate-400';
+            }
+        });
     }
 </script>
 @endpush
