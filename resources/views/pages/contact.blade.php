@@ -72,7 +72,7 @@
                         </div>
                         <div>
                             <h3 class="text-lg font-bold font-scholarly text-slate-900">المراسلة والاستفسارات</h3>
-                            <p class="text-xs text-slate-500">القنوات الرسمية المعتمدة للتواصل مع إدارة شبكة ومكتب سماحة السيد</p>
+                            <p class="text-xs text-slate-500">القنوات الرسمية المعتمدة للتواصل مع سماحة السيد وإدارة شبكة المنير</p>
                         </div>
                     </div>
 
@@ -81,25 +81,15 @@
                             <i class="fa-solid fa-circle-info text-amber-600"></i>
                             <span>تنويه حول نموذج المراسلة المباشرة:</span>
                         </div>
-                        <p class="text-slate-600">
-                            نحيطكم علماً بأن استقبال الرسائل عبر النموذج الإلكتروني متوقف حالياً. وحرصاً على سرعة المتابعة ودقة التوجيه، يرجى توجيه كافة المراسلات والطلبات العامة عبر البريد الإلكتروني الرسمي المعتمد:
+                        <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                            نحيطكم علماً بأن استقبال الرسائل عبر النموذج الإلكتروني متوقف حالياً.
                         </p>
-                        <div class="pt-2">
-                            <a href="mailto:{{ $siteSettings['site.email'] ?? 'info@almoneer.org' }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-gold-300 font-mono text-sm font-bold shadow transition">
-                                <i class="fa-solid fa-paper-plane text-xs"></i>
-                                <span>{{ $siteSettings['site.email'] ?? 'info@almoneer.org' }}</span>
-                            </a>
-                        </div>
                     </div>
 
                     <div class="space-y-3 pt-2 text-xs text-slate-600">
                         <div class="flex items-start gap-2.5">
                             <i class="fa-solid fa-circle-check text-emerald-600 mt-0.5 shrink-0"></i>
                             <span><strong>الاستفتاءات والمسائل الفقهية:</strong> يرجى التوجه إلى قسم <a href="{{ route('inquiries.index') }}" class="text-emerald-800 font-bold hover:underline">«الاستفتاءات الفقهية»</a> المخصص بالموقع.</span>
-                        </div>
-                        <div class="flex items-start gap-2.5">
-                            <i class="fa-solid fa-circle-check text-emerald-600 mt-0.5 shrink-0"></i>
-                            <span><strong>المراجعات الحضورية:</strong> نتشرف باستقبالكم عبر مكاتب التمثيل الرسمية الموضحة في بيانات العناوين.</span>
                         </div>
                     </div>
                 </div>
